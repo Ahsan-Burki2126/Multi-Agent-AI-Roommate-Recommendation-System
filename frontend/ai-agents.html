@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agents - RoomMate Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#7C3AED',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+            border-left: 3px solid #7C3AED;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -8px rgba(79, 70, 229, 0.3);
+        }
+
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .agent-flow-line {
+            position: relative;
+        }
+
+        .agent-flow-line::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -20px;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, #7C3AED, transparent);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800/50 border-r border-gray-700/50 hidden lg:block">
+            <div class="p-6">
+                <a href="/" class="flex items-center space-x-2">
+                    <span class="text-2xl">🏠</span>
+                    <span class="text-lg font-bold gradient-text">RoomMate Finder</span>
+                </a>
+            </div>
+            <nav class="mt-6 px-3">
+                <a href="/dashboard.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/matches.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Matches
+                </a>
+                <a href="/rooms.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Rooms
+                </a>
+                <a href="/ai-agents.html"
+                    class="sidebar-link active flex items-center px-4 py-3 rounded-lg text-white mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    AI Agents
+                </a>
+                <a href="/preferences.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    Preferences
+                </a>
+                <a href="/profile.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Profile
+                </a>
+                <a href="/settings.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Settings
+                </a>
+                <div class="mt-8 border-t border-gray-700/50 pt-4">
+                    <a href="#" onclick="logout()"
+                        class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-900/20 transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="bg-gray-800/30 border-b border-gray-700/50 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold">AI Agent System</h1>
+                        <p class="text-gray-400 text-sm mt-1">Multi-Agent Matching Intelligence</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span id="systemStatusBadge"
+                            class="px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+                            <span class="pulse-dot inline-block w-2 h-2 bg-green-400 rounded-full mr-1"></span> System
+                            Operational
+                        </span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-6 space-y-6">
+                <!-- Agent Pipeline Visualization -->
+                <div class="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6">
+                    <h2 class="text-lg font-bold mb-2">Agent Pipeline Architecture</h2>
+                    <p class="text-gray-400 text-sm mb-6">Our 6-agent system processes your preferences through an
+                        intelligent pipeline to find the best matches.</p>
+
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4" id="agentPipeline">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Run Pipeline Controls -->
+                <div
+                    class="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 border border-indigo-500/30 rounded-2xl p-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold flex items-center gap-2">
+                                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                Run AI Matching Pipeline
+                            </h2>
+                            <p class="text-gray-400 text-sm mt-1">Execute all 6 agents to analyze your profile and
+                                generate personalized recommendations</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-right hidden md:block">
+                                <label class="text-xs text-gray-400 block">Min Score</label>
+                                <input id="minScoreInput" type="number" value="50" min="0" max="100"
+                                    class="w-20 bg-gray-800 border border-gray-600 rounded-lg px-2 py-1 text-sm text-center">
+                            </div>
+                            <button id="runPipelineBtn" onclick="runMatchingPipeline()"
+                                class="gradient-bg px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition flex items-center gap-2 whitespace-nowrap">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Run Full Pipeline
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Progress -->
+                    <div id="pipelineProgress" class="hidden mt-6">
+                        <div class="space-y-3" id="pipelineSteps"></div>
+                    </div>
+                </div>
+
+                <!-- Execution Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Total Executions</p>
+                        <p class="text-2xl font-bold mt-1" id="totalExecutions">0</p>
+                    </div>
+                    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Success Rate</p>
+                        <p class="text-2xl font-bold text-green-400 mt-1" id="successRate">0%</p>
+                    </div>
+                    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Agents Active</p>
+                        <p class="text-2xl font-bold text-indigo-400 mt-1" id="agentsActive">6</p>
+                    </div>
+                    <div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
+                        <p class="text-gray-400 text-xs uppercase tracking-wider">Last Run</p>
+                        <p class="text-lg font-bold text-purple-400 mt-1" id="lastRun">Never</p>
+                    </div>
+                </div>
+
+                <!-- Agent Details -->
+                <div class="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6">
+                    <h2 class="text-lg font-bold mb-4">Agent Details & Status</h2>
+                    <div class="space-y-3" id="agentDetails">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Execution Log -->
+                <div class="bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-bold">Execution Log</h2>
+                        <span class="text-gray-400 text-sm" id="logCount">0 entries</span>
+                    </div>
+                    <div class="max-h-96 overflow-y-auto space-y-2" id="executionLog">
+                        <p class="text-gray-500 text-sm text-center py-8">No executions yet. Run the pipeline to see
+                            agent activity.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // Agent definitions with icons and descriptions
+        const AGENTS = [
+            {
+                name: 'User Profiling Agent',
+                shortName: 'Profiling',
+                icon: '👤',
+                color: 'blue',
+                description: 'Validates user data, checks profile completeness, and normalizes user information for the pipeline.',
+                step: 1
+            },
+            {
+                name: 'Preference Analysis Agent',
+                shortName: 'Preferences',
+                icon: '📊',
+                color: 'indigo',
+                description: 'Converts raw preferences into 6-dimensional numerical vectors using numpy for mathematical comparison.',
+                step: 2
+            },
+            {
+                name: 'Compatibility Scoring Agent',
+                shortName: 'Scoring',
+                icon: '🧮',
+                color: 'purple',
+                description: 'Computes weighted compatibility scores using cosine similarity on preference vectors.',
+                step: 3
+            },
+            {
+                name: 'Conflict Detection Agent',
+                shortName: 'Conflicts',
+                icon: '⚠️',
+                color: 'yellow',
+                description: 'Detects hard deal-breakers (smoking, pets, budget) and soft warnings (schedule, cleanliness).',
+                step: 4
+            },
+            {
+                name: 'Room Matching Agent',
+                shortName: 'Rooms',
+                icon: '🏠',
+                color: 'green',
+                description: 'Filters and scores available rooms against user budget, location, and amenity preferences.',
+                step: 5
+            },
+            {
+                name: 'Recommendation Engine Agent',
+                shortName: 'Recommendations',
+                icon: '🎯',
+                color: 'pink',
+                description: 'Generates ranked, explainable match recommendations by combining all agent outputs.',
+                step: 6
+            }
+        ];
+
+        const colorMap = {
+            blue: { bg: 'bg-blue-500/20', border: 'border-blue-500/30', text: 'text-blue-400', bar: 'bg-blue-500' },
+            indigo: { bg: 'bg-indigo-500/20', border: 'border-indigo-500/30', text: 'text-indigo-400', bar: 'bg-indigo-500' },
+            purple: { bg: 'bg-purple-500/20', border: 'border-purple-500/30', text: 'text-purple-400', bar: 'bg-purple-500' },
+            yellow: { bg: 'bg-yellow-500/20', border: 'border-yellow-500/30', text: 'text-yellow-400', bar: 'bg-yellow-500' },
+            green: { bg: 'bg-green-500/20', border: 'border-green-500/30', text: 'text-green-400', bar: 'bg-green-500' },
+            pink: { bg: 'bg-pink-500/20', border: 'border-pink-500/30', text: 'text-pink-400', bar: 'bg-pink-500' }
+        };
+
+        // Check auth
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login.html';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            renderAgentPipeline();
+            await loadSystemStatus();
+            await loadExecutionLog();
+        });
+
+        function renderAgentPipeline() {
+            const container = document.getElementById('agentPipeline');
+            container.innerHTML = AGENTS.map((agent, i) => {
+                const c = colorMap[agent.color];
+                return `
+                    <div class="relative text-center slide-in" style="animation-delay: ${i * 0.1}s">
+                        <div class="${c.bg} ${c.border} border rounded-xl p-4 card-hover transition-all duration-300">
+                            <div class="text-3xl mb-2">${agent.icon}</div>
+                            <div class="text-xs font-bold ${c.text} uppercase tracking-wider">Step ${agent.step}</div>
+                            <div class="text-sm font-semibold mt-1">${agent.shortName}</div>
+                            <div id="agent-status-${i}" class="mt-2">
+                                <span class="inline-block w-2 h-2 bg-gray-500 rounded-full"></span>
+                                <span class="text-xs text-gray-500">Idle</span>
+                            </div>
+                        </div>
+                        ${i < AGENTS.length - 1 ? `<div class="hidden lg:block absolute top-1/2 -right-2 transform -translate-y-1/2 text-gray-600 z-10">→</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadSystemStatus() {
+            try {
+                const status = await api.getSystemStatus();
+
+                // Update stats
+                const summary = status.execution_summary || {};
+                document.getElementById('totalExecutions').textContent = summary.total_executions || 0;
+                document.getElementById('successRate').textContent = (summary.success_rate || 0).toFixed(1) + '%';
+
+                // Agent details
+                const agentDetails = document.getElementById('agentDetails');
+                const agentStatusData = status.agents || {};
+
+                agentDetails.innerHTML = AGENTS.map((agentDef, i) => {
+                    const agentStatus = agentStatusData[agentDef.name] || {};
+                    const c = colorMap[agentDef.color];
+                    const byAgent = summary.by_agent?.[agentDef.name] || { total: 0, successful: 0, failed: 0 };
+
+                    return `
+                        <div class="${c.bg} ${c.border} border rounded-xl p-4 slide-in" style="animation-delay: ${i * 0.05}s">
+                            <div class="flex items-start justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-2xl">${agentDef.icon}</span>
+                                    <div>
+                                        <h3 class="font-bold ${c.text}">${agentDef.name} <span class="text-gray-500 font-normal text-xs">v${agentStatus.version || '1.0'}</span></h3>
+                                        <p class="text-gray-400 text-sm mt-0.5">${agentDef.description}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium ${agentStatus.status === 'idle' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}">
+                                        ${agentStatus.status || 'idle'}
+                                    </span>
+                                    <div class="text-xs text-gray-500 mt-1">${byAgent.total} runs | ${byAgent.successful} success</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Update pipeline status dots
+                AGENTS.forEach((agentDef, i) => {
+                    const el = document.getElementById(`agent-status-${i}`);
+                    const agentStatus = agentStatusData[agentDef.name] || {};
+                    const byAgent = summary.by_agent?.[agentDef.name] || {};
+                    if (byAgent.total > 0) {
+                        el.innerHTML = `<span class="inline-block w-2 h-2 bg-green-400 rounded-full pulse-dot"></span><span class="text-xs text-green-400"> Active</span>`;
+                    }
+                });
+
+            } catch (error) {
+                console.error('Failed to load system status:', error);
+            }
+        }
+
+        async function loadExecutionLog() {
+            try {
+                const response = await api.getExecutionLog();
+                const log = response.log || [];
+                const container = document.getElementById('executionLog');
+                document.getElementById('logCount').textContent = `${log.length} entries`;
+
+                if (log.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-sm text-center py-8">No executions yet. Run the pipeline to see agent activity.</p>';
+                    return;
+                }
+
+                container.innerHTML = log.reverse().map((entry, i) => {
+                    const agentDef = AGENTS.find(a => a.name === entry.agent) || { icon: '🤖', color: 'blue' };
+                    const c = colorMap[agentDef.color];
+                    const statusColor = entry.has_error ? 'text-red-400' : 'text-green-400';
+                    const statusIcon = entry.has_error ? '✗' : '✓';
+                    const time = new Date(entry.timestamp).toLocaleTimeString();
+
+                    return `
+                        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/30 transition ${i < 3 ? 'slide-in' : ''}" style="animation-delay: ${i * 0.05}s">
+                            <span class="text-lg">${agentDef.icon}</span>
+                            <div class="flex-1 min-w-0">
+                                <span class="text-sm font-medium">${entry.agent}</span>
+                                <span class="text-gray-500 text-xs ml-2">[${entry.inputs?.join(', ') || ''}]</span>
+                            </div>
+                            <span class="${statusColor} text-sm font-bold">${statusIcon} ${entry.status}</span>
+                            <span class="text-gray-500 text-xs">${time}</span>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Failed to load execution log:', error);
+            }
+        }
+
+        async function runMatchingPipeline() {
+            const btn = document.getElementById('runPipelineBtn');
+            const progress = document.getElementById('pipelineProgress');
+            const stepsContainer = document.getElementById('pipelineSteps');
+            const minScore = parseInt(document.getElementById('minScoreInput').value) || 50;
+
+            btn.disabled = true;
+            btn.innerHTML = '<div class="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div> Running Pipeline...';
+
+            // Show pipeline progress
+            progress.classList.remove('hidden');
+
+            const pipelineAgents = [
+                { name: 'User Profiling Agent', icon: '👤', desc: 'Validating your profile...' },
+                { name: 'Preference Analysis Agent', icon: '📊', desc: 'Vectorizing your preferences...' },
+                { name: 'Compatibility Scoring Agent', icon: '🧮', desc: 'Computing compatibility scores...' },
+                { name: 'Conflict Detection Agent', icon: '⚠️', desc: 'Checking for deal-breakers...' },
+                { name: 'Recommendation Engine Agent', icon: '🎯', desc: 'Generating recommendations...' }
+            ];
+
+            // Render initial steps
+            stepsContainer.innerHTML = pipelineAgents.map((agent, i) => `
+                <div id="step-${i}" class="flex items-center gap-3 p-3 rounded-lg bg-gray-900/50 border border-gray-700/30">
+                    <span class="text-xl">${agent.icon}</span>
+                    <div class="flex-1">
+                        <span class="text-sm font-medium">${agent.name}</span>
+                        <p class="text-gray-500 text-xs">${agent.desc}</p>
+                    </div>
+                    <span class="text-gray-500 text-xs">Waiting...</span>
+                </div>
+            `).join('');
+
+            // Animate steps one by one
+            for (let i = 0; i < pipelineAgents.length; i++) {
+                await new Promise(resolve => setTimeout(resolve, 400));
+                const stepEl = document.getElementById(`step-${i}`);
+                stepEl.classList.replace('bg-gray-900/50', 'bg-indigo-900/30');
+                stepEl.classList.replace('border-gray-700/30', 'border-indigo-500/30');
+                stepEl.querySelector('span:last-child').innerHTML = '<div class="animate-spin w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full"></div>';
+
+                // Update top pipeline visualization
+                const pipelineStatusEl = document.getElementById(`agent-status-${i}`);
+                if (pipelineStatusEl) {
+                    pipelineStatusEl.innerHTML = '<div class="animate-spin inline-block w-3 h-3 border-2 border-indigo-400 border-t-transparent rounded-full"></div><span class="text-xs text-indigo-400 ml-1">Running</span>';
+                }
+            }
+
+            try {
+                const result = await api.findMatches({ min_score: minScore });
+
+                // Mark all steps as complete
+                for (let i = 0; i < pipelineAgents.length; i++) {
+                    const stepEl = document.getElementById(`step-${i}`);
+                    stepEl.classList.replace('bg-indigo-900/30', 'bg-green-900/20');
+                    stepEl.classList.replace('border-indigo-500/30', 'border-green-500/30');
+                    stepEl.querySelector('span:last-child').innerHTML = '<span class="text-green-400 font-bold">✓ Done</span>';
+
+                    const pipelineStatusEl = document.getElementById(`agent-status-${i}`);
+                    if (pipelineStatusEl) {
+                        pipelineStatusEl.innerHTML = '<span class="inline-block w-2 h-2 bg-green-400 rounded-full"></span><span class="text-xs text-green-400"> Done</span>';
+                    }
+                }
+
+                // Show result summary
+                const count = result.count || 0;
+                const metrics = result.metrics || {};
+                stepsContainer.innerHTML += `
+                    <div class="mt-3 p-4 rounded-xl bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 slide-in">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-green-400 text-lg">🎉</span>
+                            <span class="font-bold text-green-400">Pipeline Complete!</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 text-center">
+                            <div>
+                                <p class="text-2xl font-bold">${metrics.scores_computed || 0}</p>
+                                <p class="text-xs text-gray-400">Scores Computed</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-green-400">${count}</p>
+                                <p class="text-xs text-gray-400">Matches Found</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-indigo-400">${minScore}+</p>
+                                <p class="text-xs text-gray-400">Min Score</p>
+                            </div>
+                        </div>
+                        <a href="/matches.html" class="mt-3 block text-center gradient-bg px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition">
+                            View AI-Generated Matches →
+                        </a>
+                    </div>
+                `;
+
+                // Refresh stats
+                await loadSystemStatus();
+                await loadExecutionLog();
+                document.getElementById('lastRun').textContent = 'Just now';
+
+            } catch (error) {
+                console.error('Pipeline failed:', error);
+                stepsContainer.innerHTML += `
+                    <div class="mt-3 p-4 rounded-xl bg-red-900/20 border border-red-500/30">
+                        <span class="text-red-400 font-bold">Pipeline Error:</span>
+                        <span class="text-red-300 text-sm"> ${error.message || 'Unknown error'}</span>
+                    </div>
+                `;
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Run Full Pipeline`;
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+
+</html>

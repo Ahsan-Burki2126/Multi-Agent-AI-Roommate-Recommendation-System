@@ -1,0 +1,9 @@
+
+###backend
+python -m backend.app
+
+
+
+###front end
+cd "D:\Whatsapp reply suggestion\roommate-matching-system\frontend"
+python -m http.server 8000

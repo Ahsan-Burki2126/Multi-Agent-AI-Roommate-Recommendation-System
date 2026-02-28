@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoomMate Finder - Find Your Perfect Roommate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#7C3AED',
+                        accent: '#06B6D4',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25);
+        }
+
+        .glow {
+            box-shadow: 0 0 60px rgba(79, 70, 229, 0.4);
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="flex items-center space-x-2">
+                    <span class="text-3xl">🏠</span>
+                    <span class="text-xl font-bold gradient-text">RoomMate Finder</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
+                    <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How It Works</a>
+                    <div id="authNav" class="flex items-center space-x-4"></div>
+                </div>
+                <button id="mobileMenuBtn" class="md:hidden text-gray-300 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center pt-16 relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/30 rounded-full blur-3xl animate-float"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl animate-float"
+                style="animation-delay: -3s;"></div>
+            <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-float"
+                style="animation-delay: -1.5s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center">
+                <div
+                    class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-500/20 border border-indigo-500/30 mb-8">
+                    <span class="text-indigo-400 text-sm font-medium">✨ AI-Powered Matching</span>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                    Find Your <span class="gradient-text">Perfect</span><br />
+                    Roommate Match
+                </h1>
+
+                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-10">
+                    Discover compatible roommates using intelligent AI matching.
+                    End the stress of roommate hunting forever.
+                </p>
+
+                <div id="heroCTA" class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <button id="heroRegisterBtn" onclick="window.location.href='/register.html'"
+                        class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow">
+                        Get Started Free →
+                    </button>
+                    <button id="heroLoginBtn" onclick="window.location.href='/login.html'"
+                        class="px-8 py-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl font-semibold text-lg transition-all duration-300">
+                        Sign In
+                    </button>
+                    <button id="heroDashboardBtn" onclick="window.location.href='/dashboard.html'"
+                        class="hidden px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow">
+                        Go to Dashboard →
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-center space-x-4 text-gray-500">
+                    <div class="flex -space-x-2">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-bold">
+                            JD</div>
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold">
+                            SM</div>
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 flex items-center justify-center text-sm font-bold">
+                            AK</div>
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-sm font-bold">
+                            +</div>
+                    </div>
+                    <span>Join <span class="text-white font-semibold">1,000+</span> people finding their ideal
+                        roommate</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    Why Choose <span class="gradient-text">RoomMate Finder</span>?
+                </h2>
+                <p class="text-gray-400 text-xl max-w-2xl mx-auto">
+                    More than just a listing site - we use AI to find genuinely compatible matches
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div
+                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        🎯</div>
+                    <h3 class="text-xl font-bold mb-3">Smart AI Matching</h3>
+                    <p class="text-gray-400">Our AI analyzes your preferences, lifestyle, and habits to find truly
+                        compatible roommates.</p>
+                </div>
+
+                <div
+                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        📊</div>
+                    <h3 class="text-xl font-bold mb-3">Preference Vectors</h3>
+                    <p class="text-gray-400">Set your preferences once and we'll continuously find the best matches for
+                        your needs.</p>
+                </div>
+
+                <div
+                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-r from-pink-500 to-red-500 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        ⚡</div>
+                    <h3 class="text-xl font-bold mb-3">Instant Scoring</h3>
+                    <p class="text-gray-400">Get compatibility scores instantly with detailed explanations about why
+                        matches are suitable.</p>
+                </div>
+
+                <div
+                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        🛡️</div>
+                    <h3 class="text-xl font-bold mb-3">Conflict Detection</h3>
+                    <p class="text-gray-400">Know about potential issues upfront. Our system identifies conflicts
+                        automatically.</p>
+                </div>
+
+                <div
+                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        📱</div>
+                    <h3 class="text-xl font-bold mb-3">Easy to Use</h3>
+                    <p class="text-gray-400">Simple interface with no complicated forms. Set up your profile in minutes.
+                    </p>
+                </div>
+
+                <div
+                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        🏆</div>
+                    <h3 class="text-xl font-bold mb-3">Success Stories</h3>
+                    <p class="text-gray-400">Thousands of successful roommate matches. Real people finding real
+                        solutions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-24 bg-gray-800/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">How It <span class="gradient-text">Works</span></h2>
+                <p class="text-gray-400 text-xl">Simple steps to find your perfect roommate</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 mx-auto bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 glow">
+                        1</div>
+                    <h3 class="text-xl font-bold mb-3">Create Profile</h3>
+                    <p class="text-gray-400">Sign up with your email and basic info. Takes just 2 minutes.</p>
+                </div>
+
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 mx-auto bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6">
+                        2</div>
+                    <h3 class="text-xl font-bold mb-3">Set Preferences</h3>
+                    <p class="text-gray-400">Tell us your ideal roommate preferences - budget, lifestyle, habits.</p>
+                </div>
+
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 mx-auto bg-gradient-to-r from-pink-600 to-red-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6">
+                        3</div>
+                    <h3 class="text-xl font-bold mb-3">Get Matches</h3>
+                    <p class="text-gray-400">Receive AI-powered recommendations with compatibility scores.</p>
+                </div>
+
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 mx-auto bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6">
+                        4</div>
+                    <h3 class="text-xl font-bold mb-3">Connect</h3>
+                    <p class="text-gray-400">Like matches, view profiles, and start conversations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="gradient-bg rounded-3xl p-12 md:p-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to Find Your Perfect Roommate?</h2>
+                <p class="text-xl text-white/80 mb-10">Join thousands of people who've found compatible roommates
+                    through our AI-powered platform.</p>
+                <button onclick="window.location.href='/register.html'"
+                    class="px-10 py-4 bg-white text-indigo-600 hover:bg-gray-100 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105">
+                    Get Started Free →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                    <span class="text-2xl">🏠</span>
+                    <span class="text-lg font-bold gradient-text">RoomMate Finder</span>
+                </div>
+                <p class="text-gray-500">© 2026 RoomMate Finder. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const authNav = document.getElementById('authNav');
+            const heroRegisterBtn = document.getElementById('heroRegisterBtn');
+            const heroLoginBtn = document.getElementById('heroLoginBtn');
+            const heroDashboardBtn = document.getElementById('heroDashboardBtn');
+
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+            if (token && user) {
+                authNav.innerHTML = `
+                    <a href="/dashboard.html" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-lg font-medium transition-all duration-300">Dashboard</a>
+                `;
+                heroRegisterBtn.style.display = 'none';
+                heroLoginBtn.style.display = 'none';
+                heroDashboardBtn.classList.remove('hidden');
+            } else {
+                authNav.innerHTML = `
+                    <a href="/login.html" class="text-gray-300 hover:text-white transition">Sign In</a>
+                    <a href="/register.html" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-lg font-medium transition-all duration-300">Get Started</a>
+                `;
+            }
+        });
+    </script>
+</body>
+
+</html>

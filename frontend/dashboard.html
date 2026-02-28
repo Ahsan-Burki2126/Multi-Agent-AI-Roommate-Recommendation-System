@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - RoomMate Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#7C3AED',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -12px rgba(79, 70, 229, 0.25);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2));
+            border-left: 3px solid #7C3AED;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800/50 border-r border-gray-700/50 hidden lg:block">
+            <div class="p-6">
+                <a href="/" class="flex items-center space-x-2">
+                    <span class="text-2xl">🏠</span>
+                    <span class="text-lg font-bold gradient-text">RoomMate Finder</span>
+                </a>
+            </div>
+
+            <nav class="mt-6 px-3">
+                <a href="/dashboard.html"
+                    class="sidebar-link active flex items-center px-4 py-3 rounded-lg text-white mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/matches.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    Matches
+                </a>
+                <a href="/rooms.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Rooms
+                </a>
+                <a href="/preferences.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    Preferences
+                </a>
+                <a href="/profile.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Profile
+                </a>
+                <a href="/settings.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Settings
+                </a>
+
+                <a href="/ai-agents.html"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50 mb-1 transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    AI Agents
+                </a>
+
+                <div class="border-t border-gray-700 my-4"></div>
+
+                <button onclick="handleLogout()"
+                    class="sidebar-link flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 w-full transition">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Top Bar -->
+            <header class="h-16 bg-gray-800/50 border-b border-gray-700/50 flex items-center justify-between px-6">
+                <button id="mobileMenuBtn" class="lg:hidden text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <h1 class="text-xl font-semibold hidden lg:block">Dashboard</h1>
+
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-400 hover:text-white relative">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span
+                            class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs flex items-center justify-center">3</span>
+                    </button>
+
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center font-bold"
+                            id="userAvatar">U</div>
+                        <span class="hidden md:block font-medium" id="userName">User</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 p-6 overflow-auto">
+                <!-- Welcome Section -->
+                <div class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Welcome back, <span id="userFirstName"
+                            class="gradient-text">User</span>!</h2>
+                    <p class="text-gray-400">Here's what's happening with your roommate search.</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div
+                        class="card-hover bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+12%</span>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-1" id="matchCount">0</h3>
+                        <p class="text-gray-400 text-sm">Potential Matches</p>
+                    </div>
+
+                    <div
+                        class="card-hover bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+5</span>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-1" id="likesCount">0</h3>
+                        <p class="text-gray-400 text-sm">Likes Received</p>
+                    </div>
+
+                    <div
+                        class="card-hover bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="w-12 h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                </svg>
+                            </div>
+                            <span class="text-blue-400 text-sm font-medium">New</span>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-1" id="roomsCount">0</h3>
+                        <p class="text-gray-400 text-sm">Rooms Available</p>
+                    </div>
+
+                    <div
+                        class="card-hover bg-gray-800/50 border border-gray-700/50 rounded-2xl p-6 transition-all duration-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div
+                                class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-1"><span id="profileCompletion">0</span>%</h3>
+                        <p class="text-gray-400 text-sm">Profile Complete</p>
+                        <div class="mt-3 h-2 bg-gray-700 rounded-full overflow-hidden">
+                            <div id="profileProgress"
+                                class="h-full bg-gradient-to-r from-green-500 to-teal-500 rounded-full transition-all duration-500"
+                                style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Agent System Banner -->
+                <div
+                    class="mb-8 bg-gradient-to-r from-indigo-900/40 to-purple-900/40 border border-indigo-500/20 rounded-2xl p-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold flex items-center gap-2">
+                                <span class="text-2xl">🤖</span> Multi-Agent AI System
+                            </h3>
+                            <p class="text-gray-400 text-sm mt-1">6 AI agents work together to find your ideal roommate
+                            </p>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <span class="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full text-xs">👤
+                                    Profiling</span>
+                                <span class="px-2 py-0.5 bg-indigo-500/20 text-indigo-400 rounded-full text-xs">📊
+                                    Preferences</span>
+                                <span class="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded-full text-xs">🧮
+                                    Scoring</span>
+                                <span class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded-full text-xs">⚠️
+                                    Conflicts</span>
+                                <span class="px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full text-xs">🏠
+                                    Rooms</span>
+                                <span class="px-2 py-0.5 bg-pink-500/20 text-pink-400 rounded-full text-xs">🎯
+                                    Recommendations</span>
+                            </div>
+                        </div>
+                        <a href="/ai-agents.html"
+                            class="px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-medium text-sm transition flex items-center gap-2 whitespace-nowrap">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                            View AI Agents
+                        </a>
+                    </div>
+                    <!-- AI Activity Summary -->
+                    <div id="aiActivitySummary" class="mt-4 grid grid-cols-3 gap-3">
+                        <div class="bg-gray-900/50 rounded-lg p-3 text-center">
+                            <p class="text-xl font-bold text-indigo-400" id="aiTotalRuns">--</p>
+                            <p class="text-xs text-gray-500">Pipeline Runs</p>
+                        </div>
+                        <div class="bg-gray-900/50 rounded-lg p-3 text-center">
+                            <p class="text-xl font-bold text-green-400" id="aiSuccessRate">--</p>
+                            <p class="text-xs text-gray-500">Success Rate</p>
+                        </div>
+                        <div class="bg-gray-900/50 rounded-lg p-3 text-center">
+                            <p class="text-xl font-bold text-purple-400" id="aiAgentsActive">6</p>
+                            <p class="text-xs text-gray-500">Agents Active</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <a href="/ai-agents.html"
+                            class="card-hover bg-gray-800/50 border border-indigo-500/20 rounded-xl p-6 text-center transition-all duration-300">
+                            <div
+                                class="w-14 h-14 mx-auto bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center text-2xl mb-4">
+                                🤖</div>
+                            <h4 class="font-semibold">AI Agents</h4>
+                            <p class="text-gray-400 text-sm mt-1">Run matching pipeline</p>
+                        </a>
+
+                        <a href="/matches.html"
+                            class="card-hover bg-gray-800/50 border border-gray-700/50 rounded-xl p-6 text-center transition-all duration-300">
+                            <div
+                                class="w-14 h-14 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl mb-4">
+                                🎯</div>
+                            <h4 class="font-semibold">AI Matches</h4>
+                            <p class="text-gray-400 text-sm mt-1">View AI-generated matches</p>
+                        </a>
+
+                        <a href="/preferences.html"
+                            class="card-hover bg-gray-800/50 border border-gray-700/50 rounded-xl p-6 text-center transition-all duration-300">
+                            <div
+                                class="w-14 h-14 mx-auto bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center text-2xl mb-4">
+                                ⚙️</div>
+                            <h4 class="font-semibold">Preferences</h4>
+                            <p class="text-gray-400 text-sm mt-1">Configure AI matching</p>
+                        </a>
+
+                        <a href="/profile.html"
+                            class="card-hover bg-gray-800/50 border border-gray-700/50 rounded-xl p-6 text-center transition-all duration-300">
+                            <div
+                                class="w-14 h-14 mx-auto bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center text-2xl mb-4">
+                                👤</div>
+                            <h4 class="font-semibold">Edit Profile</h4>
+                            <p class="text-gray-400 text-sm mt-1">Improve AI accuracy</p>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Recent AI Matches -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <span>🎯</span> Recent AI Matches
+                        </h3>
+                        <a href="/matches.html"
+                            class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition">View All →</a>
+                    </div>
+
+                    <div id="recentMatches" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-800/30 border border-gray-700/30 border-dashed rounded-xl p-8 text-center">
+                            <div
+                                class="w-16 h-16 mx-auto bg-gray-700/50 rounded-full flex items-center justify-center text-3xl mb-4">
+                                🤖</div>
+                            <h4 class="font-medium text-gray-300 mb-2">No AI matches yet</h4>
+                            <p class="text-gray-500 text-sm mb-4">Run the AI matching pipeline to get personalized
+                                recommendations</p>
+                            <a href="/ai-agents.html"
+                                class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition">
+                                Run AI Pipeline
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Execution Log -->
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold flex items-center gap-2">
+                            <span>📋</span> Recent Agent Activity
+                        </h3>
+                        <a href="/ai-agents.html"
+                            class="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition">Full Log →</a>
+                    </div>
+                    <div id="agentActivity" class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4">
+                        <p class="text-gray-500 text-sm text-center py-4">No agent activity yet. Run the AI pipeline to
+                            see agent executions.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 bg-gray-900/95 z-50 lg:hidden hidden">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <a href="/" class="flex items-center space-x-2">
+                    <span class="text-2xl">🏠</span>
+                    <span class="text-lg font-bold gradient-text">RoomMate Finder</span>
+                </a>
+                <button id="closeMobileMenu" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="/dashboard.html" class="flex items-center px-4 py-3 rounded-lg bg-indigo-500/20 text-white">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/matches.html"
+                    class="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Matches
+                </a>
+                <a href="/rooms.html"
+                    class="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Rooms
+                </a>
+                <a href="/preferences.html"
+                    class="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                    Preferences
+                </a>
+                <a href="/profile.html"
+                    class="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Profile
+                </a>
+                <a href="/settings.html"
+                    class="flex items-center px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-700/50">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Settings
+                </a>
+                <button onclick="handleLogout()"
+                    class="flex items-center px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 w-full">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/login.html';
+        }
+
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.remove('hidden');
+        });
+        document.getElementById('closeMobileMenu').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        });
+
+        // Logout handler
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+
+        function getScoreColor(score) {
+            if (score >= 80) return 'text-green-400';
+            if (score >= 60) return 'text-yellow-400';
+            return 'text-orange-400';
+        }
+
+        function getStrengthLabel(score) {
+            if (score >= 90) return 'Excellent';
+            if (score >= 80) return 'Very Good';
+            if (score >= 70) return 'Good';
+            if (score >= 60) return 'Decent';
+            return 'Fair';
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                const firstName = (user.full_name || user.email || 'User').split(' ')[0];
+
+                document.getElementById('userFirstName').textContent = firstName;
+                document.getElementById('userName').textContent = user.full_name || user.email || 'User';
+                document.getElementById('userAvatar').textContent = firstName.charAt(0).toUpperCase();
+
+                // Get user profile for completion percentage
+                try {
+                    const userProfile = await api.getUser(user.user_id);
+                    const completionPercent = calculateProfileCompletion(userProfile);
+                    document.getElementById('profileCompletion').textContent = completionPercent;
+                    document.getElementById('profileProgress').style.width = completionPercent + '%';
+                } catch (e) {
+                    console.log('Could not load profile');
+                }
+
+                // Get recommendations count and recent matches
+                try {
+                    const response = await api.getRecommendations(user.user_id, { limit: 100 });
+                    const recommendations = Array.isArray(response)
+                        ? response
+                        : response.recommendations || [];
+                    document.getElementById('matchCount').textContent = recommendations.length;
+
+                    // Count likes
+                    const likedCount = recommendations.filter(r => r.liked === true).length;
+                    document.getElementById('likesCount').textContent = likedCount;
+
+                    // Render recent matches (top 3)
+                    if (recommendations.length > 0) {
+                        renderRecentMatches(recommendations.slice(0, 3));
+                    }
+                } catch (e) {
+                    document.getElementById('matchCount').textContent = '0';
+                }
+
+                // Get rooms count
+                try {
+                    const rooms = await api.getRooms({ limit: 100 });
+                    const roomsList = Array.isArray(rooms) ? rooms : rooms.rooms || [];
+                    document.getElementById('roomsCount').textContent = roomsList.length;
+                } catch (e) {
+                    document.getElementById('roomsCount').textContent = '0';
+                }
+
+                // Load AI system status
+                loadAIStatus();
+                loadAgentActivity();
+
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        function renderRecentMatches(matches) {
+            const container = document.getElementById('recentMatches');
+            container.innerHTML = matches.map(function (match) {
+                const user = match.matched_user || match.user || match;
+                const score = Math.round(match.match_score || 0);
+                const initial = (user.full_name || 'U').charAt(0).toUpperCase();
+                const scoreColor = getScoreColor(score);
+
+                let explanation = null;
+                try {
+                    explanation = typeof match.explanation === 'string' ? JSON.parse(match.explanation) : match.explanation;
+                } catch (e) { }
+                const summary = explanation?.summary || 'AI-generated match recommendation';
+
+                return '<div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 hover:border-indigo-500/30 transition cursor-pointer" onclick="window.location.href=\'/matches.html\'">' +
+                    '<div class="flex items-center gap-3 mb-3">' +
+                    '<div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center font-bold">' + initial + '</div>' +
+                    '<div class="flex-1 min-w-0">' +
+                    '<h4 class="font-semibold text-sm truncate">' + (user.full_name || 'Unknown') + '</h4>' +
+                    '<p class="text-gray-500 text-xs">' + (user.city || 'Unknown') + '</p>' +
+                    '</div>' +
+                    '<div class="text-lg font-bold ' + scoreColor + '">' + score + '%</div>' +
+                    '</div>' +
+                    '<div class="bg-gray-900/50 rounded-lg p-2">' +
+                    '<p class="text-xs text-gray-400 flex items-start gap-1">' +
+                    '<span class="text-indigo-400 flex-shrink-0">🧠</span>' +
+                    '<span class="line-clamp-2">' + summary + '</span>' +
+                    '</p>' +
+                    '</div>' +
+                    '<div class="flex items-center justify-between mt-2">' +
+                    '<span class="text-xs text-indigo-400 font-medium">' + getStrengthLabel(score) + ' Match</span>' +
+                    '<span class="text-xs text-gray-500">AI Recommended</span>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        async function loadAIStatus() {
+            try {
+                const status = await api.getSystemStatus();
+                const summary = status.execution_summary || {};
+                document.getElementById('aiTotalRuns').textContent = summary.total_executions || 0;
+                document.getElementById('aiSuccessRate').textContent = (summary.success_rate || 0).toFixed(0) + '%';
+            } catch (e) {
+                console.log('Could not load AI status');
+            }
+        }
+
+        async function loadAgentActivity() {
+            try {
+                const response = await api.getExecutionLog(10);
+                const log = response.log || [];
+                const container = document.getElementById('agentActivity');
+
+                if (log.length === 0) return;
+
+                var agentIcons = {
+                    'User Profiling Agent': '👤',
+                    'Preference Analysis Agent': '📊',
+                    'Compatibility Scoring Agent': '🧮',
+                    'Conflict Detection Agent': '⚠️',
+                    'Room Matching Agent': '🏠',
+                    'Recommendation Engine Agent': '🎯'
+                };
+
+                container.innerHTML = '<div class="space-y-2">' + log.reverse().slice(0, 6).map(function (entry) {
+                    var icon = agentIcons[entry.agent] || '🤖';
+                    var statusColor = entry.has_error ? 'text-red-400' : 'text-green-400';
+                    var statusIcon = entry.has_error ? 'x' : 'ok';
+                    var time = new Date(entry.timestamp).toLocaleTimeString();
+                    return '<div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/30 transition">' +
+                        '<span class="text-lg">' + icon + '</span>' +
+                        '<div class="flex-1 min-w-0"><span class="text-sm font-medium">' + entry.agent + '</span></div>' +
+                        '<span class="' + statusColor + ' text-xs font-bold">' + entry.status + '</span>' +
+                        '<span class="text-gray-500 text-xs">' + time + '</span>' +
+                        '</div>';
+                }).join('') + '</div>';
+
+            } catch (e) {
+                console.log('Could not load agent activity');
+            }
+        }
+
+        function calculateProfileCompletion(user) {
+            let completedFields = 0;
+            let totalFields = 5;
+
+            if (user.email) completedFields++;
+            if (user.full_name) completedFields++;
+            if (user.city) completedFields++;
+            if (user.gender) completedFields++;
+            if (user.bio) completedFields++;
+
+            return Math.round((completedFields / totalFields) * 100);
+        }
+
+        // Load on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+
+</html>
