@@ -261,9 +261,8 @@ class AgentOrchestrator:
 
         # ── Pipeline complete: Generate AI summary ──
         pipeline_duration = (datetime.utcnow() - pipeline_start).total_seconds() * 1000
-        all_success = all(
-            r.is_success() for r in [profile_result, analysis_result, recommendation_result]
-        )
+        # Success if recommendation engine succeeded (partial profile/analysis is acceptable)
+        all_success = recommendation_result.is_success()
 
         ai_pipeline_summary = None
         recs = recommendation_result.data.get('recommendations', []) if recommendation_result.is_success() else []

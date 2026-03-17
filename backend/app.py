@@ -128,8 +128,8 @@ def _register_routes(app):
         pass
     
     try:
-        from backend.routes.matching import matching_bp
-        app.register_blueprint(matching_bp, url_prefix='/matches')
+        from backend.routes.matching import matches_bp
+        app.register_blueprint(matches_bp, url_prefix='/matches')
     except ImportError:
         pass
     

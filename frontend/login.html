@@ -1,224 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - RoomMate Finder</title>
+    <title>Sign In — RoomMate AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4F46E5',
-                        secondary: '#7C3AED',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="css/design-system.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
+        body { background: #0B1020; }
+        .auth-card {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.08);
         }
-
-        .gradient-bg {
-            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        .btn-primary {
+            background: linear-gradient(135deg, #4F46E5, #06B6D4);
+            transition: all 0.3s;
         }
-
-        .gradient-text {
-            background: linear-gradient(135deg, #4F46E5, #7C3AED, #EC4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .btn-primary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(79,70,229,0.4);
         }
-
-        .glow {
-            box-shadow: 0 0 60px rgba(79, 70, 229, 0.4);
+        .input-field {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #E5E7EB;
+            transition: all 0.2s;
         }
-
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+        .input-field:focus {
+            outline: none;
+            border-color: #4F46E5;
+            background: rgba(79,70,229,0.08);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
         }
-
+        .input-field::placeholder { color: #4B5563; }
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-20px);
-            }
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
+        .blob { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; }
     </style>
 </head>
+<body class="min-h-screen text-white relative overflow-hidden" style="background:#0B1020; font-family:'Inter',sans-serif;">
 
-<body class="bg-gray-900 text-white min-h-screen">
-    <!-- Background Elements -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-float"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-float"
-            style="animation-delay: -3s;"></div>
-    </div>
+    <!-- Ambient background -->
+    <div class="blob" style="width:500px;height:500px;background:rgba(79,70,229,0.12);top:-150px;left:-150px;animation:float 10s ease-in-out infinite;"></div>
+    <div class="blob" style="width:400px;height:400px;background:rgba(6,182,212,0.08);bottom:-100px;right:-100px;animation:float 8s ease-in-out infinite;animation-delay:-4s;"></div>
 
     <div class="min-h-screen flex flex-col relative z-10">
         <!-- Header -->
-        <header class="py-6">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <a href="/" class="flex items-center space-x-2 w-fit">
-                    <span class="text-3xl">🏠</span>
-                    <span class="text-xl font-bold gradient-text">RoomMate Finder</span>
-                </a>
-            </div>
+        <header class="py-6 px-8">
+            <a href="/" class="flex items-center space-x-3 w-fit">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#4F46E5,#06B6D4);">🏠</div>
+                <span class="text-lg font-bold gradient-text">RoomMate AI</span>
+            </a>
         </header>
 
-        <!-- Main Content -->
+        <!-- Main -->
         <main class="flex-1 flex items-center justify-center py-12 px-4">
             <div class="w-full max-w-md">
+
+                <!-- Badge -->
+                <div class="text-center mb-8">
+                    <span class="ai-badge">AI-Powered Matching</span>
+                    <h1 class="text-4xl font-bold mt-4 mb-2 text-white">Welcome Back</h1>
+                    <p style="color:#9CA3AF;">Sign in to continue your roommate search</p>
+                </div>
+
                 <!-- Card -->
-                <div class="bg-gray-800/50 backdrop-blur-lg border border-gray-700/50 rounded-3xl p-8 md:p-10">
-                    <div class="text-center mb-8">
-                        <h1 class="text-3xl font-bold mb-2">Welcome Back</h1>
-                        <p class="text-gray-400">Sign in to continue finding your perfect roommate</p>
-                    </div>
-
+                <div class="auth-card rounded-2xl p-8">
                     <!-- Error Message -->
-                    <div id="errorMessage"
-                        class="hidden mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-400 text-sm">
-                    </div>
+                    <div id="errorMessage" class="hidden mb-5 p-4 rounded-xl text-sm" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#F87171;"></div>
 
-                    <!-- Login Form -->
-                    <form id="loginForm" class="space-y-6">
+                    <!-- Form -->
+                    <form id="loginForm" class="space-y-5">
                         <!-- Email -->
                         <div>
-                            <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email
-                                Address</label>
-                            <input type="email" id="email" name="email" required
-                                class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                placeholder="you@example.com">
+                            <label class="block text-sm font-medium mb-2" style="color:#D1D5DB;">Email Address</label>
+                            <div class="relative">
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#4B5563;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                                <input type="email" id="email" name="email" required placeholder="you@university.edu"
+                                    class="input-field w-full pl-11 pr-4 py-3 rounded-xl text-sm">
+                            </div>
                         </div>
 
                         <!-- Password -->
                         <div>
-                            <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <label class="block text-sm font-medium mb-2" style="color:#D1D5DB;">Password</label>
                             <div class="relative">
-                                <input type="password" id="password" name="password" required
-                                    class="w-full px-4 py-3 bg-gray-900/50 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                    placeholder="••••••••">
-                                <button type="button" id="togglePassword"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#4B5563;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                <input type="password" id="password" name="password" required placeholder="••••••••"
+                                    class="input-field w-full pl-11 pr-12 py-3 rounded-xl text-sm">
+                                <button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2" style="color:#6B7280;">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Remember Me & Forgot Password -->
+                        <!-- Remember + Forgot -->
                         <div class="flex items-center justify-between">
-                            <label class="flex items-center">
-                                <input type="checkbox" id="remember"
-                                    class="w-4 h-4 rounded border-gray-600 bg-gray-900 text-indigo-500 focus:ring-indigo-500 focus:ring-offset-gray-800">
-                                <span class="ml-2 text-sm text-gray-400">Remember me</span>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="remember" class="w-4 h-4 rounded" style="accent-color:#4F46E5;">
+                                <span class="text-sm" style="color:#9CA3AF;">Remember me</span>
                             </label>
-                            <a href="#" class="text-sm text-indigo-400 hover:text-indigo-300 transition">Forgot
-                                password?</a>
+                            <a href="#" class="text-sm font-medium" style="color:#818CF8;">Forgot password?</a>
                         </div>
 
-                        <!-- Submit Button -->
+                        <!-- Submit -->
                         <button type="submit" id="submitBtn"
-                            class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            class="btn-primary w-full py-3.5 rounded-xl font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed">
                             <span id="btnText">Sign In</span>
-                            <span id="btnLoader" class="hidden">
-                                <svg class="animate-spin h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                        stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor"
-                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                    </path>
-                                </svg>
+                            <span id="btnLoader" class="hidden flex items-center justify-center gap-2">
+                                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                Signing in...
                             </span>
                         </button>
                     </form>
 
                     <!-- Divider -->
-                    <div class="my-8 flex items-center">
-                        <div class="flex-1 border-t border-gray-700"></div>
-                        <span class="px-4 text-sm text-gray-500">or</span>
-                        <div class="flex-1 border-t border-gray-700"></div>
+                    <div class="my-6 flex items-center gap-3">
+                        <div class="flex-1 h-px" style="background:rgba(255,255,255,0.08);"></div>
+                        <span class="text-xs" style="color:#6B7280;">OR</span>
+                        <div class="flex-1 h-px" style="background:rgba(255,255,255,0.08);"></div>
                     </div>
 
-                    <!-- Sign Up Link -->
-                    <p class="text-center text-gray-400">
-                        Don't have an account?
-                        <a href="/register.html"
-                            class="text-indigo-400 hover:text-indigo-300 font-medium transition">Sign up free</a>
+                    <!-- Sign up link -->
+                    <p class="text-center text-sm" style="color:#9CA3AF;">
+                        New here?
+                        <a href="/register.html" class="font-semibold ml-1" style="color:#818CF8;">Create a free account →</a>
                     </p>
                 </div>
+
+                <!-- Info note -->
+                <p class="text-center text-xs mt-6" style="color:#4B5563;">
+                    Survey participants: use your <span style="color:#818CF8;">@survey.iub.edu.pk</span> email with password <span style="color:#818CF8;">Survey@2024</span>
+                </p>
             </div>
         </main>
 
-        <!-- Footer -->
-        <footer class="py-6">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
-                © 2026 RoomMate Finder. All rights reserved.
-            </div>
-        </footer>
+        <footer class="py-6 text-center text-xs" style="color:#4B5563;">© 2026 RoomMate AI — IUB Final Year Project</footer>
     </div>
 
-    <!-- Scripts -->
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // Toggle password visibility
         document.getElementById('togglePassword').addEventListener('click', function () {
             const passwordInput = document.getElementById('password');
             passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
         });
 
-        // Form submission
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const submitBtn = document.getElementById('submitBtn');
             const btnText = document.getElementById('btnText');
             const btnLoader = document.getElementById('btnLoader');
             const errorMessage = document.getElementById('errorMessage');
-
-            // Show loading state
             submitBtn.disabled = true;
             btnText.classList.add('hidden');
             btnLoader.classList.remove('hidden');
             errorMessage.classList.add('hidden');
-
             try {
                 await auth.login(email, password);
                 window.location.href = '/dashboard.html';
             } catch (error) {
                 errorMessage.textContent = error.message || 'Invalid email or password';
                 errorMessage.classList.remove('hidden');
-
-                // Reset button
                 submitBtn.disabled = false;
                 btnText.classList.remove('hidden');
                 btnLoader.classList.add('hidden');
             }
         });
 
-        // Redirect if already logged in
         if (localStorage.getItem('token')) {
             window.location.href = '/dashboard.html';
         }
     </script>
 </body>
-
 </html>
