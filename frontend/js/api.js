@@ -5,7 +5,7 @@
  * Configuration: Update BASE_URL if backend is on different host/port
  */
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = window.location.hostname === "localhost" ? "http://localhost:5000" : "";
 
 class APIClient {
   constructor() {

@@ -96,17 +96,19 @@ class ProductionConfig(Config):
     """Production environment configuration"""
     DEBUG = False
     TESTING = False
-    
-    # PostgreSQL for production
+
+    # Use DATABASE_URL env var, or fall back to SQLite
+    _db_path = os.path.join(BASEDIR, "database", "roommate_system.db")
+    os.makedirs(os.path.dirname(_db_path), exist_ok=True)
     SQLALCHEMY_DATABASE_URI = os.getenv(
         'DATABASE_URL',
-        'postgresql://user:password@localhost/roommate_db'
+        f'sqlite:///{_db_path}'
     )
-    
+
     # Enforce HTTPS
     SESSION_COOKIE_SECURE = True
     PREFERRED_URL_SCHEME = 'https'
-    
+
     LOG_LEVEL = 'WARNING'
 
 
