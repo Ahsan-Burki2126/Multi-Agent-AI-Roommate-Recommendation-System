@@ -13,8 +13,8 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #0B1020;
-            color: #E5E7EB;
+            background: #F8FAFC;
+            color: #111827;
             min-height: 100vh;
             overflow: hidden;
         }
@@ -24,38 +24,13 @@
             overflow: hidden;
             position: relative;
         }
-        /* Ambient blobs */
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            filter: blur(80px);
-            opacity: 0.35;
-            z-index: 0;
-        }
-        .blob-1 {
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, #4F46E5, transparent 70%);
-            top: -150px; left: -150px;
-        }
-        .blob-2 {
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, #06B6D4, transparent 70%);
-            bottom: -100px; right: -100px;
-        }
-        .blob-3 {
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, #7C3AED, transparent 70%);
-            top: 40%; left: 40%;
-            opacity: 0.15;
-        }
 
         /* Sidebar */
         #sidebar {
             width: 240px;
             min-width: 240px;
-            background: rgba(255,255,255,0.03);
-            border-right: 1px solid rgba(255,255,255,0.06);
+            background: #FFFFFF;
+            border-right: 1px solid #E5E7EB;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -64,7 +39,7 @@
         }
         .sidebar-logo-area {
             padding: 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid #E5E7EB;
         }
         .sidebar-logo-link {
             display: flex;
@@ -74,7 +49,7 @@
         }
         .sidebar-logo-icon {
             width: 36px; height: 36px;
-            background: linear-gradient(135deg, #4F46E5, #06B6D4);
+            background: #2563EB;
             border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             font-size: 18px;
@@ -83,10 +58,7 @@
         .sidebar-logo-text {
             font-weight: 700;
             font-size: 15px;
-            background: linear-gradient(135deg, #4F46E5, #06B6D4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2563EB;
         }
         .sidebar-nav {
             padding: 12px 10px;
@@ -103,21 +75,21 @@
             font-size: 14px;
             margin-bottom: 2px;
             transition: all 0.2s;
-            color: #9CA3AF;
+            color: #6B7280;
             border-left: 3px solid transparent;
         }
         .nav-link:hover {
-            color: #E5E7EB;
-            background: rgba(255,255,255,0.05);
+            color: #111827;
+            background: #F3F4F6;
         }
         .nav-link.active {
-            background: linear-gradient(135deg, rgba(79,70,229,0.2), rgba(6,182,212,0.1));
-            border-left: 3px solid #4F46E5;
-            color: #E5E7EB;
+            background: #DBEAFE;
+            border-left: 3px solid #2563EB;
+            color: #2563EB;
         }
         .sidebar-footer {
             padding: 12px 10px;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid #E5E7EB;
         }
         .logout-btn {
             display: flex;
@@ -125,7 +97,7 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 10px;
-            color: #9CA3AF;
+            color: #6B7280;
             background: none;
             border: none;
             cursor: pointer;
@@ -136,7 +108,7 @@
         }
         .logout-btn:hover {
             color: #EF4444;
-            background: rgba(239,68,68,0.1);
+            background: #FEE2E2;
         }
 
         /* Main layout */
@@ -153,10 +125,8 @@
         .top-header {
             height: 64px;
             min-height: 64px;
-            background: rgba(255,255,255,0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            background: #FFFFFF;
+            border-bottom: 1px solid #E5E7EB;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -172,19 +142,19 @@
         .header-title {
             font-size: 18px;
             font-weight: 600;
-            color: #E5E7EB;
+            color: #111827;
         }
         .hamburger-btn {
             display: none;
             background: none;
             border: none;
-            color: #9CA3AF;
+            color: #6B7280;
             cursor: pointer;
             padding: 4px;
             border-radius: 8px;
             transition: all 0.2s;
         }
-        .hamburger-btn:hover { color: #E5E7EB; background: rgba(255,255,255,0.06); }
+        .hamburger-btn:hover { color: #111827; background: #F3F4F6; }
         .header-right {
             display: flex;
             align-items: center;
@@ -192,16 +162,16 @@
         }
         .notif-btn {
             position: relative;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: #F3F4F6;
+            border: 1px solid #E5E7EB;
             border-radius: 10px;
             width: 38px; height: 38px;
             display: flex; align-items: center; justify-content: center;
-            color: #9CA3AF;
+            color: #6B7280;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .notif-btn:hover { color: #E5E7EB; background: rgba(255,255,255,0.08); }
+        .notif-btn:hover { color: #111827; background: #E5E7EB; }
         .notif-badge {
             position: absolute;
             top: -4px; right: -4px;
@@ -217,15 +187,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: #F3F4F6;
+            border: 1px solid #E5E7EB;
             border-radius: 12px;
             padding: 6px 12px 6px 6px;
         }
         .user-avatar {
             width: 30px; height: 30px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #4F46E5, #06B6D4);
+            background: #2563EB;
             display: flex; align-items: center; justify-content: center;
             font-weight: 700;
             font-size: 13px;
@@ -235,7 +205,7 @@
         .user-name {
             font-size: 13px;
             font-weight: 500;
-            color: #E5E7EB;
+            color: #111827;
         }
 
         /* Content area */
@@ -246,32 +216,20 @@
         }
         .content-area::-webkit-scrollbar { width: 6px; }
         .content-area::-webkit-scrollbar-track { background: transparent; }
-        .content-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
-
-        /* Glass card */
-        .glass-card {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-        }
+        .content-area::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
 
         /* Welcome section */
         .welcome-section { margin-bottom: 28px; }
         .welcome-title {
             font-size: 28px;
             font-weight: 800;
-            color: #E5E7EB;
+            color: #111827;
             margin-bottom: 6px;
         }
         .welcome-name {
-            background: linear-gradient(135deg, #4F46E5, #06B6D4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #2563EB;
         }
-        .welcome-subtitle { font-size: 14px; color: #9CA3AF; }
+        .welcome-subtitle { font-size: 14px; color: #6B7280; }
 
         /* Stats grid */
         .stats-grid {
@@ -281,16 +239,15 @@
             margin-bottom: 24px;
         }
         .stat-card {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
             padding: 20px;
-            transition: all 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s;
         }
         .stat-card:hover {
-            border-color: rgba(79,70,229,0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(79,70,229,0.15);
+            border-color: #D1D5DB;
         }
         .stat-top {
             display: flex;
@@ -309,47 +266,40 @@
             padding: 3px 8px;
             border-radius: 99px;
         }
-        .trend-up { background: rgba(34,197,94,0.15); color: #22C55E; }
-        .trend-blue { background: rgba(6,182,212,0.15); color: #06B6D4; }
-        .trend-purple { background: rgba(139,92,246,0.15); color: #8B5CF6; }
+        .trend-up { background: #DCFCE7; color: #16A34A; }
+        .trend-blue { background: #DBEAFE; color: #2563EB; }
+        .trend-purple { background: #EDE9FE; color: #7C3AED; }
         .stat-number {
             font-size: 32px;
             font-weight: 800;
-            color: #E5E7EB;
+            color: #111827;
             line-height: 1;
             margin-bottom: 4px;
         }
-        .stat-label { font-size: 12px; color: #9CA3AF; }
+        .stat-label { font-size: 12px; color: #6B7280; }
         .progress-track {
             height: 4px;
-            background: rgba(255,255,255,0.08);
+            background: #E5E7EB;
             border-radius: 99px;
             overflow: hidden;
             margin-top: 10px;
         }
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #10B981, #06B6D4);
+            background: #2563EB;
             border-radius: 99px;
             transition: width 0.8s ease;
         }
 
         /* AI Banner */
         .ai-banner {
-            background: rgba(79,70,229,0.06);
-            border: 1px solid rgba(79,70,229,0.25);
+            background: #DBEAFE;
+            border: 1px solid rgba(37,99,235,0.15);
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
             position: relative;
             overflow: hidden;
-        }
-        .ai-banner::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(79,70,229,0.08), rgba(6,182,212,0.04));
-            pointer-events: none;
         }
         .ai-banner-inner {
             position: relative;
@@ -367,13 +317,13 @@
         .ai-banner-title {
             font-size: 17px;
             font-weight: 700;
-            color: #E5E7EB;
+            color: #111827;
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 4px;
         }
-        .ai-banner-subtitle { font-size: 13px; color: #9CA3AF; }
+        .ai-banner-subtitle { font-size: 13px; color: #6B7280; }
         .agent-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .agent-badge {
             padding: 4px 10px;
@@ -386,7 +336,7 @@
             align-items: center;
             gap: 8px;
             padding: 10px 20px;
-            background: linear-gradient(135deg, #4F46E5, #06B6D4);
+            background: #2563EB;
             border-radius: 12px;
             color: white;
             font-size: 13px;
@@ -398,27 +348,27 @@
             cursor: pointer;
             flex-shrink: 0;
         }
-        .ai-view-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(79,70,229,0.4); }
+        .ai-view-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
         .ai-stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
         .ai-stat-box {
-            background: rgba(0,0,0,0.25);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: #F8FAFC;
+            border: 1px solid #E5E7EB;
             border-radius: 12px;
             padding: 12px;
             text-align: center;
         }
         .ai-stat-num { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
-        .ai-stat-label { font-size: 11px; color: #9CA3AF; }
+        .ai-stat-label { font-size: 11px; color: #6B7280; }
 
         /* Quick Actions */
         .section-title {
             font-size: 17px;
             font-weight: 700;
-            color: #E5E7EB;
+            color: #111827;
             margin-bottom: 16px;
         }
         .quick-actions-grid {
@@ -428,13 +378,13 @@
             margin-bottom: 28px;
         }
         .quick-action-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
             padding: 20px 16px;
             text-align: center;
             text-decoration: none;
-            color: #E5E7EB;
+            color: #111827;
             transition: all 0.25s;
             display: flex;
             flex-direction: column;
@@ -442,10 +392,8 @@
             gap: 10px;
         }
         .quick-action-card:hover {
-            border-color: rgba(79,70,229,0.4);
-            background: rgba(79,70,229,0.08);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(79,70,229,0.15);
+            border-color: #2563EB;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.1);
         }
         .qa-icon {
             width: 52px; height: 52px;
@@ -453,7 +401,7 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 22px;
         }
-        .qa-title { font-size: 13px; font-weight: 600; color: #E5E7EB; }
+        .qa-title { font-size: 13px; font-weight: 600; color: #111827; }
         .qa-sub { font-size: 11px; color: #6B7280; }
 
         /* Recent matches & activity section */
@@ -472,19 +420,19 @@
         .section-header-title {
             font-size: 15px;
             font-weight: 700;
-            color: #E5E7EB;
+            color: #111827;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .view-all-link {
             font-size: 12px;
-            color: #6366F1;
+            color: #2563EB;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s;
         }
-        .view-all-link:hover { color: #A5B4FC; }
+        .view-all-link:hover { color: #1D4ED8; }
 
         /* Recent matches container */
         #recentMatches {
@@ -493,8 +441,8 @@
             gap: 10px;
         }
         .recent-match-placeholder {
-            background: rgba(255,255,255,0.03);
-            border: 1px dashed rgba(255,255,255,0.08);
+            background: #F8FAFC;
+            border: 1px dashed #D1D5DB;
             border-radius: 14px;
             padding: 32px 20px;
             text-align: center;
@@ -505,20 +453,20 @@
         }
         .placeholder-icon {
             width: 56px; height: 56px;
-            background: rgba(255,255,255,0.04);
+            background: #F3F4F6;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 28px;
             margin-bottom: 4px;
         }
-        .placeholder-title { font-size: 14px; font-weight: 500; color: #9CA3AF; }
-        .placeholder-sub { font-size: 12px; color: #6B7280; }
+        .placeholder-title { font-size: 14px; font-weight: 500; color: #6B7280; }
+        .placeholder-sub { font-size: 12px; color: #9CA3AF; }
         .run-pipeline-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             padding: 8px 16px;
-            background: linear-gradient(135deg, #4F46E5, #06B6D4);
+            background: #2563EB;
             border-radius: 10px;
             color: white;
             font-size: 12px;
@@ -531,8 +479,8 @@
 
         /* Agent activity */
         #agentActivity {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
+            background: #F8FAFC;
+            border: 1px solid #E5E7EB;
             border-radius: 14px;
             padding: 14px;
             min-height: 80px;
@@ -551,10 +499,8 @@
         #mobileMenu {
             position: fixed;
             inset: 0;
-            background: rgba(11,16,32,0.97);
+            background: #FFFFFF;
             z-index: 999;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             overflow-y: auto;
         }
         #mobileMenu.hidden { display: none; }
@@ -566,16 +512,16 @@
             margin-bottom: 28px;
         }
         .mobile-close-btn {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: #F3F4F6;
+            border: 1px solid #E5E7EB;
             border-radius: 10px;
             width: 36px; height: 36px;
             display: flex; align-items: center; justify-content: center;
-            color: #9CA3AF;
+            color: #6B7280;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .mobile-close-btn:hover { color: #E5E7EB; background: rgba(255,255,255,0.1); }
+        .mobile-close-btn:hover { color: #111827; background: #E5E7EB; }
         .mobile-nav { display: flex; flex-direction: column; gap: 4px; }
 
         @media (max-width: 1023px) {
@@ -595,11 +541,6 @@
     </style>
 </head>
 <body>
-    <!-- Ambient blobs -->
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-
     <div class="app-shell">
         <!-- Sidebar -->
         <aside id="sidebar">
@@ -682,8 +623,8 @@
                     <!-- Matches -->
                     <div class="stat-card">
                         <div class="stat-top">
-                            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(79,70,229,0.3),rgba(6,182,212,0.2));">
-                                <svg width="20" height="20" fill="none" stroke="#A5B4FC" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <div class="stat-icon" style="background:#DBEAFE;">
+                                <svg width="20" height="20" fill="none" stroke="#2563EB" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             </div>
                             <span class="stat-trend trend-up">+12%</span>
                         </div>
@@ -693,8 +634,8 @@
                     <!-- Likes -->
                     <div class="stat-card">
                         <div class="stat-top">
-                            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(236,72,153,0.25),rgba(139,92,246,0.2));">
-                                <svg width="20" height="20" fill="none" stroke="#F472B6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                            <div class="stat-icon" style="background:#FCE7F3;">
+                                <svg width="20" height="20" fill="none" stroke="#EC4899" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
                             </div>
                             <span class="stat-trend trend-up">+5</span>
                         </div>
@@ -704,8 +645,8 @@
                     <!-- Rooms -->
                     <div class="stat-card">
                         <div class="stat-top">
-                            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.25),rgba(59,130,246,0.2));">
-                                <svg width="20" height="20" fill="none" stroke="#67E8F9" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <div class="stat-icon" style="background:#CFFAFE;">
+                                <svg width="20" height="20" fill="none" stroke="#0891B2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             </div>
                             <span class="stat-trend trend-blue">New</span>
                         </div>
@@ -715,8 +656,8 @@
                     <!-- Profile -->
                     <div class="stat-card">
                         <div class="stat-top">
-                            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.25),rgba(6,182,212,0.2));">
-                                <svg width="20" height="20" fill="none" stroke="#6EE7B7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <div class="stat-icon" style="background:#D1FAE5;">
+                                <svg width="20" height="20" fill="none" stroke="#059669" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                             </div>
                             <span class="stat-trend trend-purple">Profile</span>
                         </div>
@@ -739,12 +680,12 @@
                                 </div>
                                 <p class="ai-banner-subtitle">6 specialized AI agents collaborate to find your ideal roommate match</p>
                                 <div class="agent-badges">
-                                    <span class="agent-badge" style="background:rgba(59,130,246,0.15);color:#60A5FA;">👤 Profiling</span>
-                                    <span class="agent-badge" style="background:rgba(79,70,229,0.15);color:#A5B4FC;">📊 Preferences</span>
-                                    <span class="agent-badge" style="background:rgba(139,92,246,0.15);color:#C4B5FD;">🧮 Scoring</span>
-                                    <span class="agent-badge" style="background:rgba(245,158,11,0.15);color:#FCD34D;">⚠️ Conflicts</span>
-                                    <span class="agent-badge" style="background:rgba(16,185,129,0.15);color:#6EE7B7;">🏠 Rooms</span>
-                                    <span class="agent-badge" style="background:rgba(236,72,153,0.15);color:#F9A8D4;">🎯 Recommendations</span>
+                                    <span class="agent-badge" style="background:#DBEAFE;color:#2563EB;">👤 Profiling</span>
+                                    <span class="agent-badge" style="background:#EDE9FE;color:#7C3AED;">📊 Preferences</span>
+                                    <span class="agent-badge" style="background:#F3E8FF;color:#9333EA;">🧮 Scoring</span>
+                                    <span class="agent-badge" style="background:#FEF3C7;color:#D97706;">⚠️ Conflicts</span>
+                                    <span class="agent-badge" style="background:#D1FAE5;color:#059669;">🏠 Rooms</span>
+                                    <span class="agent-badge" style="background:#FCE7F3;color:#DB2777;">🎯 Recommendations</span>
                                 </div>
                             </div>
                             <a href="/ai-agents.html" class="ai-view-btn">
@@ -754,15 +695,15 @@
                         </div>
                         <div class="ai-stats-row">
                             <div class="ai-stat-box">
-                                <div class="ai-stat-num" style="color:#818CF8;" id="aiTotalRuns">--</div>
+                                <div class="ai-stat-num" style="color:#2563EB;" id="aiTotalRuns">--</div>
                                 <div class="ai-stat-label">Pipeline Runs</div>
                             </div>
                             <div class="ai-stat-box">
-                                <div class="ai-stat-num" style="color:#22C55E;" id="aiSuccessRate">--</div>
+                                <div class="ai-stat-num" style="color:#16A34A;" id="aiSuccessRate">--</div>
                                 <div class="ai-stat-label">Success Rate</div>
                             </div>
                             <div class="ai-stat-box">
-                                <div class="ai-stat-num" style="color:#A78BFA;" id="aiAgentsActive">6</div>
+                                <div class="ai-stat-num" style="color:#7C3AED;" id="aiAgentsActive">6</div>
                                 <div class="ai-stat-label">Agents Active</div>
                             </div>
                         </div>
@@ -773,29 +714,29 @@
                 <div style="margin-bottom:28px;">
                     <h3 class="section-title">Quick Actions</h3>
                     <div class="quick-actions-grid">
-                        <a href="/ai-agents.html" class="quick-action-card" style="border-color:rgba(79,70,229,0.25);">
-                            <div class="qa-icon" style="background:linear-gradient(135deg,rgba(79,70,229,0.3),rgba(6,182,212,0.2));">🤖</div>
+                        <a href="/ai-agents.html" class="quick-action-card">
+                            <div class="qa-icon" style="background:#DBEAFE;">🤖</div>
                             <div>
                                 <div class="qa-title">AI Agents</div>
                                 <div class="qa-sub">Run matching pipeline</div>
                             </div>
                         </a>
                         <a href="/matches.html" class="quick-action-card">
-                            <div class="qa-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(236,72,153,0.2));">🎯</div>
+                            <div class="qa-icon" style="background:#EDE9FE;">🎯</div>
                             <div>
                                 <div class="qa-title">AI Matches</div>
                                 <div class="qa-sub">View AI-generated matches</div>
                             </div>
                         </a>
                         <a href="/preferences.html" class="quick-action-card">
-                            <div class="qa-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.3),rgba(59,130,246,0.2));">⚙️</div>
+                            <div class="qa-icon" style="background:#CFFAFE;">⚙️</div>
                             <div>
                                 <div class="qa-title">Preferences</div>
                                 <div class="qa-sub">Configure AI matching</div>
                             </div>
                         </a>
                         <a href="/profile.html" class="quick-action-card">
-                            <div class="qa-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.3),rgba(239,68,68,0.2));">👤</div>
+                            <div class="qa-icon" style="background:#FEF3C7;">👤</div>
                             <div>
                                 <div class="qa-title">Edit Profile</div>
                                 <div class="qa-sub">Improve AI accuracy</div>

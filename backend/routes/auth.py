@@ -70,6 +70,9 @@ def register():
         }
         gender_value = gender_mapping.get(data.get('gender'), None)
         
+        # Extract age
+        age = data.get('age')
+
         # Create user
         user = User(
             email=data['email'].lower(),
@@ -80,6 +83,7 @@ def register():
             is_active=True
         )
         user.set_password(data['password'])
+        user.age = int(age) if age else None
         
         # Validate user
         is_valid, errors = user.validate()

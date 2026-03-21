@@ -1,333 +1,447 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RoomMate Finder - Find Your Perfect Roommate</title>
+    <title>RoomMate AI — Find Your Perfect Roommate with AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4F46E5',
-                        secondary: '#7C3AED',
-                        accent: '#06B6D4',
-                    }
-                }
-            }
+        // Auth redirect — if already logged in, go straight to dashboard
+        if (localStorage.getItem('token')) {
+            window.location.href = '/dashboard.html';
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
+        * { box-sizing: border-box; }
         body {
+            background: #F8FAFC;
             font-family: 'Inter', sans-serif;
+            color: #111827;
         }
 
-        .gradient-bg {
-            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        /* ---------- Button: Primary ---------- */
+        .btn-primary {
+            background: #2563EB;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 12px 28px;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background: #1D4ED8;
         }
 
-        .gradient-text {
-            background: linear-gradient(135deg, #4F46E5, #7C3AED, #EC4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* ---------- Button: Outline ---------- */
+        .btn-outline {
+            background: transparent;
+            color: #111827;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 12px 28px;
+            transition: all 0.2s;
+            border: 1px solid #E5E7EB;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
         }
 
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.25);
+        /* ---------- Card ---------- */
+        .clean-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .clean-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        .glow {
-            box-shadow: 0 0 60px rgba(79, 70, 229, 0.4);
+        /* ---------- Navbar ---------- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E5E7EB;
         }
 
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+        /* ---------- Nav links ---------- */
+        .nav-link {
+            color: #6B7280;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #111827;
         }
 
-        @keyframes float {
+        /* ---------- Login button in navbar ---------- */
+        .nav-login {
+            color: #111827;
+            border: 1px solid #E5E7EB;
+            transition: all 0.2s;
+        }
+        .nav-login:hover {
+            background: #F3F4F6;
+            border-color: #D1D5DB;
+        }
 
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
+        /* ---------- Badge ---------- */
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: #DBEAFE;
+            border: 1px solid rgba(37,99,235,0.2);
+            color: #2563EB;
+            font-size: 13px;
+            font-weight: 500;
+        }
 
-            50% {
-                transform: translateY(-20px);
-            }
+        /* ---------- Trust badges ---------- */
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: #F3F4F6;
+            border: 1px solid #E5E7EB;
+            color: #6B7280;
+            font-size: 13px;
+        }
+        .trust-badge span { color: #111827; font-weight: 600; }
+
+        /* ---------- Step number ---------- */
+        .step-number {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #2563EB;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            margin: 0 auto 20px;
+            flex-shrink: 0;
+        }
+
+        /* ---------- Agent icon ---------- */
+        .agent-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #DBEAFE;
+            border: 1px solid rgba(37,99,235,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+
+        /* ---------- CTA banner ---------- */
+        .cta-banner {
+            background: #DBEAFE;
+            border: 1px solid rgba(37,99,235,0.15);
+            border-radius: 24px;
+        }
+
+        /* ---------- Section divider ---------- */
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: #E5E7EB;
+        }
+
+        /* ---------- Mobile menu ---------- */
+        #mobileMenu {
+            display: none;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        #mobileMenu.open { display: block; }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.4rem; }
+            .section-title { font-size: 2rem; }
+            .cta-banner { padding: 40px 24px; }
+        }
+        @media (max-width: 480px) {
+            .hero-title { font-size: 2rem; }
+            .btn-primary, .btn-outline { width: 100%; text-align: center; }
+            .hero-cta { flex-direction: column; }
         }
     </style>
 </head>
+<body class="relative" style="background:#F8FAFC;">
 
-<body class="bg-gray-900 text-white">
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-gray-900/80 backdrop-blur-lg border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="/" class="flex items-center space-x-2">
-                    <span class="text-3xl">🏠</span>
-                    <span class="text-xl font-bold gradient-text">RoomMate Finder</span>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8">
+            <div class="flex items-center justify-between h-16">
+
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-2.5 no-underline">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0" style="background:#2563EB;color:#fff;">🏠</div>
+                    <span class="text-lg font-bold" style="color:#2563EB;">RoomMate AI</span>
                 </a>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
-                    <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How It Works</a>
-                    <div id="authNav" class="flex items-center space-x-4"></div>
+
+                <!-- Desktop nav links -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#how-it-works" class="nav-link text-sm font-medium">How it works</a>
+                    <a href="#features" class="nav-link text-sm font-medium">Features</a>
+                    <a href="#ai-agents" class="nav-link text-sm font-medium">AI Agents</a>
                 </div>
-                <button id="mobileMenuBtn" class="md:hidden text-gray-300 hover:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
+
+                <!-- Desktop auth buttons -->
+                <div class="hidden md:flex items-center gap-3">
+                    <a href="/login.html" class="nav-login text-sm font-medium px-4 py-2 rounded-xl">Login</a>
+                    <a href="/register.html" class="btn-primary text-sm" style="padding:8px 20px;">Get Started</a>
+                </div>
+
+                <!-- Mobile hamburger -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg" style="color:#6B7280;border:1px solid #E5E7EB;" aria-label="Open menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobileMenu">
+            <div class="max-w-7xl mx-auto px-5 py-4 flex flex-col gap-3">
+                <a href="#how-it-works" class="text-sm font-medium py-2" style="color:#6B7280;">How it works</a>
+                <a href="#features" class="text-sm font-medium py-2" style="color:#6B7280;">Features</a>
+                <a href="#ai-agents" class="text-sm font-medium py-2" style="color:#6B7280;">AI Agents</a>
+                <hr class="section-divider my-1">
+                <a href="/login.html" class="text-sm font-medium py-2" style="color:#6B7280;">Login</a>
+                <a href="/register.html" class="btn-primary text-sm text-center">Get Started</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="min-h-screen flex items-center pt-16 relative overflow-hidden">
-        <!-- Background Elements -->
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/30 rounded-full blur-3xl animate-float"></div>
-            <div class="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500/30 rounded-full blur-3xl animate-float"
-                style="animation-delay: -3s;"></div>
-            <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-float"
-                style="animation-delay: -1.5s;"></div>
-        </div>
+    <!-- ===== HERO ===== -->
+    <section class="relative overflow-hidden pt-20 pb-28 px-5 sm:px-8" style="z-index:1;">
+        <div class="max-w-4xl mx-auto text-center">
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center">
-                <div
-                    class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-500/20 border border-indigo-500/30 mb-8">
-                    <span class="text-indigo-400 text-sm font-medium">✨ AI-Powered Matching</span>
-                </div>
+            <!-- Badge -->
+            <div class="mb-6">
+                <span class="ai-badge">🤖 Powered by Multi-Agent AI</span>
+            </div>
 
-                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-                    Find Your <span class="gradient-text">Perfect</span><br />
-                    Roommate Match
-                </h1>
+            <!-- Title -->
+            <h1 class="hero-title font-extrabold leading-tight mb-6" style="font-size:3.5rem;color:#111827;line-height:1.15;">
+                Find Your Perfect Roommate<br>
+                <span style="color:#2563EB;">with AI</span>
+            </h1>
 
-                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-10">
-                    Discover compatible roommates using intelligent AI matching.
-                    End the stress of roommate hunting forever.
-                </p>
+            <!-- Subtitle -->
+            <p class="text-lg mb-10 max-w-2xl mx-auto" style="color:#6B7280;line-height:1.7;">
+                6 specialized AI agents analyze your preferences, compute compatibility scores, and detect conflicts to recommend your ideal roommate match.
+            </p>
 
-                <div id="heroCTA" class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                    <button id="heroRegisterBtn" onclick="window.location.href='/register.html'"
-                        class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow">
-                        Get Started Free →
-                    </button>
-                    <button id="heroLoginBtn" onclick="window.location.href='/login.html'"
-                        class="px-8 py-4 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-xl font-semibold text-lg transition-all duration-300">
-                        Sign In
-                    </button>
-                    <button id="heroDashboardBtn" onclick="window.location.href='/dashboard.html'"
-                        class="hidden px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow">
-                        Go to Dashboard →
-                    </button>
-                </div>
+            <!-- CTA buttons -->
+            <div class="hero-cta flex flex-wrap items-center justify-center gap-4 mb-10">
+                <a href="/register.html" class="btn-primary text-base" style="padding:14px 32px;">Get Started Free →</a>
+                <a href="/ai-agents.html" class="btn-outline text-base" style="padding:14px 32px;">View AI Agents</a>
+            </div>
 
-                <div class="flex items-center justify-center space-x-4 text-gray-500">
-                    <div class="flex -space-x-2">
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-bold">
-                            JD</div>
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold">
-                            SM</div>
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-red-500 flex items-center justify-center text-sm font-bold">
-                            AK</div>
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-sm font-bold">
-                            +</div>
-                    </div>
-                    <span>Join <span class="text-white font-semibold">1,000+</span> people finding their ideal
-                        roommate</span>
-                </div>
+            <!-- Trust badges -->
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <span class="trust-badge">✅ <span>319</span> Real Users</span>
+                <span class="trust-badge">🤖 <span>6</span> AI Agents</span>
+                <span class="trust-badge">🔍 <span>XAI</span> Transparency</span>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-24 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- ===== HOW IT WORKS ===== -->
+    <section id="how-it-works" class="py-24 px-5 sm:px-8 relative" style="z-index:1;">
+        <div class="max-w-6xl mx-auto">
+
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">
-                    Why Choose <span class="gradient-text">RoomMate Finder</span>?
-                </h2>
-                <p class="text-gray-400 text-xl max-w-2xl mx-auto">
-                    More than just a listing site - we use AI to find genuinely compatible matches
-                </p>
+                <h2 class="section-title font-bold mb-4" style="font-size:2.5rem;color:#111827;">How It <span style="color:#2563EB;">Works</span></h2>
+                <p style="color:#6B7280;">Three simple steps to your perfect match</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div
-                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        🎯</div>
-                    <h3 class="text-xl font-bold mb-3">Smart AI Matching</h3>
-                    <p class="text-gray-400">Our AI analyzes your preferences, lifestyle, and habits to find truly
-                        compatible roommates.</p>
+            <div class="grid gap-6 md:grid-cols-3">
+
+                <!-- Step 1 -->
+                <div class="clean-card p-8 text-center">
+                    <div class="step-number">1</div>
+                    <div class="text-3xl mb-4">🧾</div>
+                    <h3 class="text-lg font-bold mb-3" style="color:#111827;">Set Your Preferences</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Fill out your lifestyle, budget, schedule, and living preferences to build your profile.</p>
                 </div>
 
-                <div
-                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        📊</div>
-                    <h3 class="text-xl font-bold mb-3">Preference Vectors</h3>
-                    <p class="text-gray-400">Set your preferences once and we'll continuously find the best matches for
-                        your needs.</p>
+                <!-- Step 2 -->
+                <div class="clean-card p-8 text-center">
+                    <div class="step-number">2</div>
+                    <div class="text-3xl mb-4">🤖</div>
+                    <h3 class="text-lg font-bold mb-3" style="color:#111827;">AI Analyzes &amp; Scores</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">6 specialized agents compute compatibility scores and detect potential conflicts automatically.</p>
                 </div>
 
-                <div
-                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-gradient-to-r from-pink-500 to-red-500 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        ⚡</div>
-                    <h3 class="text-xl font-bold mb-3">Instant Scoring</h3>
-                    <p class="text-gray-400">Get compatibility scores instantly with detailed explanations about why
-                        matches are suitable.</p>
+                <!-- Step 3 -->
+                <div class="clean-card p-8 text-center">
+                    <div class="step-number">3</div>
+                    <div class="text-3xl mb-4">🎯</div>
+                    <h3 class="text-lg font-bold mb-3" style="color:#111827;">Get Matched</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Receive ranked recommendations with full explanations so you understand every match.</p>
                 </div>
 
-                <div
-                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        🛡️</div>
-                    <h3 class="text-xl font-bold mb-3">Conflict Detection</h3>
-                    <p class="text-gray-400">Know about potential issues upfront. Our system identifies conflicts
-                        automatically.</p>
-                </div>
-
-                <div
-                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        📱</div>
-                    <h3 class="text-xl font-bold mb-3">Easy to Use</h3>
-                    <p class="text-gray-400">Simple interface with no complicated forms. Set up your profile in minutes.
-                    </p>
-                </div>
-
-                <div
-                    class="feature-card bg-gray-800/50 border border-gray-700/50 rounded-2xl p-8 transition-all duration-300">
-                    <div
-                        class="w-14 h-14 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center text-2xl mb-6">
-                        🏆</div>
-                    <h3 class="text-xl font-bold mb-3">Success Stories</h3>
-                    <p class="text-gray-400">Thousands of successful roommate matches. Real people finding real
-                        solutions.</p>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="py-24 bg-gray-800/30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <hr class="section-divider max-w-6xl mx-auto" style="margin:0 auto;">
+
+    <!-- ===== 6 AI AGENTS ===== -->
+    <section id="ai-agents" class="py-24 px-5 sm:px-8 relative" style="z-index:1;">
+        <div class="max-w-6xl mx-auto">
+
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4">How It <span class="gradient-text">Works</span></h2>
-                <p class="text-gray-400 text-xl">Simple steps to find your perfect roommate</p>
+                <h2 class="section-title font-bold mb-4" style="font-size:2.5rem;color:#111827;">6 <span style="color:#2563EB;">AI Agents</span> Working for You</h2>
+                <p style="color:#6B7280;">A multi-agent pipeline purpose-built for roommate compatibility</p>
             </div>
 
-            <div class="grid md:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div
-                        class="w-20 h-20 mx-auto bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6 glow">
-                        1</div>
-                    <h3 class="text-xl font-bold mb-3">Create Profile</h3>
-                    <p class="text-gray-400">Sign up with your email and basic info. Takes just 2 minutes.</p>
+            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+                <div class="clean-card p-6">
+                    <div class="agent-icon">👤</div>
+                    <h3 class="font-bold mb-2" style="color:#111827;">User Profiling Agent</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Validates and normalizes your profile data to ensure consistency across the pipeline.</p>
                 </div>
 
-                <div class="text-center">
-                    <div
-                        class="w-20 h-20 mx-auto bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6">
-                        2</div>
-                    <h3 class="text-xl font-bold mb-3">Set Preferences</h3>
-                    <p class="text-gray-400">Tell us your ideal roommate preferences - budget, lifestyle, habits.</p>
+                <div class="clean-card p-6">
+                    <div class="agent-icon">📊</div>
+                    <h3 class="font-bold mb-2" style="color:#111827;">Preference Analysis Agent</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Vectorizes preferences using feature encoding for precise similarity computation.</p>
                 </div>
 
-                <div class="text-center">
-                    <div
-                        class="w-20 h-20 mx-auto bg-gradient-to-r from-pink-600 to-red-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6">
-                        3</div>
-                    <h3 class="text-xl font-bold mb-3">Get Matches</h3>
-                    <p class="text-gray-400">Receive AI-powered recommendations with compatibility scores.</p>
+                <div class="clean-card p-6">
+                    <div class="agent-icon">🧮</div>
+                    <h3 class="font-bold mb-2" style="color:#111827;">Compatibility Scoring Agent</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Computes cosine similarity and weighted sub-scores across all preference dimensions.</p>
                 </div>
 
-                <div class="text-center">
-                    <div
-                        class="w-20 h-20 mx-auto bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl flex items-center justify-center text-3xl font-bold mb-6">
-                        4</div>
-                    <h3 class="text-xl font-bold mb-3">Connect</h3>
-                    <p class="text-gray-400">Like matches, view profiles, and start conversations.</p>
+                <div class="clean-card p-6">
+                    <div class="agent-icon">🏠</div>
+                    <h3 class="font-bold mb-2" style="color:#111827;">Room Matching Agent</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Filters available rooms by your hard constraints like budget, location, and amenities.</p>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="py-24">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="gradient-bg rounded-3xl p-12 md:p-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to Find Your Perfect Roommate?</h2>
-                <p class="text-xl text-white/80 mb-10">Join thousands of people who've found compatible roommates
-                    through our AI-powered platform.</p>
-                <button onclick="window.location.href='/register.html'"
-                    class="px-10 py-4 bg-white text-indigo-600 hover:bg-gray-100 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105">
-                    Get Started Free →
-                </button>
+                <div class="clean-card p-6">
+                    <div class="agent-icon">⚠️</div>
+                    <h3 class="font-bold mb-2" style="color:#111827;">Conflict Detection Agent</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Identifies deal-breaker mismatches before they become real-world problems.</p>
+                </div>
+
+                <div class="clean-card p-6">
+                    <div class="agent-icon">🎯</div>
+                    <h3 class="font-bold mb-2" style="color:#111827;">Recommendation Engine</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Ranks your matches and generates explainable AI summaries for full transparency.</p>
+                </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-12 border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-2 mb-4 md:mb-0">
-                    <span class="text-2xl">🏠</span>
-                    <span class="text-lg font-bold gradient-text">RoomMate Finder</span>
-                </div>
-                <p class="text-gray-500">© 2026 RoomMate Finder. All rights reserved.</p>
+    <hr class="section-divider max-w-6xl mx-auto" style="margin:0 auto;">
+
+    <!-- ===== KEY FEATURES ===== -->
+    <section id="features" class="py-24 px-5 sm:px-8 relative" style="z-index:1;">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="text-center mb-16">
+                <h2 class="section-title font-bold mb-4" style="font-size:2.5rem;color:#111827;">Why <span style="color:#2563EB;">RoomMate AI</span>?</h2>
+                <p style="color:#6B7280;">Built differently — transparent, accurate, and privacy-respecting</p>
             </div>
+
+            <div class="grid gap-6 md:grid-cols-3">
+
+                <div class="clean-card p-8">
+                    <div class="text-4xl mb-5">🔍</div>
+                    <h3 class="text-lg font-bold mb-3" style="color:#111827;">Explainable AI</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Every recommendation comes with a detailed explanation. No black-box decisions — you always know why a match was suggested.</p>
+                </div>
+
+                <div class="clean-card p-8">
+                    <div class="text-4xl mb-5">⚡</div>
+                    <h3 class="text-lg font-bold mb-3" style="color:#111827;">Multi-Agent Pipeline</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">6 specialized agents collaborate in sequence for precise, accurate matching — far beyond simple keyword filters.</p>
+                </div>
+
+                <div class="clean-card p-8">
+                    <div class="text-4xl mb-5">🔒</div>
+                    <h3 class="text-lg font-bold mb-3" style="color:#111827;">Privacy First</h3>
+                    <p class="text-sm leading-relaxed" style="color:#6B7280;">Your data is only used for matching and is never shared with third parties or used for advertising.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER CTA BANNER ===== -->
+    <section class="py-16 px-5 sm:px-8 relative" style="z-index:1;">
+        <div class="max-w-4xl mx-auto">
+            <div class="cta-banner p-16 text-center">
+                <h2 class="font-bold mb-4" style="font-size:2rem;color:#111827;">Ready to find your perfect roommate?</h2>
+                <p class="mb-8 text-base" style="color:#6B7280;">Join 319 real users already using RoomMate AI to find compatible matches.</p>
+                <a href="/register.html" class="btn-primary text-base" style="padding:14px 36px;">Get Started Free →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="py-10 px-5 sm:px-8 relative" style="z-index:1;background:#FFFFFF;border-top:1px solid #E5E7EB;">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center text-base flex-shrink-0" style="background:#2563EB;color:#fff;">🏠</div>
+                <span class="font-bold" style="color:#2563EB;">RoomMate AI</span>
+            </div>
+            <p class="text-sm" style="color:#6B7280;">© 2026 RoomMate AI · Built with Multi-Agent AI Technology</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const authNav = document.getElementById('authNav');
-            const heroRegisterBtn = document.getElementById('heroRegisterBtn');
-            const heroLoginBtn = document.getElementById('heroLoginBtn');
-            const heroDashboardBtn = document.getElementById('heroDashboardBtn');
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function () {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('open');
+        });
 
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || 'null');
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobileMenu a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                document.getElementById('mobileMenu').classList.remove('open');
+            });
+        });
 
-            if (token && user) {
-                authNav.innerHTML = `
-                    <a href="/dashboard.html" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-lg font-medium transition-all duration-300">Dashboard</a>
-                `;
-                heroRegisterBtn.style.display = 'none';
-                heroLoginBtn.style.display = 'none';
-                heroDashboardBtn.classList.remove('hidden');
-            } else {
-                authNav.innerHTML = `
-                    <a href="/login.html" class="text-gray-300 hover:text-white transition">Sign In</a>
-                    <a href="/register.html" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-lg font-medium transition-all duration-300">Get Started</a>
-                `;
-            }
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
         });
     </script>
 </body>
-
 </html>

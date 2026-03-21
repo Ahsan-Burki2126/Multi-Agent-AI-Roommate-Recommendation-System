@@ -146,9 +146,20 @@ def create_preferences(user_id):
         )
         db.session.add(audit)
         db.session.commit()
-        
+
+        # Auto re-vectorize after saving preferences
+        try:
+            from backend.agents import get_orchestrator
+            orchestrator = get_orchestrator()
+            pref_agent = orchestrator.get_agent('preference_analysis')
+            if pref_agent:
+                pref_agent.vectorize_preferences(prefs.user_id)
+        except Exception as ve:
+            # Non-fatal: vectorization will happen on next pipeline run
+            pass
+
         return jsonify(prefs.to_dict()), 201
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
@@ -228,9 +239,20 @@ def update_preferences(user_id):
         )
         db.session.add(audit)
         db.session.commit()
-        
+
+        # Auto re-vectorize after saving preferences
+        try:
+            from backend.agents import get_orchestrator
+            orchestrator = get_orchestrator()
+            pref_agent = orchestrator.get_agent('preference_analysis')
+            if pref_agent:
+                pref_agent.vectorize_preferences(prefs.user_id)
+        except Exception as ve:
+            # Non-fatal: vectorization will happen on next pipeline run
+            pass
+
         return jsonify(prefs.to_dict()), 200
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
@@ -268,7 +290,8 @@ def get_preference_vector(user_id):
             'vector_data': vector.vector_data,
             'vector_norm': float(vector.vector_norm) if vector.vector_norm else None,
             'computed_at': vector.computed_at.isoformat() if vector.computed_at else None,
-            'is_stale': vector.is_stale()
+            'is_stale': vector.is_stale(),
+            'preference_weights': vector.preference_weights if vector.preference_weights else {}
         }), 200
         
     except Exception as e:

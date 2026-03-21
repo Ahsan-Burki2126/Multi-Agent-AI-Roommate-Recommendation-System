@@ -31,6 +31,7 @@ class User(db.Model):
         phone: Contact phone number
         profile_picture: URL to profile photo
         bio: User's bio/description
+        age: User's age (integer, optional)
         is_active: Whether account is active
         created_at: Account creation timestamp
         updated_at: Last update timestamp
@@ -54,7 +55,11 @@ class User(db.Model):
     # Profile
     profile_picture = db.Column(db.String(500))  # URL to image
     bio = db.Column(db.Text)
-    
+    age = db.Column(db.Integer, nullable=True)
+
+    # Settings (JSON blob for notification/privacy preferences)
+    settings_json = db.Column(db.Text, default='{}')
+
     # Status
     is_active = db.Column(db.Boolean, default=True, index=True)
     
@@ -149,6 +154,8 @@ class User(db.Model):
             'city': self.city,
             'profile_picture': self.profile_picture,
             'bio': self.bio,
+            'age': self.age,
+            'settings_json': self.settings_json or '{}',
             'created_at': self.created_at.isoformat() if self.created_at else None,
         }
         

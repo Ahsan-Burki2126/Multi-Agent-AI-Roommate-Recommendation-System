@@ -83,13 +83,14 @@ class APIClient {
    */
 
   // Register new user
-  async register(email, password, fullName, city, gender) {
+  async register(email, password, fullName, city, gender, age) {
     return this.request("POST", "/auth/register", {
       email,
       password,
       full_name: fullName,
       city,
       gender,
+      age,
     });
   }
 
@@ -311,6 +312,11 @@ class APIClient {
   // Get stats
   async getRecommendationStats(userId) {
     return this.request("GET", `/recommendations/user/${userId}/stats`);
+  }
+
+  // Get mutual matches (FR-6.1)
+  async getMutualMatches(userId) {
+    return this.request("GET", `/recommendations/user/${userId}/mutual`);
   }
 
   /**

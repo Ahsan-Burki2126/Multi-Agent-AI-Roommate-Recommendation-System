@@ -27,7 +27,7 @@ class AuthManager {
   /**
    * Register new user
    */
-  async register(email, password, passwordConfirm, fullName, city, gender) {
+  async register(email, password, passwordConfirm, fullName, city, gender, age) {
     // Validation
     if (!email || !password || !passwordConfirm || !fullName) {
       throw new Error("Please fill in all required fields");
@@ -52,6 +52,7 @@ class AuthManager {
       fullName,
       city,
       gender,
+      age,
     );
 
     if (response.user_id) {

@@ -8,54 +8,49 @@
     <link rel="stylesheet" href="css/design-system.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background: #0B1020; }
+        body { background: #F8FAFC; }
         .auth-card {
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .btn-primary {
-            background: linear-gradient(135deg, #4F46E5, #06B6D4);
+            background: #2563EB;
             transition: all 0.3s;
         }
         .btn-primary:hover {
-            filter: brightness(1.1);
+            background: #1D4ED8;
             transform: translateY(-1px);
-            box-shadow: 0 8px 32px rgba(79,70,229,0.4);
+            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
         }
         .input-field {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: #E5E7EB;
+            background: #FFFFFF;
+            border: 1px solid #D1D5DB;
+            color: #111827;
+            border-radius: 8px;
             transition: all 0.2s;
         }
         .input-field:focus {
             outline: none;
-            border-color: #4F46E5;
-            background: rgba(79,70,229,0.08);
-            box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
-        .input-field::placeholder { color: #4B5563; }
-        @keyframes float {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        .input-field::placeholder { color: #9CA3AF; }
+        .ai-badge {
+            background: #DBEAFE;
+            color: #2563EB;
         }
-        .blob { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; }
     </style>
 </head>
-<body class="min-h-screen text-white relative overflow-hidden" style="background:#0B1020; font-family:'Inter',sans-serif;">
-
-    <!-- Ambient background -->
-    <div class="blob" style="width:500px;height:500px;background:rgba(79,70,229,0.12);top:-150px;left:-150px;animation:float 10s ease-in-out infinite;"></div>
-    <div class="blob" style="width:400px;height:400px;background:rgba(6,182,212,0.08);bottom:-100px;right:-100px;animation:float 8s ease-in-out infinite;animation-delay:-4s;"></div>
+<body class="min-h-screen relative" style="background:#F8FAFC; font-family:'Inter',sans-serif;">
 
     <div class="min-h-screen flex flex-col relative z-10">
         <!-- Header -->
         <header class="py-6 px-8">
             <a href="/" class="flex items-center space-x-3 w-fit">
-                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#4F46E5,#06B6D4);">🏠</div>
-                <span class="text-lg font-bold gradient-text">RoomMate AI</span>
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:#2563EB;">🏠</div>
+                <span class="text-lg font-bold" style="color:#2563EB;">RoomMate AI</span>
             </a>
         </header>
 
@@ -66,35 +61,35 @@
                 <!-- Badge -->
                 <div class="text-center mb-8">
                     <span class="ai-badge">AI-Powered Matching</span>
-                    <h1 class="text-4xl font-bold mt-4 mb-2 text-white">Welcome Back</h1>
-                    <p style="color:#9CA3AF;">Sign in to continue your roommate search</p>
+                    <h1 class="text-4xl font-bold mt-4 mb-2" style="color:#111827;">Welcome Back</h1>
+                    <p style="color:#6B7280;">Sign in to continue your roommate search</p>
                 </div>
 
                 <!-- Card -->
-                <div class="auth-card rounded-2xl p-8">
+                <div class="auth-card p-8">
                     <!-- Error Message -->
-                    <div id="errorMessage" class="hidden mb-5 p-4 rounded-xl text-sm" style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.25);color:#F87171;"></div>
+                    <div id="errorMessage" class="hidden mb-5 p-4 rounded-xl text-sm" style="background:#FEE2E2;border:1px solid #FECACA;color:#DC2626;"></div>
 
                     <!-- Form -->
                     <form id="loginForm" class="space-y-5">
                         <!-- Email -->
                         <div>
-                            <label class="block text-sm font-medium mb-2" style="color:#D1D5DB;">Email Address</label>
+                            <label class="block text-sm font-medium mb-2" style="color:#374151;">Email Address</label>
                             <div class="relative">
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#4B5563;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
                                 <input type="email" id="email" name="email" required placeholder="you@university.edu"
-                                    class="input-field w-full pl-11 pr-4 py-3 rounded-xl text-sm">
+                                    class="input-field w-full pl-11 pr-4 py-3 text-sm">
                             </div>
                         </div>
 
                         <!-- Password -->
                         <div>
-                            <label class="block text-sm font-medium mb-2" style="color:#D1D5DB;">Password</label>
+                            <label class="block text-sm font-medium mb-2" style="color:#374151;">Password</label>
                             <div class="relative">
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#4B5563;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                                 <input type="password" id="password" name="password" required placeholder="••••••••"
-                                    class="input-field w-full pl-11 pr-12 py-3 rounded-xl text-sm">
-                                <button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2" style="color:#6B7280;">
+                                    class="input-field w-full pl-11 pr-12 py-3 text-sm">
+                                <button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2" style="color:#9CA3AF;">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </button>
                             </div>
@@ -103,10 +98,10 @@
                         <!-- Remember + Forgot -->
                         <div class="flex items-center justify-between">
                             <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="remember" class="w-4 h-4 rounded" style="accent-color:#4F46E5;">
+                                <input type="checkbox" id="remember" class="w-4 h-4 rounded" style="accent-color:#2563EB;">
                                 <span class="text-sm" style="color:#9CA3AF;">Remember me</span>
                             </label>
-                            <a href="#" class="text-sm font-medium" style="color:#818CF8;">Forgot password?</a>
+                            <a href="#" class="text-sm font-medium" style="color:#2563EB;">Forgot password?</a>
                         </div>
 
                         <!-- Submit -->
@@ -122,26 +117,26 @@
 
                     <!-- Divider -->
                     <div class="my-6 flex items-center gap-3">
-                        <div class="flex-1 h-px" style="background:rgba(255,255,255,0.08);"></div>
-                        <span class="text-xs" style="color:#6B7280;">OR</span>
-                        <div class="flex-1 h-px" style="background:rgba(255,255,255,0.08);"></div>
+                        <div class="flex-1 h-px" style="background:#E5E7EB;"></div>
+                        <span class="text-xs" style="color:#9CA3AF;">OR</span>
+                        <div class="flex-1 h-px" style="background:#E5E7EB;"></div>
                     </div>
 
                     <!-- Sign up link -->
                     <p class="text-center text-sm" style="color:#9CA3AF;">
                         New here?
-                        <a href="/register.html" class="font-semibold ml-1" style="color:#818CF8;">Create a free account →</a>
+                        <a href="/register.html" class="font-semibold ml-1" style="color:#2563EB;">Create a free account →</a>
                     </p>
                 </div>
 
                 <!-- Info note -->
-                <p class="text-center text-xs mt-6" style="color:#4B5563;">
-                    Survey participants: use your <span style="color:#818CF8;">@survey.iub.edu.pk</span> email with password <span style="color:#818CF8;">Survey@2024</span>
+                <p class="text-center text-xs mt-6" style="color:#6B7280;">
+                    Survey participants: use your <span style="color:#2563EB;">@survey.iub.edu.pk</span> email with password <span style="color:#2563EB;">Survey@2024</span>
                 </p>
             </div>
         </main>
 
-        <footer class="py-6 text-center text-xs" style="color:#4B5563;">© 2026 RoomMate AI — IUB Final Year Project</footer>
+        <footer class="py-6 text-center text-xs" style="color:#6B7280;">© 2026 RoomMate AI — IUB Final Year Project</footer>
     </div>
 
     <script src="js/api.js"></script>

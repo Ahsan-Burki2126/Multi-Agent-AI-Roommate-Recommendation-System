@@ -109,9 +109,11 @@ def get_recommendations(user_id):
             matched_user_data = None
             if rec.match_type == 'roommate':
                 matched_user = User.query.get(rec.match_id)
-                if matched_user:
-                    matched_user_data = matched_user.to_dict()
-            
+                if not matched_user:
+                    # Skip recommendations pointing to deleted users
+                    continue
+                matched_user_data = matched_user.to_dict()
+
             result_recs.append({
                 'recommendation_id': rec.recommendation_id,
                 'requester_id': rec.requester_id,
@@ -512,6 +514,73 @@ def get_recommendation_stats(user_id):
             'avg_score_of_liked': round(avg_liked, 1),
             'avg_score_of_disliked': round(avg_disliked, 1)
         }), 200
-        
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@recommendations_bp.route('/user/<int:user_id>/mutual', methods=['GET'])
+@jwt_required()
+def get_mutual_matches(user_id):
+    """
+    Get mutual matches — pairs where both users have liked each other's recommendation.
+
+    Two users are a "mutual match" when:
+    - User A has a recommendation for User B with liked=True
+    - User B has a recommendation for User A with liked=True
+
+    Returns:
+    {
+        "mutual_matches": [
+            {
+                "recommendation_id": 1,
+                "match_id": 456,
+                "match_score": 82.5,
+                "matched_user": {...},
+                "matched_at": "2024-01-15T10:30:00"
+            }
+        ],
+        "count": 1
+    }
+    """
+    try:
+        current_user = int(get_jwt_identity())
+        if current_user != user_id:
+            return jsonify({'error': 'Unauthorized'}), 403
+
+        # Find all recommendations where this user liked someone
+        liked_by_me = Recommendation.query.filter_by(
+            requester_id=user_id,
+            liked=True,
+            match_type='roommate'
+        ).all()
+
+        mutual = []
+        for rec in liked_by_me:
+            # Check if the other person also liked this user back
+            reverse = Recommendation.query.filter_by(
+                requester_id=rec.match_id,
+                match_id=user_id,
+                match_type='roommate',
+                liked=True
+            ).first()
+
+            if reverse:
+                matched_user = User.query.get(rec.match_id)
+                if not matched_user:
+                    continue
+                mutual.append({
+                    'recommendation_id': rec.recommendation_id,
+                    'match_id': rec.match_id,
+                    'match_score': float(rec.match_score) if rec.match_score else 0,
+                    'matched_user': matched_user.to_dict(),
+                    'matched_at': rec.viewed_at.isoformat() if rec.viewed_at else rec.created_at.isoformat()
+                })
+
+        return jsonify({
+            'mutual_matches': mutual,
+            'count': len(mutual)
+        }), 200
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500

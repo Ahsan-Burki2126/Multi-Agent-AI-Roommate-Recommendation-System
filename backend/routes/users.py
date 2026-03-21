@@ -81,7 +81,7 @@ def update_user(user_id):
         data = request.get_json()
         
         # Update allowed fields
-        allowed_fields = ['full_name', 'phone', 'gender', 'city', 'bio', 'profile_picture']
+        allowed_fields = ['full_name', 'phone', 'gender', 'city', 'bio', 'profile_picture', 'settings_json', 'age']
         for field in allowed_fields:
             if field in data:
                 setattr(user, field, data[field])
