@@ -45,9 +45,8 @@ def create_app(config_name=None):
     # Import here to avoid circular imports
     from backend.config import get_config
     
-    # Create Flask app — serve frontend static files in production
-    frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend')
-    app = Flask(__name__, static_folder=frontend_dir, static_url_path='')
+    # Create Flask app
+    app = Flask(__name__)
     
     # Load configuration
     app.config.from_object(get_config(config_name))
@@ -154,18 +153,6 @@ def _register_routes(app):
             'status': 'healthy',
             'message': 'Roommate Matching System API is running'
         }), 200
-
-    # Serve frontend pages
-    @app.route('/')
-    def serve_index():
-        return app.send_static_file('index.html')
-
-    @app.route('/<path:path>')
-    def serve_frontend(path):
-        """Serve frontend static files (HTML, CSS, JS)"""
-        if os.path.exists(os.path.join(app.static_folder, path)):
-            return app.send_static_file(path)
-        return app.send_static_file('index.html')
 
 
 def _register_error_handlers(app):
