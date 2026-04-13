@@ -101,11 +101,22 @@ class ProductionConfig(Config):
     # Neon / Supabase / Railway give you a postgres:// URL.
     # Vercel Postgres uses postgres:// but SQLAlchemy needs postgresql://
     _raw_db_url = os.getenv('DATABASE_URL', '')
+    # Normalise postgres:// → postgresql:// (Neon/Heroku shorthand)
     if _raw_db_url.startswith('postgres://'):
-        # Fix Heroku/Vercel shorthand prefix that SQLAlchemy doesn't recognise
         _raw_db_url = _raw_db_url.replace('postgres://', 'postgresql://', 1)
+    # Switch driver to pg8000 (pure-Python, works on Vercel Lambda)
+    if _raw_db_url.startswith('postgresql://') and '+' not in _raw_db_url.split('://')[0]:
+        _raw_db_url = _raw_db_url.replace('postgresql://', 'postgresql+pg8000://', 1)
     # Fallback: /tmp is the only writable path on Vercel's read-only filesystem
     SQLALCHEMY_DATABASE_URI = _raw_db_url or 'sqlite:////tmp/production.db'
+
+    # Neon serverless needs SSL and short-lived connections (no persistent pool)
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,   # test connection before use
+        'pool_recycle': 280,     # recycle before Neon's 300s idle timeout
+        'pool_size': 1,          # Vercel Lambda = one request at a time
+        'max_overflow': 0,
+    }
 
     # Disable SQL echo in production for performance
     SQLALCHEMY_ECHO = False
