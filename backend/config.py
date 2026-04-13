@@ -108,12 +108,18 @@ class ProductionConfig(Config):
     # Switch driver to pg8000 (pure-Python, works on Vercel Lambda)
     if _raw_db_url.startswith('postgresql://') and '+' not in _raw_db_url.split('://')[0]:
         _raw_db_url = _raw_db_url.replace('postgresql://', 'postgresql+pg8000://', 1)
+    # Strip ?sslmode=... — pg8000 does NOT accept sslmode as a URL param;
+    # SSL is passed via connect_args instead (see SQLALCHEMY_ENGINE_OPTIONS below).
+    if '?' in _raw_db_url:
+        from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
+        _parsed = urlparse(_raw_db_url)
+        _qs = {k: v for k, v in parse_qs(_parsed.query).items() if k != 'sslmode'}
+        _raw_db_url = urlunparse(_parsed._replace(query=urlencode(_qs, doseq=True)))
     # Fallback: /tmp is the only writable path on Vercel's read-only filesystem
     SQLALCHEMY_DATABASE_URI = _raw_db_url or 'sqlite:////tmp/production.db'
 
-    # Neon requires SSL; pg8000 needs an ssl_context object (not just sslmode=require).
-    # NullPool is mandatory for serverless — each Lambda invocation is independent,
-    # persistent connection pools cause "too many connections" on Neon free tier.
+    # Neon requires SSL; pg8000 uses ssl_context (not sslmode URL param).
+    # NullPool is mandatory for serverless — each Lambda invocation is independent.
     _ssl_ctx = ssl.create_default_context()
     from sqlalchemy.pool import NullPool
     SQLALCHEMY_ENGINE_OPTIONS = {
