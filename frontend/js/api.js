@@ -74,8 +74,16 @@ class APIClient {
       }
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || `API error: ${response.status}`);
+        let errorMsg = `API error: ${response.status}`;
+        try {
+          const error = await response.json();
+          errorMsg = error.error || error.message || errorMsg;
+        } catch {
+          // Response was not JSON (e.g. Vercel HTML error page)
+          const text = await response.text().catch(() => "");
+          if (text) errorMsg = text.substring(0, 150);
+        }
+        throw new Error(errorMsg);
       }
 
       return await response.json();
