@@ -141,10 +141,14 @@ class PreferenceAnalysisAgent(BaseAgent):
             if not force_recompute:
                 cached_vector = PreferenceVector.query.filter_by(user_id=user_id).first()
                 if cached_vector and not cached_vector.is_stale():
+                    from datetime import timezone
+                    age_seconds = int(
+                        (datetime.utcnow() - cached_vector.computed_at).total_seconds()
+                    )
                     return AgentResult(
                         self.name, AgentStatus.SUCCESS,
                         data=cached_vector.to_dict(),
-                        metadata={'cached': True, 'age_seconds': cached_vector.get_age()}
+                        metadata={'cached': True, 'age_seconds': age_seconds}
                     )
 
             # ── Tool: Vectorize preferences (NumPy) ──

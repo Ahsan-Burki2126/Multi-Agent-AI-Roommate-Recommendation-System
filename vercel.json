@@ -1,0 +1,69 @@
+{
+  "version": 2,
+  "name": "roommate-matching-system",
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "50mb" }
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/auth/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/users/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/preferences/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/rooms/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/matches/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/recommendations/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/orchestrate/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/health",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/frontend/(.*)",
+      "dest": "frontend/$1"
+    },
+    {
+      "src": "/(.*\\.(css|js|png|jpg|svg|ico|woff|woff2|ttf|eot))",
+      "dest": "frontend/$1"
+    },
+    {
+      "src": "/(login|register|dashboard|matches|preferences|profile|rooms|settings|ai-agents)\\.html",
+      "dest": "frontend/$1.html"
+    },
+    {
+      "src": "/",
+      "dest": "frontend/index.html"
+    }
+  ],
+  "env": {
+    "FLASK_ENV": "production",
+    "PYTHONPATH": "."
+  }
+}

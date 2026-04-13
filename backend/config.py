@@ -93,20 +93,26 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
-    """Production environment configuration"""
+    """Production environment configuration (Vercel / Render / Railway)"""
     DEBUG = False
     TESTING = False
-    
-    # PostgreSQL for production
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        'DATABASE_URL',
-        'postgresql://user:password@localhost/roommate_db'
-    )
-    
-    # Enforce HTTPS
+
+    # DATABASE_URL must be set in Vercel environment variables.
+    # Neon / Supabase / Railway give you a postgres:// URL.
+    # Vercel Postgres uses postgres:// but SQLAlchemy needs postgresql://
+    _raw_db_url = os.getenv('DATABASE_URL', '')
+    if _raw_db_url.startswith('postgres://'):
+        # Fix Heroku/Vercel shorthand prefix that SQLAlchemy doesn't recognise
+        _raw_db_url = _raw_db_url.replace('postgres://', 'postgresql://', 1)
+    SQLALCHEMY_DATABASE_URI = _raw_db_url or 'sqlite:///production.db'
+
+    # Disable SQL echo in production for performance
+    SQLALCHEMY_ECHO = False
+
+    # Enforce HTTPS cookies
     SESSION_COOKIE_SECURE = True
     PREFERRED_URL_SCHEME = 'https'
-    
+
     LOG_LEVEL = 'WARNING'
 
 

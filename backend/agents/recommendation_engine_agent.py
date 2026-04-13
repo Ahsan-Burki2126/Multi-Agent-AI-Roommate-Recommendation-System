@@ -159,6 +159,16 @@ class RecommendationEngineAgent(BaseAgent):
                 if explanation.get('llm_generated'):
                     llm_explanations_generated += 1
 
+                # Fetch soft conflicts from DB (detected in pipeline Step 3.5)
+                soft_conflict_rows = ConflictLog.get_soft_conflicts_for_pair(
+                    user_id, other_user_id
+                )
+                soft_warnings = [
+                    {'type': c.conflict_type, 'description': c.description,
+                     'severity': c.severity}
+                    for c in soft_conflict_rows
+                ]
+
                 # Create or update recommendation in DB
                 existing_rec = Recommendation.query.filter(
                     (Recommendation.requester_id == user_id) &
@@ -169,6 +179,7 @@ class RecommendationEngineAgent(BaseAgent):
                 if existing_rec:
                     existing_rec.match_score = float(score_obj.overall_score)
                     existing_rec.explanation = json.dumps(explanation)
+                    existing_rec.conflict_warnings = soft_warnings
                 else:
                     rec = Recommendation(
                         requester_id=user_id,
@@ -176,7 +187,7 @@ class RecommendationEngineAgent(BaseAgent):
                         match_id=other_user_id,
                         match_score=float(score_obj.overall_score),
                         explanation=json.dumps(explanation),
-                        conflict_warnings=json.dumps([]),
+                        conflict_warnings=soft_warnings,
                         created_at=datetime.utcnow()
                     )
                     db.session.add(rec)
@@ -189,6 +200,7 @@ class RecommendationEngineAgent(BaseAgent):
                     'gender': other_user.gender,
                     'bio': other_user.bio,
                     'explanation': explanation,
+                    'conflict_warnings': soft_warnings,
                     'components': {
                         'lifestyle': float(score_obj.lifestyle_score or 0),
                         'schedule': float(score_obj.schedule_score or 0),

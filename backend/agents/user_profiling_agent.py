@@ -277,7 +277,7 @@ class UserProfilingAgent(BaseAgent):
             'city': str(user_data.get('city', '')).strip().title(),
             'phone': str(user_data.get('phone', '')).strip() if user_data.get('phone') else None,
             'bio': str(user_data.get('bio', '')).strip() if user_data.get('bio') else None,
-            'age': int(user_data.get('age', 25)) if user_data.get('age') else 25,
+            'age': int(user_data.get('age')) if user_data.get('age') else None,
         }
 
     def _profile_from_user(self, user):
@@ -289,7 +289,7 @@ class UserProfilingAgent(BaseAgent):
             'city': user.city,
             'phone': user.phone,
             'bio': user.bio,
-            'age': 25,
+            'age': user.age,
             'is_active': user.is_active,
             'created_at': user.created_at.isoformat() if user.created_at else None,
             'updated_at': user.updated_at.isoformat() if user.updated_at else None,

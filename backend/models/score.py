@@ -183,41 +183,49 @@ class CompatibilityScore(db.Model):
     
     def get_strongest_component(self):
         """
-        Return which component is the strongest
-        
+        Return which component is the strongest.
+        Only considers components that were actually computed (not None).
+
         Returns:
-            tuple: (component_name: str, score: float)
-        
-        Example:
-            strongest, score = compatibility.get_strongest_component()
-            # Returns: ("lifestyle", 85.0)
+            tuple: (component_name: str, score: float) or (None, None) if no scores
         """
         components = {
-            'lifestyle': float(self.lifestyle_score) if self.lifestyle_score else 0,
-            'budget': float(self.budget_score) if self.budget_score else 0,
-            'schedule': float(self.schedule_score) if self.schedule_score else 0,
-            'habits': float(self.habits_score) if self.habits_score else 0,
-            'age_match': float(self.age_match_score) if self.age_match_score else 0,
+            name: float(val)
+            for name, val in [
+                ('lifestyle', self.lifestyle_score),
+                ('budget', self.budget_score),
+                ('schedule', self.schedule_score),
+                ('habits', self.habits_score),
+                ('age_match', self.age_match_score),
+            ]
+            if val is not None
         }
-        
+        if not components:
+            return None, None
         strongest = max(components, key=components.get)
         return strongest, components[strongest]
-    
+
     def get_weakest_component(self):
         """
-        Return which component has the lowest score
-        
+        Return which component has the lowest score.
+        Only considers components that were actually computed (not None).
+
         Returns:
-            tuple: (component_name: str, score: float)
+            tuple: (component_name: str, score: float) or (None, None) if no scores
         """
         components = {
-            'lifestyle': float(self.lifestyle_score) if self.lifestyle_score else 100,
-            'budget': float(self.budget_score) if self.budget_score else 100,
-            'schedule': float(self.schedule_score) if self.schedule_score else 100,
-            'habits': float(self.habits_score) if self.habits_score else 100,
-            'age_match': float(self.age_match_score) if self.age_match_score else 100,
+            name: float(val)
+            for name, val in [
+                ('lifestyle', self.lifestyle_score),
+                ('budget', self.budget_score),
+                ('schedule', self.schedule_score),
+                ('habits', self.habits_score),
+                ('age_match', self.age_match_score),
+            ]
+            if val is not None
         }
-        
+        if not components:
+            return None, None
         weakest = min(components, key=components.get)
         return weakest, components[weakest]
     

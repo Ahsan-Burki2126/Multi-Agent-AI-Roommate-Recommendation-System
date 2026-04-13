@@ -61,9 +61,9 @@ htmlcov/
 ehthumbs.db
 Thumbs.db
 
-# Database
-*.db
-*.sqlite
+# Database — keep the seeded production database, exclude only local test dbs
+instance/*.db
+backend/instance/*.db
 *.sqlite3
 *.log
 

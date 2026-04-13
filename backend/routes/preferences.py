@@ -16,7 +16,6 @@ from datetime import datetime
 from backend.database import db
 from backend.models import UserPreference, PreferenceVector, AuditLog
 import json
-import numpy as np
 from decimal import Decimal
 
 preferences_bp = Blueprint('preferences', __name__)
@@ -151,9 +150,9 @@ def create_preferences(user_id):
         try:
             from backend.agents import get_orchestrator
             orchestrator = get_orchestrator()
-            pref_agent = orchestrator.get_agent('preference_analysis')
+            pref_agent = orchestrator.get_agent('Preference Analysis Agent')
             if pref_agent:
-                pref_agent.vectorize_preferences(prefs.user_id)
+                pref_agent.execute(user_id=prefs.user_id, force_recompute=True)
         except Exception as ve:
             # Non-fatal: vectorization will happen on next pipeline run
             pass
@@ -244,9 +243,9 @@ def update_preferences(user_id):
         try:
             from backend.agents import get_orchestrator
             orchestrator = get_orchestrator()
-            pref_agent = orchestrator.get_agent('preference_analysis')
+            pref_agent = orchestrator.get_agent('Preference Analysis Agent')
             if pref_agent:
-                pref_agent.vectorize_preferences(prefs.user_id)
+                pref_agent.execute(user_id=prefs.user_id, force_recompute=True)
         except Exception as ve:
             # Non-fatal: vectorization will happen on next pipeline run
             pass
@@ -322,71 +321,28 @@ def vectorize_preferences(user_id):
         if current_user != user_id:
             return jsonify({'error': 'Unauthorized'}), 403
         
-        # Get user preferences
+        # Verify preferences exist before delegating to agent
         prefs = UserPreference.query.filter_by(user_id=user_id).first()
         if not prefs:
             return jsonify({'error': 'User preferences not found. Create preferences first.'}), 404
-        
-        # Convert preferences to vector (simple example)
-        # Real implementation would use more sophisticated feature engineering
-        vector_data = [
-            float(prefs.budget_min) / 2000.0,  # Normalize budget min
-            float(prefs.budget_max) / 3000.0,  # Normalize budget max
-            (prefs.age_min or 20) / 60.0 if prefs.age_min else 0.33,  # Normalize age
-            (prefs.noise_tolerance or 5) / 10.0,  # Normalize noise tolerance (0-1)
-            1.0 if prefs.smoking_ok else 0.0,  # Smoking preference
-            1.0 if prefs.pets_ok else 0.0,  # Pets preference
-        ]
-        
-        # Compute norm
-        vector_norm = float(np.linalg.norm(vector_data))
-        
-        # Delete existing vector
-        existing = PreferenceVector.query.filter_by(user_id=user_id).first()
-        if existing:
-            db.session.delete(existing)
-        
-        # Create new vector
-        vector = PreferenceVector(
-            user_id=user_id,
-            vector_data=vector_data,
-            vector_norm=vector_norm,
-            preference_weights={
-                'cosine_similarity': 0.3,
-                'lifestyle_match': 0.2,
-                'schedule_compatibility': 0.2,
-                'budget_alignment': 0.15,
-                'habits_alignment': 0.15
-            },
-            computed_at=datetime.utcnow()
-        )
-        
-        db.session.add(vector)
-        db.session.commit()
-        
-        # Log vectorization
-        audit = AuditLog(
-            agent_name='Analysis Agent',
-            action='computed_vector',
-            entity_type='user',
-            entity_id=user_id,
-            details=json.dumps({
-                'vector_dim': len(vector_data),
-                'vector_norm': float(vector_norm),
-                'components': [
-                    'budget_min',
-                    'budget_max',
-                    'age_min',
-                    'noise_tolerance',
-                    'smoking_ok',
-                    'pets_ok'
-                ]
-            }),
-            timestamp=datetime.utcnow()
-        )
-        db.session.add(audit)
-        db.session.commit()
-        
+
+        # Delegate to Preference Analysis Agent so the vector format is
+        # always consistent (6D: budget, age, noise, smoking, pets, cleanliness)
+        # regardless of which code path triggered vectorization.
+        from backend.agents import get_orchestrator
+        orchestrator = get_orchestrator()
+        pref_agent = orchestrator.get_agent('Preference Analysis Agent')
+        if not pref_agent:
+            return jsonify({'error': 'Preference Analysis Agent unavailable'}), 503
+
+        result = pref_agent.execute(user_id=user_id, force_recompute=True)
+        if not result.is_success():
+            return jsonify({'error': result.error or 'Vectorization failed'}), 500
+
+        vector = PreferenceVector.query.filter_by(user_id=user_id).first()
+        if not vector:
+            return jsonify({'error': 'Vector was not saved correctly'}), 500
+
         return jsonify({
             'vector_id': vector.vector_id,
             'user_id': vector.user_id,

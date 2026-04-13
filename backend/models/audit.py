@@ -165,16 +165,10 @@ class AuditLog(db.Model):
             # - Conflict Detection: Found no hard conflicts
             # - Recommendation Engine: Generated explanation
         """
-        # Get logs for both users and any scores between them
-        # This is a simplified version - real implementation would be more complex
-        logs = AuditLog.query.order_by(AuditLog.timestamp.asc()).all()
-        
-        relevant_logs = [
-            log for log in logs
-            if (log.entity_id == user_a_id or log.entity_id == user_b_id)
-        ]
-        
-        return relevant_logs
+        # Filter at the database level — do NOT load the entire table into memory
+        return AuditLog.query.filter(
+            AuditLog.entity_id.in_([user_a_id, user_b_id])
+        ).order_by(AuditLog.timestamp.asc()).all()
     
     @staticmethod
     def get_agent_timeline(limit=100):

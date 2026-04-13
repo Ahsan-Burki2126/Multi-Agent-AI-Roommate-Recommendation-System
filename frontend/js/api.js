@@ -5,7 +5,15 @@
  * Configuration: Update BASE_URL if backend is on different host/port
  */
 
-const BASE_URL = "http://localhost:5000";
+// In production (Vercel), the Flask backend is served on the same domain
+// via the /api serverless function, so we use a relative URL.
+// In local development, the backend runs separately on port 5000.
+const BASE_URL = (
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+)
+  ? "http://localhost:5000"
+  : "";   // same origin on Vercel — routes handled by vercel.json
 
 class APIClient {
   constructor() {
