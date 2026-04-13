@@ -3,6 +3,7 @@ Configuration management for the Roommate Matching System
 Handles different environments (development, testing, production)
 """
 import os
+import ssl
 from datetime import timedelta
 
 class Config:
@@ -110,12 +111,14 @@ class ProductionConfig(Config):
     # Fallback: /tmp is the only writable path on Vercel's read-only filesystem
     SQLALCHEMY_DATABASE_URI = _raw_db_url or 'sqlite:////tmp/production.db'
 
-    # Neon serverless needs SSL and short-lived connections (no persistent pool)
+    # Neon requires SSL; pg8000 needs an ssl_context object (not just sslmode=require).
+    # NullPool is mandatory for serverless — each Lambda invocation is independent,
+    # persistent connection pools cause "too many connections" on Neon free tier.
+    _ssl_ctx = ssl.create_default_context()
+    from sqlalchemy.pool import NullPool
     SQLALCHEMY_ENGINE_OPTIONS = {
-        'pool_pre_ping': True,   # test connection before use
-        'pool_recycle': 280,     # recycle before Neon's 300s idle timeout
-        'pool_size': 1,          # Vercel Lambda = one request at a time
-        'max_overflow': 0,
+        'poolclass': NullPool,
+        'connect_args': {'ssl_context': _ssl_ctx},
     }
 
     # Disable SQL echo in production for performance
