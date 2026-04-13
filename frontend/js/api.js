@@ -5,15 +5,14 @@
  * Configuration: Update BASE_URL if backend is on different host/port
  */
 
-// In production (Vercel Services preset), the Flask backend is served at
-// /_/backend on the same domain.
+// In production (Vercel), API routes are on the same domain (routed via vercel.json).
 // In local development, the backend runs separately on port 5000.
 const BASE_URL = (
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
 )
   ? "http://localhost:5000"
-  : "/_/backend";   // Vercel Services preset — backend routePrefix
+  : "";   // same origin on Vercel — routes handled by vercel.json
 
 class APIClient {
   constructor() {
