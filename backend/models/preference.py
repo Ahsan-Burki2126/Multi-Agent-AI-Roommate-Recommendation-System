@@ -53,17 +53,17 @@ class UserPreference(db.Model):
     
     # Location & Demographics
     preferred_location = db.Column(db.String(200))
-    gender_preference = db.Column(db.Enum('M', 'F', 'Any'), default='Any')
+    gender_preference = db.Column(db.Enum('M', 'F', 'Any', name='gender_pref_enum'), default='Any')
     age_min = db.Column(db.Integer)
     age_max = db.Column(db.Integer)
     
     # Lifestyle Preferences
     cleanliness_level = db.Column(
-        db.Enum('Very Clean', 'Clean', 'Average', 'Relaxed'),
+        db.Enum('Very Clean', 'Clean', 'Average', 'Relaxed', name='cleanliness_enum'),
         nullable=True
     )
     schedule = db.Column(
-        db.Enum('9-5 Job', 'Night Shift', 'Student', 'Flexible'),
+        db.Enum('9-5 Job', 'Night Shift', 'Student', 'Flexible', name='schedule_enum'),
         nullable=True
     )
     
@@ -74,7 +74,7 @@ class UserPreference(db.Model):
     # Soft Preferences
     noise_tolerance = db.Column(db.Integer)  # 1-10 scale
     preferred_room_type = db.Column(
-        db.Enum('Single', 'Shared', 'Any'),
+        db.Enum('Single', 'Shared', 'Any', name='room_pref_enum'),
         default='Any'
     )
     lease_duration_months = db.Column(db.Integer)

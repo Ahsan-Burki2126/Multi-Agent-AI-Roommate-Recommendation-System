@@ -47,7 +47,7 @@ class ConflictLog(db.Model):
                        nullable=True, index=True)
     
     # Conflict Details
-    conflict_type = db.Column(db.Enum('Hard', 'Soft'), nullable=False, index=True)
+    conflict_type = db.Column(db.Enum('Hard', 'Soft', name='conflict_type_enum'), nullable=False, index=True)
     description = db.Column(db.Text, nullable=False)
     severity = db.Column(db.Integer)  # 1-10 scale
     

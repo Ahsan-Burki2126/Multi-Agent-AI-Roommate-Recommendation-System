@@ -48,7 +48,7 @@ class User(db.Model):
     
     # Basic Info
     full_name = db.Column(db.String(255), nullable=False)
-    gender = db.Column(db.Enum('M', 'F', 'Other'), nullable=True)
+    gender = db.Column(db.Enum('M', 'F', 'Other', name='gender_enum'), nullable=True)
     city = db.Column(db.String(100), index=True)
     phone = db.Column(db.String(20))
     

@@ -46,7 +46,7 @@ class Recommendation(db.Model):
     # User & Match Info
     requester_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),
                             nullable=False, index=True)
-    match_type = db.Column(db.Enum('roommate', 'room'), nullable=False, index=True)
+    match_type = db.Column(db.Enum('roommate', 'room', name='match_type_enum'), nullable=False, index=True)
     match_id = db.Column(db.Integer, nullable=False)  # user_id or room_id
     
     # Score & Explanation

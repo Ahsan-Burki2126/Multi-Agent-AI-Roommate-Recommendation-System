@@ -54,7 +54,7 @@ class Room(db.Model):
     
     # Rental Details
     rent_price = db.Column(db.Numeric(8, 2), nullable=False)
-    room_type = db.Column(db.Enum('Single', 'Shared', 'Master'), 
+    room_type = db.Column(db.Enum('Single', 'Shared', 'Master', name='room_type_enum'),
                          nullable=False, index=True)
     bedrooms = db.Column(db.Integer)
     bathrooms = db.Column(db.Numeric(3, 1))
