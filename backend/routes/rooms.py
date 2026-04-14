@@ -350,6 +350,33 @@ def search_rooms():
         return jsonify({'error': str(e)}), 500
 
 
+@rooms_bp.route('/import-hostels', methods=['POST'])
+@jwt_required()
+def import_hostels():
+    """
+    Manually trigger a Google Places hostel import for a city.
+
+    Request JSON:
+    { "city": "Bahawalpur" }
+
+    Returns:
+    { "saved": 8, "city": "Bahawalpur" }
+    """
+    try:
+        data = request.get_json() or {}
+        city = (data.get('city') or '').strip()
+        if not city:
+            return jsonify({'error': 'city is required'}), 400
+
+        from backend.services.hostel_search import fetch_and_save_hostels
+        saved = fetch_and_save_hostels(city)
+
+        return jsonify({'saved': saved, 'city': city}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @rooms_bp.route('/user/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_user_rooms(user_id):

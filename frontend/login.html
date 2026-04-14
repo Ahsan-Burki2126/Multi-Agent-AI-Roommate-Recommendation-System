@@ -5,175 +5,324 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In — RoomMate AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/design-system.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { background: #F8FAFC; }
-        .auth-card {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        * { font-family: 'Inter', sans-serif; }
+
+        body { background: #0f1117; color: #e2e8f0; }
+
+        /* ── Left panel gradient ── */
+        .hero-panel {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 70%, #1e1b4b 100%);
+            position: relative;
+            overflow: hidden;
         }
-        .btn-primary {
-            background: #2563EB;
-            transition: all 0.3s;
+        .hero-panel::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 30% 20%, rgba(139,92,246,.25) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 80%, rgba(99,102,241,.2) 0%, transparent 55%);
         }
-        .btn-primary:hover {
-            background: #1D4ED8;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+        .hero-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: drift 8s ease-in-out infinite alternate;
         }
+        @keyframes drift {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(20px, -15px) scale(1.08); }
+        }
+
+        /* ── Right panel (form) ── */
+        .form-panel { background: #0f1117; }
+
+        .input-wrap { position: relative; }
         .input-field {
-            background: #FFFFFF;
-            border: 1px solid #D1D5DB;
-            color: #111827;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .input-field:focus {
+            width: 100%;
+            background: #1a1f2e;
+            border: 1px solid #2d3748;
+            color: #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 16px 12px 44px;
+            font-size: 14px;
+            transition: border-color .2s, box-shadow .2s;
             outline: none;
-            border-color: #2563EB;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
-        .input-field::placeholder { color: #9CA3AF; }
-        .ai-badge {
-            background: #DBEAFE;
-            color: #2563EB;
+        .input-field::placeholder { color: #4a5568; }
+        .input-field:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124,58,237,.15);
         }
+        .input-icon {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #4a5568; pointer-events: none;
+        }
+        .input-icon svg { width: 18px; height: 18px; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            border: none; color: #fff; font-weight: 600;
+            padding: 13px; border-radius: 10px; width: 100%;
+            cursor: pointer; font-size: 15px;
+            transition: transform .2s, box-shadow .2s, opacity .2s;
+            box-shadow: 0 4px 20px rgba(124,58,237,.35);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(124,58,237,.5);
+        }
+        .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+        /* Feature pills */
+        .feature-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 50px;
+            padding: 8px 16px; font-size: 13px; color: #c4b5fd;
+            backdrop-filter: blur(8px);
+        }
+        .feature-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; flex-shrink: 0; }
+
+        /* Stats strip */
+        .stat-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 12px; padding: 16px 20px;
+            backdrop-filter: blur(12px);
+        }
+
+        /* Error / divider */
+        .error-box {
+            background: rgba(239,68,68,.1);
+            border: 1px solid rgba(239,68,68,.3);
+            color: #fca5a5;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+        }
+        .divider { display: flex; align-items: center; gap: 12px; }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: #1e2538;
+        }
+
+        /* Spin */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spin { animation: spin .8s linear infinite; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f1117; }
+        ::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 3px; }
     </style>
 </head>
-<body class="min-h-screen relative" style="background:#F8FAFC; font-family:'Inter',sans-serif;">
+<body class="min-h-screen flex">
 
-    <div class="min-h-screen flex flex-col relative z-10">
-        <!-- Header -->
-        <header class="py-6 px-8">
-            <a href="/" class="flex items-center space-x-3 w-fit">
-                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:#2563EB;">🏠</div>
-                <span class="text-lg font-bold" style="color:#2563EB;">RoomMate AI</span>
+    <!-- ═══════════════════════════ LEFT HERO ═══════════════════════════ -->
+    <div class="hero-panel hidden lg:flex flex-col justify-between w-[52%] p-12 relative z-0">
+        <!-- Blobs -->
+        <div class="hero-blob w-80 h-80 bg-violet-600/30 top-[-60px] left-[-60px]" style="position:absolute;"></div>
+        <div class="hero-blob w-64 h-64 bg-indigo-500/20 bottom-20 right-[-40px]" style="position:absolute; animation-delay:4s;"></div>
+        <div class="hero-blob w-40 h-40 bg-purple-400/20 bottom-[-30px] left-1/3" style="position:absolute; animation-delay:2s;"></div>
+
+        <!-- Logo -->
+        <div class="relative z-10">
+            <a href="/" class="flex items-center gap-3 w-fit">
+                <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-xl" style="background:rgba(255,255,255,.15);backdrop-filter:blur(8px);">🏠</div>
+                <span class="text-xl font-bold text-white">RoomMate AI</span>
             </a>
-        </header>
+        </div>
 
-        <!-- Main -->
-        <main class="flex-1 flex items-center justify-center py-12 px-4">
-            <div class="w-full max-w-md">
-
-                <!-- Badge -->
-                <div class="text-center mb-8">
-                    <span class="ai-badge">AI-Powered Matching</span>
-                    <h1 class="text-4xl font-bold mt-4 mb-2" style="color:#111827;">Welcome Back</h1>
-                    <p style="color:#6B7280;">Sign in to continue your roommate search</p>
+        <!-- Main copy -->
+        <div class="relative z-10 space-y-8">
+            <div>
+                <div class="feature-pill mb-6">
+                    <div class="feature-dot"></div>
+                    AI-Powered Matching System
                 </div>
-
-                <!-- Card -->
-                <div class="auth-card p-8">
-                    <!-- Error Message -->
-                    <div id="errorMessage" class="hidden mb-5 p-4 rounded-xl text-sm" style="background:#FEE2E2;border:1px solid #FECACA;color:#DC2626;"></div>
-
-                    <!-- Form -->
-                    <form id="loginForm" class="space-y-5">
-                        <!-- Email -->
-                        <div>
-                            <label class="block text-sm font-medium mb-2" style="color:#374151;">Email Address</label>
-                            <div class="relative">
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
-                                <input type="email" id="email" name="email" required placeholder="you@university.edu"
-                                    class="input-field w-full pl-11 pr-4 py-3 text-sm">
-                            </div>
-                        </div>
-
-                        <!-- Password -->
-                        <div>
-                            <label class="block text-sm font-medium mb-2" style="color:#374151;">Password</label>
-                            <div class="relative">
-                                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                                <input type="password" id="password" name="password" required placeholder="••••••••"
-                                    class="input-field w-full pl-11 pr-12 py-3 text-sm">
-                                <button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2" style="color:#9CA3AF;">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Remember + Forgot -->
-                        <div class="flex items-center justify-between">
-                            <label class="flex items-center gap-2 cursor-pointer">
-                                <input type="checkbox" id="remember" class="w-4 h-4 rounded" style="accent-color:#2563EB;">
-                                <span class="text-sm" style="color:#9CA3AF;">Remember me</span>
-                            </label>
-                            <a href="#" class="text-sm font-medium" style="color:#2563EB;">Forgot password?</a>
-                        </div>
-
-                        <!-- Submit -->
-                        <button type="submit" id="submitBtn"
-                            class="btn-primary w-full py-3.5 rounded-xl font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed">
-                            <span id="btnText">Sign In</span>
-                            <span id="btnLoader" class="hidden flex items-center justify-center gap-2">
-                                <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                Signing in...
-                            </span>
-                        </button>
-                    </form>
-
-                    <!-- Divider -->
-                    <div class="my-6 flex items-center gap-3">
-                        <div class="flex-1 h-px" style="background:#E5E7EB;"></div>
-                        <span class="text-xs" style="color:#9CA3AF;">OR</span>
-                        <div class="flex-1 h-px" style="background:#E5E7EB;"></div>
-                    </div>
-
-                    <!-- Sign up link -->
-                    <p class="text-center text-sm" style="color:#9CA3AF;">
-                        New here?
-                        <a href="/register.html" class="font-semibold ml-1" style="color:#2563EB;">Create a free account →</a>
-                    </p>
-                </div>
-
-                <!-- Info note -->
-                <p class="text-center text-xs mt-6" style="color:#6B7280;">
-                    Survey participants: use your <span style="color:#2563EB;">@survey.iub.edu.pk</span> email with password <span style="color:#2563EB;">Survey@2024</span>
+                <h1 class="text-5xl font-black text-white leading-tight mb-4">
+                    Find Your<br>
+                    <span style="background:linear-gradient(90deg,#c4b5fd,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Perfect Match</span>
+                </h1>
+                <p class="text-purple-200/70 text-lg leading-relaxed max-w-sm">
+                    Our multi-agent AI system analyses lifestyle, budget, and habits to connect you with your ideal roommate.
                 </p>
             </div>
-        </main>
 
-        <footer class="py-6 text-center text-xs" style="color:#6B7280;">© 2026 RoomMate AI — IUB Final Year Project</footer>
+            <!-- Feature list -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(167,139,250,.15);">
+                        <svg class="w-4 h-4 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <span class="text-purple-100/80 text-sm">Smart compatibility scoring across 6 dimensions</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(167,139,250,.15);">
+                        <svg class="w-4 h-4 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                    </div>
+                    <span class="text-purple-100/80 text-sm">Real hostel listings sourced from Google Maps</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(167,139,250,.15);">
+                        <svg class="w-4 h-4 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                    </div>
+                    <span class="text-purple-100/80 text-sm">Explainable AI — see exactly why you matched</span>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="stat-card text-center">
+                    <div class="text-2xl font-black text-white">327</div>
+                    <div class="text-xs text-purple-300/70 mt-1">Survey Users</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div class="text-2xl font-black text-white">6</div>
+                    <div class="text-xs text-purple-300/70 mt-1">AI Agents</div>
+                </div>
+                <div class="stat-card text-center">
+                    <div class="text-2xl font-black text-white">98%</div>
+                    <div class="text-xs text-purple-300/70 mt-1">Match Rate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer note -->
+        <p class="relative z-10 text-purple-300/40 text-xs">IUB Final Year Project · 2026</p>
+    </div>
+
+    <!-- ═══════════════════════════ RIGHT FORM ═══════════════════════════ -->
+    <div class="form-panel flex-1 flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-12 min-h-screen">
+
+        <!-- Mobile logo -->
+        <div class="lg:hidden mb-10">
+            <a href="/" class="flex items-center gap-3 w-fit">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">🏠</div>
+                <span class="text-lg font-bold text-white">RoomMate AI</span>
+            </a>
+        </div>
+
+        <div class="max-w-sm w-full mx-auto">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-white mb-2">Welcome back</h2>
+                <p class="text-slate-400 text-sm">Sign in to continue your roommate search</p>
+            </div>
+
+            <!-- Error -->
+            <div id="errorMessage" class="hidden error-box mb-6"></div>
+
+            <!-- Form -->
+            <form id="loginForm" class="space-y-4">
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1.5">Email Address</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                        </span>
+                        <input type="email" id="email" required placeholder="you@university.edu" class="input-field">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="text-sm font-medium text-slate-300">Password</label>
+                        <a href="#" class="text-xs text-violet-400 hover:text-violet-300 transition-colors">Forgot password?</a>
+                    </div>
+                    <div class="input-wrap">
+                        <span class="input-icon">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                        </span>
+                        <input type="password" id="password" required placeholder="••••••••" class="input-field" style="padding-right:44px;">
+                        <button type="button" id="togglePassword" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#4a5568;background:none;border:none;cursor:pointer;padding:0;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember -->
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" id="remember" class="w-4 h-4 rounded" style="accent-color:#7c3aed;">
+                    <label for="remember" class="text-sm text-slate-400 cursor-pointer">Remember me for 30 days</label>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" id="submitBtn" class="btn-primary mt-2" style="margin-top:8px;">
+                    <span id="btnText">Sign In</span>
+                    <span id="btnLoader" class="hidden" style="display:none;align-items:center;justify-content:center;gap:8px;">
+                        <svg class="spin" style="width:18px;height:18px;" fill="none" viewBox="0 0 24 24">
+                            <circle style="opacity:.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path style="opacity:.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        Signing in…
+                    </span>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="divider my-6">
+                <span class="text-xs text-slate-600">OR</span>
+            </div>
+
+            <!-- Register link -->
+            <p class="text-center text-sm text-slate-500">
+                New to RoomMate AI?
+                <a href="/register.html" class="font-semibold text-violet-400 hover:text-violet-300 transition-colors ml-1">Create account →</a>
+            </p>
+
+            <!-- Survey hint -->
+            <div class="mt-8 rounded-xl p-4" style="background:#1a1f2e;border:1px solid #2d3748;">
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    <span class="text-violet-400 font-semibold">Survey participants:</span>
+                    Use your <span class="text-slate-300">@survey.iub.edu.pk</span> email with password
+                    <span class="text-slate-300">Survey@2024</span>
+                </p>
+            </div>
+        </div>
     </div>
 
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        // Redirect if already logged in
+        if (localStorage.getItem('token')) {
+            window.location.href = '/dashboard.html';
+        }
+
         document.getElementById('togglePassword').addEventListener('click', function () {
-            const passwordInput = document.getElementById('password');
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            const inp = document.getElementById('password');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
         });
 
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const email = document.getElementById('email').value;
+            const email    = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = document.getElementById('btnText');
-            const btnLoader = document.getElementById('btnLoader');
-            const errorMessage = document.getElementById('errorMessage');
-            submitBtn.disabled = true;
+            const btn      = document.getElementById('submitBtn');
+            const btnText  = document.getElementById('btnText');
+            const loader   = document.getElementById('btnLoader');
+            const errBox   = document.getElementById('errorMessage');
+
+            btn.disabled = true;
             btnText.classList.add('hidden');
-            btnLoader.classList.remove('hidden');
-            errorMessage.classList.add('hidden');
+            loader.style.display = 'flex';
+            errBox.classList.add('hidden');
+
             try {
                 await auth.login(email, password);
                 window.location.href = '/dashboard.html';
-            } catch (error) {
-                errorMessage.textContent = error.message || 'Invalid email or password';
-                errorMessage.classList.remove('hidden');
-                submitBtn.disabled = false;
+            } catch (err) {
+                errBox.textContent = err.message || 'Invalid email or password.';
+                errBox.classList.remove('hidden');
+                btn.disabled = false;
                 btnText.classList.remove('hidden');
-                btnLoader.classList.add('hidden');
+                loader.style.display = 'none';
             }
         });
-
-        if (localStorage.getItem('token')) {
-            window.location.href = '/dashboard.html';
-        }
     </script>
 </body>
 </html>

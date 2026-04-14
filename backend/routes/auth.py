@@ -109,13 +109,21 @@ def register():
         db.session.add(audit)
         db.session.commit()
         
+        # Trigger real hostel fetch for the user's city (non-blocking)
+        if user.city:
+            try:
+                from backend.services.hostel_search import fetch_and_save_hostels
+                fetch_and_save_hostels(user.city)
+            except Exception:
+                pass  # Never fail registration because of hostel fetch
+
         return jsonify({
             'user_id': user.user_id,
             'email': user.email,
             'full_name': user.full_name,
             'message': 'Registration successful'
         }), 201
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500

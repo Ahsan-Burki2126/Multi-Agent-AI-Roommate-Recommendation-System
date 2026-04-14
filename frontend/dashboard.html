@@ -13,7 +13,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #F8FAFC;
+            background: #F0F2F8;
             color: #111827;
             min-height: 100vh;
             overflow: hidden;
@@ -29,17 +29,18 @@
         #sidebar {
             width: 240px;
             min-width: 240px;
-            background: #FFFFFF;
-            border-right: 1px solid #E5E7EB;
+            background: #1e1b4b;
+            border-right: none;
             display: flex;
             flex-direction: column;
             position: relative;
             z-index: 10;
             flex-shrink: 0;
+            box-shadow: 2px 0 12px rgba(0,0,0,.12);
         }
         .sidebar-logo-area {
             padding: 24px 20px;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid rgba(255,255,255,.08);
         }
         .sidebar-logo-link {
             display: flex;
@@ -49,7 +50,7 @@
         }
         .sidebar-logo-icon {
             width: 36px; height: 36px;
-            background: #2563EB;
+            background: linear-gradient(135deg,#7c3aed,#4f46e5);
             border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             font-size: 18px;
@@ -58,7 +59,7 @@
         .sidebar-logo-text {
             font-weight: 700;
             font-size: 15px;
-            color: #2563EB;
+            color: #c4b5fd;
         }
         .sidebar-nav {
             padding: 12px 10px;
@@ -75,21 +76,21 @@
             font-size: 14px;
             margin-bottom: 2px;
             transition: all 0.2s;
-            color: #6B7280;
+            color: rgba(196,181,253,.6);
             border-left: 3px solid transparent;
         }
         .nav-link:hover {
-            color: #111827;
-            background: #F3F4F6;
+            color: #e2e8f0;
+            background: rgba(255,255,255,.07);
         }
         .nav-link.active {
-            background: #DBEAFE;
-            border-left: 3px solid #2563EB;
-            color: #2563EB;
+            background: rgba(124,58,237,.25);
+            border-left: 3px solid #a78bfa;
+            color: #c4b5fd;
         }
         .sidebar-footer {
             padding: 12px 10px;
-            border-top: 1px solid #E5E7EB;
+            border-top: 1px solid rgba(255,255,255,.08);
         }
         .logout-btn {
             display: flex;
@@ -97,7 +98,7 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 10px;
-            color: #6B7280;
+            color: rgba(196,181,253,.55);
             background: none;
             border: none;
             cursor: pointer;
@@ -107,8 +108,8 @@
             transition: all 0.2s;
         }
         .logout-btn:hover {
-            color: #EF4444;
-            background: #FEE2E2;
+            color: #fca5a5;
+            background: rgba(239,68,68,.12);
         }
 
         /* Main layout */
@@ -133,6 +134,7 @@
             padding: 0 24px;
             position: relative;
             z-index: 20;
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
         }
         .header-left {
             display: flex;
@@ -219,17 +221,31 @@
         .content-area::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
 
         /* Welcome section */
-        .welcome-section { margin-bottom: 28px; }
+        .welcome-section {
+            margin-bottom: 28px;
+            background: linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4c1d95 100%);
+            border-radius: 20px;
+            padding: 28px 28px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-section::before {
+            content:''; position:absolute; inset:0;
+            background: radial-gradient(ellipse at 80% 50%, rgba(139,92,246,.3) 0%, transparent 60%);
+            pointer-events: none;
+        }
         .welcome-title {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
-            color: #111827;
+            color: #ffffff;
             margin-bottom: 6px;
+            position: relative; z-index: 1;
         }
         .welcome-name {
-            color: #2563EB;
+            background: linear-gradient(90deg,#c4b5fd,#a5b4fc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .welcome-subtitle { font-size: 14px; color: #6B7280; }
+        .welcome-subtitle { font-size: 14px; color: rgba(196,181,253,.7); position: relative; z-index: 1; }
 
         /* Stats grid */
         .stats-grid {
@@ -241,13 +257,20 @@
         .stat-card {
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+            transition: all 0.25s;
+            border-top: 3px solid transparent;
+            position: relative; overflow: hidden;
         }
+        .stat-card:nth-child(1) { border-top-color: #7c3aed; }
+        .stat-card:nth-child(2) { border-top-color: #2563eb; }
+        .stat-card:nth-child(3) { border-top-color: #059669; }
+        .stat-card:nth-child(4) { border-top-color: #d97706; }
         .stat-card:hover {
-            border-color: #D1D5DB;
+            box-shadow: 0 6px 20px rgba(0,0,0,.1);
+            transform: translateY(-2px);
         }
         .stat-top {
             display: flex;
@@ -286,20 +309,25 @@
         }
         .progress-fill {
             height: 100%;
-            background: #2563EB;
+            background: linear-gradient(90deg,#7c3aed,#4f46e5);
             border-radius: 99px;
             transition: width 0.8s ease;
         }
 
         /* AI Banner */
         .ai-banner {
-            background: #DBEAFE;
-            border: 1px solid rgba(37,99,235,0.15);
+            background: linear-gradient(135deg,#1e1b4b 0%,#4c1d95 60%,#312e81 100%);
+            border: none;
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
             position: relative;
             overflow: hidden;
+        }
+        .ai-banner::before {
+            content:''; position:absolute; inset:0;
+            background: radial-gradient(ellipse at 70% 30%, rgba(167,139,250,.25) 0%, transparent 55%);
+            pointer-events:none;
         }
         .ai-banner-inner {
             position: relative;
@@ -317,26 +345,30 @@
         .ai-banner-title {
             font-size: 17px;
             font-weight: 700;
-            color: #111827;
+            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 4px;
         }
-        .ai-banner-subtitle { font-size: 13px; color: #6B7280; }
+        .ai-banner-subtitle { font-size: 13px; color: rgba(196,181,253,.7); }
         .agent-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .agent-badge {
             padding: 4px 10px;
             border-radius: 99px;
             font-size: 11px;
             font-weight: 600;
+            background: rgba(255,255,255,.12) !important;
+            color: #c4b5fd !important;
+            border: 1px solid rgba(255,255,255,.15);
         }
         .ai-view-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             padding: 10px 20px;
-            background: #2563EB;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.25);
             border-radius: 12px;
             color: white;
             font-size: 13px;
@@ -344,25 +376,37 @@
             text-decoration: none;
             white-space: nowrap;
             transition: all 0.2s;
-            border: none;
             cursor: pointer;
             flex-shrink: 0;
+            backdrop-filter: blur(8px);
         }
-        .ai-view-btn:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .ai-view-btn:hover { background: rgba(255,255,255,.22); transform: translateY(-1px); }
         .ai-stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
         .ai-stat-box {
-            background: #F8FAFC;
-            border: 1px solid #E5E7EB;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.12);
             border-radius: 12px;
             padding: 12px;
             text-align: center;
+            backdrop-filter: blur(8px);
         }
-        .ai-stat-num { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
-        .ai-stat-label { font-size: 11px; color: #6B7280; }
+        .ai-stat-num { font-size: 20px; font-weight: 700; margin-bottom: 2px; color: #fff; }
+        .ai-stat-label { font-size: 11px; color: rgba(196,181,253,.6); }
+
+        /* Section divider label */
+        .section-divider {
+            display: flex; align-items: center; gap: 10px;
+            margin: 8px 0 16px;
+        }
+        .section-divider-label {
+            font-size: 11px; font-weight: 700; letter-spacing: .07em;
+            text-transform: uppercase; color: #9CA3AF; white-space: nowrap;
+        }
+        .section-divider::after { content:''; flex:1; height:1px; background:#E5E7EB; }
 
         /* Quick Actions */
         .section-title {
@@ -380,7 +424,7 @@
         .quick-action-card {
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 20px 16px;
             text-align: center;
             text-decoration: none;
@@ -390,10 +434,12 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.05);
         }
         .quick-action-card:hover {
-            border-color: #2563EB;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.1);
+            border-color: #7c3aed;
+            box-shadow: 0 6px 20px rgba(124,58,237,.12);
+            transform: translateY(-3px);
         }
         .qa-icon {
             width: 52px; height: 52px;
@@ -477,6 +523,18 @@
         }
         .run-pipeline-btn:hover { opacity: 0.9; }
 
+        /* Section panel wrapper */
+        .section-panel {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.05);
+        }
+        .section-panel-violet { border-top: 3px solid #7c3aed; }
+        .section-panel-blue   { border-top: 3px solid #2563eb; }
+        .section-panel-green  { border-top: 3px solid #059669; }
+
         /* Agent activity */
         #agentActivity {
             background: #F8FAFC;
@@ -499,7 +557,7 @@
         #mobileMenu {
             position: fixed;
             inset: 0;
-            background: #FFFFFF;
+            background: #1e1b4b;
             z-index: 999;
             overflow-y: auto;
         }
@@ -712,7 +770,7 @@
 
                 <!-- Quick Actions -->
                 <div style="margin-bottom:28px;">
-                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="section-divider"><span class="section-divider-label">Quick Actions</span></div>
                     <div class="quick-actions-grid">
                         <a href="/ai-agents.html" class="quick-action-card">
                             <div class="qa-icon" style="background:#DBEAFE;">🤖</div>
@@ -745,10 +803,13 @@
                     </div>
                 </div>
 
+                <!-- Section divider -->
+                <div class="section-divider"><span class="section-divider-label">Activity &amp; Matches</span></div>
+
                 <!-- Recent Matches + Agent Activity -->
                 <div class="two-col">
                     <!-- Recent AI Matches -->
-                    <div>
+                    <div class="section-panel section-panel-violet">
                         <div class="section-header">
                             <div class="section-header-title">
                                 <span>🎯</span> Recent AI Matches
@@ -766,7 +827,7 @@
                     </div>
 
                     <!-- Recent Agent Activity -->
-                    <div>
+                    <div class="section-panel section-panel-blue">
                         <div class="section-header">
                             <div class="section-header-title">
                                 <span>📋</span> Recent Agent Activity
