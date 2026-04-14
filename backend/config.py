@@ -108,13 +108,12 @@ class ProductionConfig(Config):
     # Switch driver to pg8000 (pure-Python, works on Vercel Lambda)
     if _raw_db_url.startswith('postgresql://') and '+' not in _raw_db_url.split('://')[0]:
         _raw_db_url = _raw_db_url.replace('postgresql://', 'postgresql+pg8000://', 1)
-    # Strip ?sslmode=... — pg8000 does NOT accept sslmode as a URL param;
-    # SSL is passed via connect_args instead (see SQLALCHEMY_ENGINE_OPTIONS below).
+    # pg8000 rejects ALL unknown URL query params (sslmode, channel_binding, etc.)
+    # Strip every query param — SSL is handled via connect_args ssl_context below.
     if '?' in _raw_db_url:
-        from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
+        from urllib.parse import urlparse, urlunparse
         _parsed = urlparse(_raw_db_url)
-        _qs = {k: v for k, v in parse_qs(_parsed.query).items() if k != 'sslmode'}
-        _raw_db_url = urlunparse(_parsed._replace(query=urlencode(_qs, doseq=True)))
+        _raw_db_url = urlunparse(_parsed._replace(query=''))
     # Fallback: /tmp is the only writable path on Vercel's read-only filesystem
     SQLALCHEMY_DATABASE_URI = _raw_db_url or 'sqlite:////tmp/production.db'
 
