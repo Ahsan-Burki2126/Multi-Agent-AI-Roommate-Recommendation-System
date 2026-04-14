@@ -66,7 +66,8 @@ class APIClient {
       const response = await fetch(url, options);
 
       // Handle 401 (unauthorized) - clear token and redirect to login
-      if (response.status === 401) {
+      // But don't redirect if we're already on the login page (wrong credentials case)
+      if (response.status === 401 && !window.location.pathname.includes("login")) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "/login.html";
