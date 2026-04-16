@@ -9,7 +9,7 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
 
-        body { background: #0f1117; color: #e2e8f0; }
+        body { background: #F7F7F7; color: #222222; }
 
         /* ── Left panel gradient ── */
         .hero-panel {
@@ -20,8 +20,8 @@
         .hero-panel::before {
             content: '';
             position: absolute; inset: 0;
-            background: radial-gradient(ellipse at 30% 20%, rgba(139,92,246,.25) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 80%, rgba(99,102,241,.2) 0%, transparent 55%);
+            background: radial-gradient(ellipse at 30% 20%, rgba(255,56,92,.25) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 80%, rgba(255,56,92,.2) 0%, transparent 55%);
         }
         .hero-blob {
             position: absolute;
@@ -35,42 +35,42 @@
         }
 
         /* ── Right panel (form) ── */
-        .form-panel { background: #0f1117; }
+        .form-panel { background: #F7F7F7; }
 
         .input-wrap { position: relative; }
         .input-field {
             width: 100%;
-            background: #1a1f2e;
-            border: 1px solid #2d3748;
-            color: #e2e8f0;
+            background: #FFFFFF;
+            border: 1px solid #EBEBEB;
+            color: #222222;
             border-radius: 10px;
             padding: 12px 16px 12px 44px;
             font-size: 14px;
             transition: border-color .2s, box-shadow .2s;
             outline: none;
         }
-        .input-field::placeholder { color: #4a5568; }
+        .input-field::placeholder { color: #717171; }
         .input-field:focus {
-            border-color: #7c3aed;
-            box-shadow: 0 0 0 3px rgba(124,58,237,.15);
+            border-color: #FF385C;
+            box-shadow: 0 0 0 3px rgba(255,56,92,.15);
         }
         .input-icon {
             position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-            color: #4a5568; pointer-events: none;
+            color: #717171; pointer-events: none;
         }
         .input-icon svg { width: 18px; height: 18px; }
 
         .btn-primary {
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            background: linear-gradient(135deg, #FF385C, #FF385C);
             border: none; color: #fff; font-weight: 600;
             padding: 13px; border-radius: 10px; width: 100%;
             cursor: pointer; font-size: 15px;
             transition: transform .2s, box-shadow .2s, opacity .2s;
-            box-shadow: 0 4px 20px rgba(124,58,237,.35);
+            box-shadow: 0 4px 20px rgba(255,56,92,.35);
         }
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 8px 28px rgba(124,58,237,.5);
+            box-shadow: 0 8px 28px rgba(255,56,92,.5);
         }
         .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
 
@@ -80,10 +80,10 @@
             background: rgba(255,255,255,.08);
             border: 1px solid rgba(255,255,255,.12);
             border-radius: 50px;
-            padding: 8px 16px; font-size: 13px; color: #c4b5fd;
+            padding: 8px 16px; font-size: 13px; color: #FF8C9E;
             backdrop-filter: blur(8px);
         }
-        .feature-dot { width: 6px; height: 6px; border-radius: 50%; background: #a78bfa; flex-shrink: 0; }
+        .feature-dot { width: 6px; height: 6px; border-radius: 50%; background: #FF385C; flex-shrink: 0; }
 
         /* Stats strip */
         .stat-card {
@@ -104,7 +104,7 @@
         }
         .divider { display: flex; align-items: center; gap: 12px; }
         .divider::before, .divider::after {
-            content: ''; flex: 1; height: 1px; background: #1e2538;
+            content: ''; flex: 1; height: 1px; background: #EBEBEB;
         }
 
         /* Spin */
@@ -113,8 +113,8 @@
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f1117; }
-        ::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #F7F7F7; }
+        ::-webkit-scrollbar-thumb { background: #EBEBEB; border-radius: 3px; }
     </style>
 </head>
 <body class="min-h-screen flex">
@@ -143,7 +143,7 @@
                 </div>
                 <h1 class="text-5xl font-black text-white leading-tight mb-4">
                     Find Your<br>
-                    <span style="background:linear-gradient(90deg,#c4b5fd,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Perfect Match</span>
+                    <span style="background:linear-gradient(90deg,#FF8C9E,#FF8C9E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Perfect Match</span>
                 </h1>
                 <p class="text-purple-200/70 text-lg leading-relaxed max-w-sm">
                     Our multi-agent AI system analyses lifestyle, budget, and habits to connect you with your ideal roommate.
@@ -153,19 +153,19 @@
             <!-- Feature list -->
             <div class="space-y-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(167,139,250,.15);">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,56,92,.15);">
                         <svg class="w-4 h-4 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                     <span class="text-purple-100/80 text-sm">Smart compatibility scoring across 6 dimensions</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(167,139,250,.15);">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,56,92,.15);">
                         <svg class="w-4 h-4 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
                     </div>
                     <span class="text-purple-100/80 text-sm">Real hostel listings sourced from Google Maps</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(167,139,250,.15);">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,56,92,.15);">
                         <svg class="w-4 h-4 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                     </div>
                     <span class="text-purple-100/80 text-sm">Explainable AI — see exactly why you matched</span>
@@ -199,7 +199,7 @@
         <!-- Mobile logo -->
         <div class="lg:hidden mb-10">
             <a href="/" class="flex items-center gap-3 w-fit">
-                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">🏠</div>
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center text-lg" style="background:linear-gradient(135deg,#FF385C,#FF385C);">🏠</div>
                 <span class="text-lg font-bold text-white">RoomMate AI</span>
             </a>
         </div>
@@ -238,7 +238,7 @@
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </span>
                         <input type="password" id="password" required placeholder="••••••••" class="input-field" style="padding-right:44px;">
-                        <button type="button" id="togglePassword" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#4a5568;background:none;border:none;cursor:pointer;padding:0;">
+                        <button type="button" id="togglePassword" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#717171;background:none;border:none;cursor:pointer;padding:0;">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                         </button>
                     </div>
@@ -246,7 +246,7 @@
 
                 <!-- Remember -->
                 <div class="flex items-center gap-2">
-                    <input type="checkbox" id="remember" class="w-4 h-4 rounded" style="accent-color:#7c3aed;">
+                    <input type="checkbox" id="remember" class="w-4 h-4 rounded" style="accent-color:#FF385C;">
                     <label for="remember" class="text-sm text-slate-400 cursor-pointer">Remember me for 30 days</label>
                 </div>
 
@@ -275,7 +275,7 @@
             </p>
 
             <!-- Survey hint -->
-            <div class="mt-8 rounded-xl p-4" style="background:#1a1f2e;border:1px solid #2d3748;">
+            <div class="mt-8 rounded-xl p-4" style="background:#FFFFFF;border:1px solid #EBEBEB;">
                 <p class="text-xs text-slate-500 leading-relaxed">
                     <span class="text-violet-400 font-semibold">Survey participants:</span>
                     Use your <span class="text-slate-300">@survey.iub.edu.pk</span> email with password

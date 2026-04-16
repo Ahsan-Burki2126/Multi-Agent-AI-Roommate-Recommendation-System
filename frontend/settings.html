@@ -12,8 +12,8 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #F8FAFC;
-            color: #111827;
+            background: #F7F7F7;
+            color: #222222;
             min-height: 100vh;
             overflow: hidden;
         }
@@ -28,7 +28,7 @@
             width: 240px;
             min-width: 240px;
             background: #FFFFFF;
-            border-right: 1px solid #E5E7EB;
+            border-right: 1px solid #EBEBEB;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -37,7 +37,7 @@
         }
         .sidebar-logo-area {
             padding: 24px 20px;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid #EBEBEB;
         }
         .sidebar-logo-link {
             display: flex;
@@ -47,7 +47,7 @@
         }
         .sidebar-logo-icon {
             width: 36px; height: 36px;
-            background: #2563EB;
+            background: #FF385C;
             border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             font-size: 18px;
@@ -56,7 +56,7 @@
         .sidebar-logo-text {
             font-weight: 700;
             font-size: 15px;
-            color: #2563EB;
+            color: #FF385C;
         }
         .sidebar-nav {
             padding: 12px 10px;
@@ -73,21 +73,21 @@
             font-size: 14px;
             margin-bottom: 2px;
             transition: all 0.2s;
-            color: #6B7280;
+            color: #717171;
             border-left: 3px solid transparent;
         }
         .nav-link:hover {
-            color: #111827;
+            color: #222222;
             background: #F3F4F6;
         }
         .nav-link.active {
-            background: #DBEAFE;
-            border-left: 3px solid #2563EB;
-            color: #2563EB;
+            background: #FFF2F5;
+            border-left: 3px solid #FF385C;
+            color: #FF385C;
         }
         .sidebar-footer {
             padding: 12px 10px;
-            border-top: 1px solid #E5E7EB;
+            border-top: 1px solid #EBEBEB;
         }
         .logout-btn {
             display: flex;
@@ -95,7 +95,7 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 10px;
-            color: #6B7280;
+            color: #717171;
             background: none;
             border: none;
             cursor: pointer;
@@ -122,7 +122,7 @@
             height: 64px;
             min-height: 64px;
             background: #FFFFFF;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid #EBEBEB;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -133,32 +133,32 @@
         .header-title {
             font-size: 18px;
             font-weight: 600;
-            color: #111827;
+            color: #222222;
         }
         .hamburger-btn {
             display: none;
             background: none;
             border: none;
-            color: #6B7280;
+            color: #717171;
             cursor: pointer;
             padding: 4px;
             border-radius: 8px;
             transition: all 0.2s;
         }
-        .hamburger-btn:hover { color: #111827; background: #F3F4F6; }
+        .hamburger-btn:hover { color: #222222; background: #F3F4F6; }
         .user-pill {
             display: flex;
             align-items: center;
             gap: 10px;
             background: #F3F4F6;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             padding: 6px 12px 6px 6px;
         }
         .user-avatar {
             width: 30px; height: 30px;
             border-radius: 50%;
-            background: #2563EB;
+            background: #FF385C;
             display: flex; align-items: center; justify-content: center;
             font-weight: 700;
             font-size: 13px;
@@ -168,7 +168,7 @@
         .user-name-pill {
             font-size: 13px;
             font-weight: 500;
-            color: #111827;
+            color: #222222;
         }
         /* Content area */
         .content-area {
@@ -178,33 +178,33 @@
         }
         .content-area::-webkit-scrollbar { width: 6px; }
         .content-area::-webkit-scrollbar-track { background: transparent; }
-        .content-area::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+        .content-area::-webkit-scrollbar-thumb { background: #EBEBEB; border-radius: 3px; }
         /* Page header */
         .page-header { margin-bottom: 28px; }
-        .page-title { font-size: 26px; font-weight: 800; color: #111827; margin-bottom: 4px; }
-        .page-subtitle { font-size: 14px; color: #6B7280; }
+        .page-title { font-size: 26px; font-weight: 800; color: #222222; margin-bottom: 4px; }
+        .page-subtitle { font-size: 14px; color: #717171; }
         /* Settings max width */
         .settings-inner { max-width: 680px; }
         /* Section card */
         .section-card {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 16px;
             overflow: hidden;
             margin-bottom: 20px;
         }
         .section-card-header {
             padding: 16px 20px;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid #EBEBEB;
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 15px;
             font-weight: 600;
-            color: #111827;
-            border-left: 3px solid #2563EB;
+            color: #222222;
+            border-left: 3px solid #FF385C;
         }
-        .section-card-header svg { color: #2563EB; flex-shrink: 0; }
+        .section-card-header svg { color: #FF385C; flex-shrink: 0; }
         .section-card-body { padding: 20px; }
         /* Toggle row */
         .toggle-row {
@@ -219,12 +219,12 @@
         .toggle-info h4 {
             font-size: 14px;
             font-weight: 500;
-            color: #111827;
+            color: #222222;
             margin-bottom: 2px;
         }
         .toggle-info p {
             font-size: 12px;
-            color: #6B7280;
+            color: #717171;
         }
         /* Toggle switch */
         .toggle-switch {
@@ -241,13 +241,13 @@
         }
         .toggle-track {
             width: 44px; height: 24px;
-            background: #D1D5DB;
+            background: #EBEBEB;
             border-radius: 99px;
             position: relative;
             transition: background 0.2s;
         }
         .toggle-switch input[type="checkbox"]:checked + .toggle-track {
-            background: #2563EB;
+            background: #FF385C;
         }
         .toggle-thumb {
             width: 18px; height: 18px;
@@ -265,7 +265,7 @@
         .field-group { margin-bottom: 14px; }
         .field-label {
             display: block;
-            color: #374151;
+            color: #444444;
             font-size: 0.875rem;
             font-weight: 500;
             margin-bottom: 6px;
@@ -273,30 +273,30 @@
         .field-input {
             width: 100%;
             background: #FFFFFF;
-            border: 1px solid #D1D5DB;
+            border: 1px solid #EBEBEB;
             border-radius: 8px;
             padding: 10px 16px;
-            color: #111827;
+            color: #222222;
             outline: none;
             font-size: 14px;
             font-family: 'Inter', sans-serif;
             transition: all 0.2s;
         }
         .field-input:focus {
-            border-color: #2563EB;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+            border-color: #FF385C;
+            box-shadow: 0 0 0 3px rgba(255,56,92,0.15);
         }
-        .field-input::placeholder { color: #9CA3AF; }
+        .field-input::placeholder { color: #B0B0B0; }
         /* Divider */
         .divider {
             height: 1px;
-            background: #E5E7EB;
+            background: #EBEBEB;
             margin: 16px 0;
         }
         /* Buttons */
         .btn-primary {
             padding: 10px 24px;
-            background: #2563EB;
+            background: #FF385C;
             border: none;
             border-radius: 10px;
             color: white;
@@ -306,26 +306,26 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,56,92,0.3); }
         .btn-secondary {
             padding: 8px 18px;
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 8px;
-            color: #6B7280;
+            color: #717171;
             font-size: 13px;
             font-weight: 500;
             font-family: 'Inter', sans-serif;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-secondary:hover { background: #F3F4F6; color: #111827; }
+        .btn-secondary:hover { background: #F3F4F6; color: #222222; }
         .btn-indigo {
             padding: 8px 18px;
-            background: #DBEAFE;
-            border: 1px solid rgba(37,99,235,0.2);
+            background: #FFF2F5;
+            border: 1px solid rgba(255,56,92,0.2);
             border-radius: 8px;
-            color: #2563EB;
+            color: #FF385C;
             font-size: 13px;
             font-weight: 600;
             font-family: 'Inter', sans-serif;
@@ -354,8 +354,8 @@
             color: #DC2626;
         }
         .danger-card-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .danger-item h5 { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
-        .danger-item p { font-size: 12px; color: #6B7280; margin-bottom: 10px; }
+        .danger-item h5 { font-size: 14px; font-weight: 600; color: #222222; margin-bottom: 4px; }
+        .danger-item p { font-size: 12px; color: #717171; margin-bottom: 10px; }
         .btn-danger {
             padding: 8px 18px;
             background: #FEE2E2;
@@ -376,13 +376,13 @@
             justify-content: space-between;
             padding: 12px 14px;
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 10px;
         }
         .session-info { display: flex; align-items: center; gap: 10px; }
-        .session-info svg { color: #6B7280; flex-shrink: 0; }
-        .session-info p { font-size: 14px; font-weight: 500; color: #111827; margin-bottom: 2px; }
-        .session-info span { font-size: 12px; color: #6B7280; }
+        .session-info svg { color: #717171; flex-shrink: 0; }
+        .session-info p { font-size: 14px; font-weight: 500; color: #222222; margin-bottom: 2px; }
+        .session-info span { font-size: 12px; color: #717171; }
         .tag-active {
             padding: 3px 10px;
             background: #D1FAE5;
@@ -409,7 +409,7 @@
         }
         .modal-box {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 16px;
             width: 100%;
             max-width: 420px;
@@ -421,16 +421,16 @@
             justify-content: space-between;
             margin-bottom: 24px;
         }
-        .modal-title { font-size: 18px; font-weight: 700; color: #111827; }
+        .modal-title { font-size: 18px; font-weight: 700; color: #222222; }
         .modal-close {
             background: none;
             border: none;
-            color: #6B7280;
+            color: #717171;
             cursor: pointer;
             padding: 2px;
             transition: color 0.2s;
         }
-        .modal-close:hover { color: #111827; }
+        .modal-close:hover { color: #222222; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         /* Mobile sidebar overlay */
         #mobileSidebar {
@@ -617,20 +617,20 @@
                         </div>
                         <div class="section-card-body">
                             <div style="margin-bottom:16px;">
-                                <h4 style="font-size:14px;font-weight:600;color:#111827;margin-bottom:4px;">Change Password</h4>
-                                <p style="font-size:12px;color:#6B7280;margin-bottom:10px;">Update your password to keep your account secure</p>
+                                <h4 style="font-size:14px;font-weight:600;color:#222222;margin-bottom:4px;">Change Password</h4>
+                                <p style="font-size:12px;color:#717171;margin-bottom:10px;">Update your password to keep your account secure</p>
                                 <button onclick="showChangePassword()" class="btn-secondary">Change Password</button>
                             </div>
                             <div class="divider"></div>
                             <div style="margin-bottom:16px;">
-                                <h4 style="font-size:14px;font-weight:600;color:#111827;margin-bottom:4px;">Two-Factor Authentication</h4>
-                                <p style="font-size:12px;color:#6B7280;margin-bottom:10px;">Add an extra layer of security to your account</p>
+                                <h4 style="font-size:14px;font-weight:600;color:#222222;margin-bottom:4px;">Two-Factor Authentication</h4>
+                                <p style="font-size:12px;color:#717171;margin-bottom:10px;">Add an extra layer of security to your account</p>
                                 <button class="btn-secondary" onclick="showComingSoon('Two-Factor Authentication')">Enable 2FA</button>
                             </div>
                             <div class="divider"></div>
                             <div>
-                                <h4 style="font-size:14px;font-weight:600;color:#111827;margin-bottom:4px;">Active Sessions</h4>
-                                <p style="font-size:12px;color:#6B7280;margin-bottom:10px;">Manage devices where you're logged in</p>
+                                <h4 style="font-size:14px;font-weight:600;color:#222222;margin-bottom:4px;">Active Sessions</h4>
+                                <p style="font-size:12px;color:#717171;margin-bottom:10px;">Manage devices where you're logged in</p>
                                 <div class="session-item">
                                     <div class="session-info">
                                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -652,8 +652,8 @@
                             Data &amp; Export
                         </div>
                         <div class="section-card-body">
-                            <h4 style="font-size:14px;font-weight:600;color:#111827;margin-bottom:4px;">Download Your Data</h4>
-                            <p style="font-size:12px;color:#6B7280;margin-bottom:10px;">Get a copy of all your data stored with us</p>
+                            <h4 style="font-size:14px;font-weight:600;color:#222222;margin-bottom:4px;">Download Your Data</h4>
+                            <p style="font-size:12px;color:#717171;margin-bottom:10px;">Get a copy of all your data stored with us</p>
                             <button class="btn-indigo" onclick="exportUserData()">Request Data Export</button>
                         </div>
                     </div>
@@ -719,7 +719,7 @@
                 <div class="sidebar-logo-icon">🏠</div>
                 <span class="sidebar-logo-text">RoomMate AI</span>
             </div>
-            <button id="closeMobileNav" style="background:none;border:none;color:#6B7280;cursor:pointer;">
+            <button id="closeMobileNav" style="background:none;border:none;color:#717171;cursor:pointer;">
                 <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
@@ -758,7 +758,7 @@
         function showToast(msg, isError) {
             const toast = document.createElement('div');
             toast.style.cssText = 'position:fixed;bottom:24px;right:24px;padding:12px 22px;background:' +
-                (isError ? '#EF4444' : '#2563EB') +
+                (isError ? '#EF4444' : '#FF385C') +
                 ';color:white;border-radius:10px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
             toast.textContent = (isError ? '\u2717 ' : '\u2713 ') + msg;
             document.body.appendChild(toast);

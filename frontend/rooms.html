@@ -13,8 +13,8 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #F8FAFC;
-            color: #111827;
+            background: #F7F7F7;
+            color: #222222;
             min-height: 100vh;
             overflow: hidden;
         }
@@ -30,7 +30,7 @@
             width: 240px;
             min-width: 240px;
             background: #FFFFFF;
-            border-right: 1px solid #E5E7EB;
+            border-right: 1px solid #EBEBEB;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -39,7 +39,7 @@
         }
         .sidebar-logo-area {
             padding: 24px 20px;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid #EBEBEB;
         }
         .sidebar-logo-link {
             display: flex;
@@ -49,7 +49,7 @@
         }
         .sidebar-logo-icon {
             width: 36px; height: 36px;
-            background: #2563EB;
+            background: #FF385C;
             border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             font-size: 18px;
@@ -58,7 +58,7 @@
         .sidebar-logo-text {
             font-weight: 700;
             font-size: 15px;
-            color: #2563EB;
+            color: #FF385C;
         }
         .sidebar-nav {
             padding: 12px 10px;
@@ -75,21 +75,21 @@
             font-size: 14px;
             margin-bottom: 2px;
             transition: all 0.2s;
-            color: #6B7280;
+            color: #717171;
             border-left: 3px solid transparent;
         }
         .nav-link:hover {
-            color: #111827;
+            color: #222222;
             background: #F3F4F6;
         }
         .nav-link.active {
-            background: #DBEAFE;
-            border-left: 3px solid #2563EB;
-            color: #2563EB;
+            background: #FFF2F5;
+            border-left: 3px solid #FF385C;
+            color: #FF385C;
         }
         .sidebar-footer {
             padding: 12px 10px;
-            border-top: 1px solid #E5E7EB;
+            border-top: 1px solid #EBEBEB;
         }
         .logout-btn {
             display: flex;
@@ -97,7 +97,7 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 10px;
-            color: #6B7280;
+            color: #717171;
             background: none;
             border: none;
             cursor: pointer;
@@ -126,7 +126,7 @@
             height: 64px;
             min-height: 64px;
             background: #FFFFFF;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid #EBEBEB;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -142,19 +142,19 @@
         .header-title {
             font-size: 18px;
             font-weight: 600;
-            color: #111827;
+            color: #222222;
         }
         .hamburger-btn {
             display: none;
             background: none;
             border: none;
-            color: #6B7280;
+            color: #717171;
             cursor: pointer;
             padding: 4px;
             border-radius: 8px;
             transition: all 0.2s;
         }
-        .hamburger-btn:hover { color: #111827; background: #F3F4F6; }
+        .hamburger-btn:hover { color: #222222; background: #F3F4F6; }
         .header-right {
             display: flex;
             align-items: center;
@@ -174,7 +174,7 @@
         /* Glass card */
         .glass-card {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 16px;
         }
 
@@ -191,24 +191,24 @@
         }
         .tab-btn-inactive {
             background: #F9FAFB;
-            color: #6B7280;
-            border: 1px solid #E5E7EB;
+            color: #717171;
+            border: 1px solid #EBEBEB;
         }
         .tab-btn-inactive:hover {
             background: #F3F4F6;
-            color: #111827;
+            color: #222222;
         }
         .tab-btn-active {
-            background: #2563EB;
+            background: #FF385C;
             color: white;
-            box-shadow: 0 1px 3px rgba(37,99,235,0.3);
+            box-shadow: 0 1px 3px rgba(255,56,92,0.3);
         }
 
         /* Input style */
         .input-glass {
             background: #FFFFFF;
-            border: 1px solid #D1D5DB;
-            color: #111827;
+            border: 1px solid #EBEBEB;
+            color: #222222;
             border-radius: 10px;
             padding: 10px 14px;
             font-size: 14px;
@@ -216,30 +216,30 @@
             outline: none;
             transition: all 0.2s;
         }
-        .input-glass::placeholder { color: #9CA3AF; }
+        .input-glass::placeholder { color: #B0B0B0; }
         .input-glass:focus {
-            border-color: #2563EB;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+            border-color: #FF385C;
+            box-shadow: 0 0 0 3px rgba(255,56,92,0.1);
         }
-        select.input-glass option { background: #FFFFFF; color: #111827; }
+        select.input-glass option { background: #FFFFFF; color: #222222; }
 
         /* Room card */
         .room-card {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .room-card:hover {
-            border-color: rgba(37,99,235,0.3);
+            border-color: rgba(255,56,92,0.3);
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
         .room-card-image {
             height: 160px;
-            background: #DBEAFE;
+            background: #FFF2F5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -261,7 +261,7 @@
         }
         .modal-box {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 16px;
             width: 100%;
             max-width: 520px;
@@ -275,7 +275,7 @@
         .user-avatar-pill {
             width: 36px; height: 36px;
             border-radius: 50%;
-            background: #2563EB;
+            background: #FF385C;
             display: flex; align-items: center; justify-content: center;
             font-weight: 700;
             font-size: 14px;
@@ -285,7 +285,7 @@
 
         /* Gradient button */
         .btn-gradient {
-            background: #2563EB;
+            background: #FF385C;
             color: white;
             border: none;
             border-radius: 12px;
@@ -299,12 +299,12 @@
             align-items: center;
             gap: 6px;
         }
-        .btn-gradient:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
+        .btn-gradient:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,56,92,0.3); }
 
         .btn-glass {
             background: #F9FAFB;
-            color: #6B7280;
-            border: 1px solid #E5E7EB;
+            color: #717171;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             padding: 10px 20px;
             font-size: 14px;
@@ -313,7 +313,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-glass:hover { background: #F3F4F6; color: #111827; }
+        .btn-glass:hover { background: #F3F4F6; color: #222222; }
 
         /* Checkbox glass */
         .checkbox-glass {
@@ -322,15 +322,15 @@
             gap: 10px;
             padding: 12px 14px;
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 13px;
-            color: #111827;
+            color: #222222;
         }
-        .checkbox-glass:hover { background: #F3F4F6; border-color: rgba(37,99,235,0.3); }
-        .checkbox-glass input[type="checkbox"] { accent-color: #2563EB; width: 16px; height: 16px; }
+        .checkbox-glass:hover { background: #F3F4F6; border-color: rgba(255,56,92,0.3); }
+        .checkbox-glass input[type="checkbox"] { accent-color: #FF385C; width: 16px; height: 16px; }
 
         /* Badge tag */
         .badge-tag {
@@ -476,9 +476,9 @@
 
                         <!-- AI Room Match Button -->
                         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
-                            <p style="font-size:13px; color:#6B7280; margin:0;">Browse all rooms or let AI find your best matches</p>
+                            <p style="font-size:13px; color:#717171; margin:0;">Browse all rooms or let AI find your best matches</p>
                             <button onclick="runAIRoomMatching()" id="aiRoomBtn"
-                                style="display:inline-flex; align-items:center; gap:8px; padding:10px 20px; background:#2563EB; border:none; border-radius:12px; color:white; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">
+                                style="display:inline-flex; align-items:center; gap:8px; padding:10px 20px; background:#FF385C; border:none; border-radius:12px; color:white; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s;">
                                 🤖 Find My Best Rooms (AI)
                             </button>
                         </div>
@@ -487,15 +487,15 @@
                         <div id="roomsGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px;">
                             <!-- Loading state -->
                             <div style="grid-column:1/-1; display:flex; align-items:center; justify-content:center; padding:60px 0;">
-                                <div style="width:36px; height:36px; border:3px solid rgba(37,99,235,0.3); border-top-color:#2563EB; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+                                <div style="width:36px; height:36px; border:3px solid rgba(255,56,92,0.3); border-top-color:#FF385C; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
                             </div>
                         </div>
 
                         <!-- Empty State -->
                         <div id="emptyRooms" class="hidden" style="text-align:center; padding:80px 20px;">
-                            <div style="width:80px; height:80px; margin:0 auto 20px; background:#DBEAFE; border:1px solid rgba(37,99,235,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px;">🏠</div>
-                            <h3 style="font-size:22px; font-weight:700; margin-bottom:8px; color:#111827;">No Rooms Available</h3>
-                            <p style="color:#6B7280; margin-bottom:24px;">Be the first to list a room in your area!</p>
+                            <div style="width:80px; height:80px; margin:0 auto 20px; background:#FFF2F5; border:1px solid rgba(255,56,92,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px;">🏠</div>
+                            <h3 style="font-size:22px; font-weight:700; margin-bottom:8px; color:#222222;">No Rooms Available</h3>
+                            <p style="color:#717171; margin-bottom:24px;">Be the first to list a room in your area!</p>
                             <button onclick="openPostRoomModal()" class="btn-gradient">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                 Post Your Room
@@ -509,8 +509,8 @@
                         </div>
                         <div id="emptyMyRooms" class="hidden" style="text-align:center; padding:80px 20px;">
                             <div style="width:80px; height:80px; margin:0 auto 20px; background:#D1FAE5; border:1px solid rgba(16,185,129,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px;">📝</div>
-                            <h3 style="font-size:22px; font-weight:700; margin-bottom:8px; color:#111827;">No Listings Yet</h3>
-                            <p style="color:#6B7280; margin-bottom:24px;">You haven't posted any rooms yet.</p>
+                            <h3 style="font-size:22px; font-weight:700; margin-bottom:8px; color:#222222;">No Listings Yet</h3>
+                            <p style="color:#717171; margin-bottom:24px;">You haven't posted any rooms yet.</p>
                             <button onclick="openPostRoomModal()" class="btn-gradient">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                 Post Your First Room
@@ -529,35 +529,35 @@
             <div style="padding:28px;">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;">
                     <div>
-                        <h3 style="font-size:20px; font-weight:700; color:#111827;">Post a Room</h3>
-                        <p style="font-size:13px; color:#6B7280; margin-top:3px;">List your room to find the perfect roommate</p>
+                        <h3 style="font-size:20px; font-weight:700; color:#222222;">Post a Room</h3>
+                        <p style="font-size:13px; color:#717171; margin-top:3px;">List your room to find the perfect roommate</p>
                     </div>
-                    <button onclick="closePostRoomModal()" style="background:#F3F4F6; border:1px solid #E5E7EB; border-radius:10px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:#6B7280; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.color='#111827'" onmouseout="this.style.color='#6B7280'">
+                    <button onclick="closePostRoomModal()" style="background:#F3F4F6; border:1px solid #EBEBEB; border-radius:10px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:#717171; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.color='#222222'" onmouseout="this.style.color='#717171'">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
 
                 <form id="addRoomForm" style="display:flex; flex-direction:column; gap:16px;">
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:8px;">Room Title *</label>
+                        <label style="display:block; font-size:13px; font-weight:500; color:#444444; margin-bottom:8px;">Room Title *</label>
                         <input type="text" id="roomTitle" required placeholder="e.g., Cozy private room near downtown"
                             class="input-glass" style="width:100%;">
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:8px;">Location *</label>
+                        <label style="display:block; font-size:13px; font-weight:500; color:#444444; margin-bottom:8px;">Location *</label>
                         <input type="text" id="roomLocation" required placeholder="e.g., Manhattan, NYC"
                             class="input-glass" style="width:100%;">
                     </div>
 
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
                         <div>
-                            <label style="display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:8px;">Monthly Rent (PKR) *</label>
+                            <label style="display:block; font-size:13px; font-weight:500; color:#444444; margin-bottom:8px;">Monthly Rent (PKR) *</label>
                             <input type="number" id="roomPrice" required min="0" placeholder="15000"
                                 class="input-glass" style="width:100%;">
                         </div>
                         <div>
-                            <label style="display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:8px;">Room Type *</label>
+                            <label style="display:block; font-size:13px; font-weight:500; color:#444444; margin-bottom:8px;">Room Type *</label>
                             <select id="roomType" required class="input-glass" style="width:100%;">
                                 <option value="">Select Type</option>
                                 <option value="Single">Single Room</option>
@@ -568,14 +568,14 @@
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:8px;">Description</label>
+                        <label style="display:block; font-size:13px; font-weight:500; color:#444444; margin-bottom:8px;">Description</label>
                         <textarea id="roomDescription" rows="4"
                             placeholder="Describe your room, amenities, and what you're looking for in a roommate..."
                             class="input-glass" style="width:100%; resize:none;"></textarea>
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:10px;">Amenities</label>
+                        <label style="display:block; font-size:13px; font-weight:500; color:#444444; margin-bottom:10px;">Amenities</label>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                             <label class="checkbox-glass">
                                 <input type="checkbox" id="roomFurnished">
@@ -597,7 +597,7 @@
                     </div>
 
                     <div>
-                        <label style="display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:8px;">Available From</label>
+                        <label style="display:block; font-size:13px; font-weight:500; color:#444444; margin-bottom:8px;">Available From</label>
                         <input type="date" id="roomAvailable" class="input-glass" style="width:100%;">
                     </div>
 
@@ -622,21 +622,21 @@
         <div style="padding:24px;">
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:28px;">
                 <a href="/" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
-                    <div style="width:36px; height:36px; background:#2563EB; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px;">🏠</div>
-                    <span style="font-weight:700; font-size:15px; color:#2563EB;">RoomMate AI</span>
+                    <div style="width:36px; height:36px; background:#FF385C; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px;">🏠</div>
+                    <span style="font-weight:700; font-size:15px; color:#FF385C;">RoomMate AI</span>
                 </a>
-                <button id="closeMobileMenu" style="background:#F3F4F6; border:1px solid #E5E7EB; border-radius:10px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; color:#6B7280; cursor:pointer;">
+                <button id="closeMobileMenu" style="background:#F3F4F6; border:1px solid #EBEBEB; border-radius:10px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; color:#717171; cursor:pointer;">
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             <nav style="display:flex; flex-direction:column; gap:4px;">
-                <a href="/dashboard.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#6B7280; text-decoration:none; font-size:14px; transition:all 0.2s;">Dashboard</a>
-                <a href="/matches.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#6B7280; text-decoration:none; font-size:14px;">Matches</a>
-                <a href="/rooms.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; background:#DBEAFE; border-left:3px solid #2563EB; color:#2563EB; text-decoration:none; font-size:14px;">Rooms 🏡</a>
-                <a href="/ai-agents.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#6B7280; text-decoration:none; font-size:14px;">AI Agents</a>
-                <a href="/preferences.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#6B7280; text-decoration:none; font-size:14px;">Preferences</a>
-                <a href="/profile.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#6B7280; text-decoration:none; font-size:14px;">Profile</a>
-                <a href="/settings.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#6B7280; text-decoration:none; font-size:14px;">Settings</a>
+                <a href="/dashboard.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#717171; text-decoration:none; font-size:14px; transition:all 0.2s;">Dashboard</a>
+                <a href="/matches.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#717171; text-decoration:none; font-size:14px;">Matches</a>
+                <a href="/rooms.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; background:#FFF2F5; border-left:3px solid #FF385C; color:#FF385C; text-decoration:none; font-size:14px;">Rooms 🏡</a>
+                <a href="/ai-agents.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#717171; text-decoration:none; font-size:14px;">AI Agents</a>
+                <a href="/preferences.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#717171; text-decoration:none; font-size:14px;">Preferences</a>
+                <a href="/profile.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#717171; text-decoration:none; font-size:14px;">Profile</a>
+                <a href="/settings.html" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#717171; text-decoration:none; font-size:14px;">Settings</a>
                 <button onclick="handleLogout()" style="display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; color:#EF4444; background:none; border:none; font-size:14px; font-family:'Inter',sans-serif; cursor:pointer; width:100%; text-align:left;">Logout</button>
             </nav>
         </div>
@@ -764,11 +764,11 @@
                 const roomId = room.room_id || room.id;
 
                 const typeBadgeStyle = {
-                    'single': 'background:#DBEAFE;color:#2563EB;',
-                    'shared': 'background:#EDE9FE;color:#7C3AED;',
+                    'single': 'background:#FFF2F5;color:#FF385C;',
+                    'shared': 'background:#EDE9FE;color:#FF385C;',
                     'master': 'background:#FCE7F3;color:#DB2777;'
                 };
-                const badgeStyle = typeBadgeStyle[roomType] || 'background:#F3F4F6;color:#6B7280;';
+                const badgeStyle = typeBadgeStyle[roomType] || 'background:#F3F4F6;color:#717171;';
 
                 return `
                     <div class="room-card slide-in">
@@ -777,25 +777,25 @@
                         </div>
                         <div style="padding:18px 20px;">
                             <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; gap:8px;">
-                                <h4 style="font-weight:700; font-size:16px; color:#111827; line-height:1.3;">${room.title}</h4>
+                                <h4 style="font-weight:700; font-size:16px; color:#222222; line-height:1.3;">${room.title}</h4>
                                 <span style="flex-shrink:0; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; ${badgeStyle}">${typeLabels[roomType] || roomType}</span>
                             </div>
-                            <div style="display:flex; align-items:center; gap:5px; color:#6B7280; font-size:13px; margin-bottom:8px;">
+                            <div style="display:flex; align-items:center; gap:5px; color:#717171; font-size:13px; margin-bottom:8px;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 ${room.location}
                             </div>
-                            <p style="color:#6B7280; font-size:13px; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${room.description || 'No description available'}</p>
+                            <p style="color:#717171; font-size:13px; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${room.description || 'No description available'}</p>
 
                             ${amenities.length > 0 ? `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;">
-                                ${amenities.map(a => `<span style="padding:3px 8px; background:#F3F4F6; border:1px solid #E5E7EB; border-radius:6px; font-size:11px; color:#6B7280;">${a}</span>`).join('')}
+                                ${amenities.map(a => `<span style="padding:3px 8px; background:#F3F4F6; border:1px solid #EBEBEB; border-radius:6px; font-size:11px; color:#717171;">${a}</span>`).join('')}
                             </div>` : ''}
 
-                            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid #E5E7EB;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid #EBEBEB;">
                                 <div>
                                     <span style="font-size:24px; font-weight:800; color:#059669;">PKR ${price.toLocaleString()}</span>
-                                    <span style="font-size:13px; color:#6B7280;">/month</span>
+                                    <span style="font-size:13px; color:#717171;">/month</span>
                                 </div>
-                                <button onclick="contactOwner(${roomId})" style="padding:8px 18px; background:#2563EB; border:none; border-radius:10px; color:white; font-size:13px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                <button onclick="contactOwner(${roomId})" style="padding:8px 18px; background:#FF385C; border:none; border-radius:10px; color:white; font-size:13px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                                     Contact
                                 </button>
                             </div>
@@ -1037,20 +1037,20 @@
             const aiSection = document.createElement('div');
             aiSection.id = 'aiRoomsSection';
             aiSection.innerHTML = `
-                <div style="background:#DBEAFE; border:1px solid rgba(37,99,235,0.25); border-radius:14px; padding:16px; margin-bottom:20px;">
-                    <div style="font-size:15px; font-weight:700; color:#2563EB; margin-bottom:12px;">🤖 AI-Matched Rooms (${rooms.length})</div>
+                <div style="background:#FFF2F5; border:1px solid rgba(255,56,92,0.25); border-radius:14px; padding:16px; margin-bottom:20px;">
+                    <div style="font-size:15px; font-weight:700; color:#FF385C; margin-bottom:12px;">🤖 AI-Matched Rooms (${rooms.length})</div>
                     <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px;">
                         ${rooms.map(room => `
-                            <div style="background:#FFFFFF; border:1px solid rgba(37,99,235,0.2); border-radius:12px; padding:16px;">
+                            <div style="background:#FFFFFF; border:1px solid rgba(255,56,92,0.2); border-radius:12px; padding:16px;">
                                 <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
-                                    <h4 style="font-size:14px; font-weight:600; color:#111827; margin:0;">${room.title || 'Room'}</h4>
-                                    <span style="background:#DBEAFE; color:#2563EB; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px; white-space:nowrap; margin-left:8px;">
+                                    <h4 style="font-size:14px; font-weight:600; color:#222222; margin:0;">${room.title || 'Room'}</h4>
+                                    <span style="background:#FFF2F5; color:#FF385C; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px; white-space:nowrap; margin-left:8px;">
                                         ${Math.round(room.match_score || room.compatibility_score || 0)}% match
                                     </span>
                                 </div>
-                                <div style="font-size:12px; color:#6B7280; margin-bottom:8px;">📍 ${room.location || 'Location N/A'}</div>
+                                <div style="font-size:12px; color:#717171; margin-bottom:8px;">📍 ${room.location || 'Location N/A'}</div>
                                 <div style="font-size:13px; font-weight:600; color:#059669;">PKR ${(room.rent_price || 0).toLocaleString()}/month</div>
-                                ${room.explanation ? `<div style="font-size:11px; color:#6B7280; margin-top:8px; border-top:1px solid #E5E7EB; padding-top:8px;">${typeof room.explanation === 'object' ? (room.explanation.summary || '') : room.explanation}</div>` : ''}
+                                ${room.explanation ? `<div style="font-size:11px; color:#717171; margin-top:8px; border-top:1px solid #EBEBEB; padding-top:8px;">${typeof room.explanation === 'object' ? (room.explanation.summary || '') : room.explanation}</div>` : ''}
                             </div>
                         `).join('')}
                     </div>
@@ -1065,7 +1065,7 @@
 
         function showNotification(message, isError = false) {
             const notif = document.createElement('div');
-            notif.style.cssText = `position:fixed; bottom:24px; right:24px; padding:14px 20px; border-radius:12px; font-size:14px; font-weight:500; z-index:9999; max-width:360px; box-shadow:0 4px 12px rgba(0,0,0,0.1); transition:all 0.3s; ${isError ? 'background:#FEE2E2; border:1px solid #FECACA; color:#DC2626;' : 'background:#DBEAFE; border:1px solid rgba(37,99,235,0.2); color:#2563EB;'}`;
+            notif.style.cssText = `position:fixed; bottom:24px; right:24px; padding:14px 20px; border-radius:12px; font-size:14px; font-weight:500; z-index:9999; max-width:360px; box-shadow:0 4px 12px rgba(0,0,0,0.1); transition:all 0.3s; ${isError ? 'background:#FEE2E2; border:1px solid #FECACA; color:#DC2626;' : 'background:#FFF2F5; border:1px solid rgba(255,56,92,0.2); color:#FF385C;'}`;
             notif.textContent = message;
             document.body.appendChild(notif);
             setTimeout(() => { notif.style.opacity = '0'; setTimeout(() => notif.remove(), 300); }, 4000);

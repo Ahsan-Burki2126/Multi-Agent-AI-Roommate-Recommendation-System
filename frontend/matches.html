@@ -14,8 +14,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #F8FAFC;
-            color: #111827;
+            background: #F7F7F7;
+            color: #222222;
             min-height: 100vh;
             overflow: hidden;
         }
@@ -32,7 +32,7 @@
             width: 240px;
             min-width: 240px;
             background: #FFFFFF;
-            border-right: 1px solid #E5E7EB;
+            border-right: 1px solid #EBEBEB;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -41,7 +41,7 @@
         }
         .sidebar-logo-area {
             padding: 24px 20px;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid #EBEBEB;
         }
         .sidebar-logo-link {
             display: flex;
@@ -51,7 +51,7 @@
         }
         .sidebar-logo-icon {
             width: 36px; height: 36px;
-            background: #2563EB;
+            background: #FF385C;
             border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             font-size: 18px;
@@ -60,7 +60,7 @@
         .sidebar-logo-text {
             font-weight: 700;
             font-size: 15px;
-            color: #2563EB;
+            color: #FF385C;
         }
         .sidebar-nav {
             padding: 12px 10px;
@@ -77,21 +77,21 @@
             font-size: 14px;
             margin-bottom: 2px;
             transition: all 0.2s;
-            color: #6B7280;
+            color: #717171;
             border-left: 3px solid transparent;
         }
         .nav-link:hover {
-            color: #111827;
+            color: #222222;
             background: #F3F4F6;
         }
         .nav-link.active {
-            background: #DBEAFE;
-            border-left: 3px solid #2563EB;
-            color: #2563EB;
+            background: #FFF2F5;
+            border-left: 3px solid #FF385C;
+            color: #FF385C;
         }
         .sidebar-footer {
             padding: 12px 10px;
-            border-top: 1px solid #E5E7EB;
+            border-top: 1px solid #EBEBEB;
         }
         .logout-btn {
             display: flex;
@@ -99,7 +99,7 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 10px;
-            color: #6B7280;
+            color: #717171;
             background: none;
             border: none;
             cursor: pointer;
@@ -128,7 +128,7 @@
             height: 64px;
             min-height: 64px;
             background: #FFFFFF;
-            border-bottom: 1px solid #E5E7EB;
+            border-bottom: 1px solid #EBEBEB;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -139,21 +139,21 @@
         .header-title {
             font-size: 18px;
             font-weight: 600;
-            color: #111827;
+            color: #222222;
         }
         .user-pill {
             display: flex;
             align-items: center;
             gap: 10px;
             background: #F3F4F6;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             padding: 6px 12px 6px 6px;
         }
         .user-avatar {
             width: 30px; height: 30px;
             border-radius: 50%;
-            background: #2563EB;
+            background: #FF385C;
             display: flex; align-items: center; justify-content: center;
             font-weight: 700;
             font-size: 13px;
@@ -173,8 +173,8 @@
 
         /* AI Banner */
         .ai-banner {
-            background: #DBEAFE;
-            border: 1px solid rgba(37,99,235,0.15);
+            background: #FFF2F5;
+            border: 1px solid rgba(255,56,92,0.15);
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 20px;
@@ -182,7 +182,7 @@
 
         /* Gradient button */
         .btn-gradient {
-            background: #2563EB;
+            background: #FF385C;
             color: white;
             border: none;
             cursor: pointer;
@@ -199,7 +199,7 @@
         /* Filter bar */
         .filter-bar {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 16px;
             padding: 16px 20px;
             margin-bottom: 20px;
@@ -208,9 +208,9 @@
         /* Glass input */
         .input-glass {
             background: #FFFFFF;
-            border: 1px solid #D1D5DB;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
-            color: #111827;
+            color: #222222;
             outline: none;
             padding: 10px 16px;
             font-size: 14px;
@@ -218,11 +218,11 @@
             transition: all 0.2s;
         }
         .input-glass:focus {
-            border-color: #2563EB;
+            border-color: #FF385C;
             background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+            box-shadow: 0 0 0 3px rgba(255,56,92,0.1);
         }
-        .input-glass::placeholder { color: #9CA3AF; }
+        .input-glass::placeholder { color: #B0B0B0; }
 
         /* Stats bar */
         #statsBar {
@@ -234,21 +234,21 @@
         #statsBar.visible { display: grid; }
         .stat-card-mini {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 14px;
             padding: 14px;
             text-align: center;
             transition: all 0.3s;
         }
         .stat-card-mini:hover {
-            border-color: rgba(37,99,235,0.3);
+            border-color: rgba(255,56,92,0.3);
             transform: translateY(-2px);
         }
 
         /* Match cards */
         .match-card {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
@@ -256,14 +256,14 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .match-card:hover {
-            border-color: rgba(37,99,235,0.3);
+            border-color: rgba(255,56,92,0.3);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .match-card-header {
             padding: 10px 16px;
-            background: #F8FAFC;
-            border-bottom: 1px solid #E5E7EB;
+            background: #F7F7F7;
+            border-bottom: 1px solid #EBEBEB;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -271,7 +271,7 @@
         .match-card-footer {
             padding: 10px 20px;
             background: #F9FAFB;
-            border-top: 1px solid #E5E7EB;
+            border-top: 1px solid #EBEBEB;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -297,7 +297,7 @@
         /* AI summary box on card */
         .ai-summary-box {
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 10px;
             padding: 10px 12px;
             margin-bottom: 10px;
@@ -312,8 +312,8 @@
 
         /* Pipeline status */
         #pipelineStatus {
-            background: #F8FAFC;
-            border: 1px solid #E5E7EB;
+            background: #F7F7F7;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             padding: 10px 14px;
             margin-top: 16px;
@@ -333,7 +333,7 @@
         #matchModal.open { display: flex; }
         .modal-card {
             background: #FFFFFF;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 16px;
             max-width: 640px;
             width: 100%;
@@ -347,14 +347,14 @@
         /* Modal inner sections */
         .modal-section {
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 14px;
         }
         .modal-ai-box {
-            background: #DBEAFE;
-            border: 1px solid rgba(37,99,235,0.15);
+            background: #FFF2F5;
+            border: 1px solid rgba(255,56,92,0.15);
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 14px;
@@ -372,8 +372,8 @@
             padding: 10px 14px;
         }
         .modal-contact-box {
-            background: #DBEAFE;
-            border: 1px solid rgba(37,99,235,0.15);
+            background: #FFF2F5;
+            border: 1px solid rgba(255,56,92,0.15);
             border-radius: 12px;
             padding: 14px;
             margin-top: 14px;
@@ -382,8 +382,8 @@
         /* Refresh btn ghost */
         .btn-ghost {
             background: #F9FAFB;
-            border: 1px solid #E5E7EB;
-            color: #6B7280;
+            border: 1px solid #EBEBEB;
+            color: #717171;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
             font-weight: 500;
@@ -393,20 +393,20 @@
             transition: all 0.2s;
         }
         .btn-ghost:hover {
-            color: #111827;
+            color: #222222;
             background: #F3F4F6;
-            border-color: #D1D5DB;
+            border-color: #EBEBEB;
         }
 
         /* Select styling */
         select.input-glass option {
             background: #FFFFFF;
-            color: #111827;
+            color: #222222;
         }
 
         /* Avatar circle */
         .avatar-gradient {
-            background: #2563EB;
+            background: #FF385C;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-weight: 700;
@@ -417,8 +417,8 @@
         .empty-icon-wrap {
             width: 96px; height: 96px;
             margin: 0 auto 24px;
-            background: #DBEAFE;
-            border: 1px solid rgba(37,99,235,0.15);
+            background: #FFF2F5;
+            border: 1px solid rgba(255,56,92,0.15);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 48px;
@@ -440,8 +440,8 @@
             font-size: 11px;
             font-weight: 600;
             background: #F0F4FF;
-            border: 1px solid rgba(37,99,235,0.15);
-            color: #2563EB;
+            border: 1px solid rgba(255,56,92,0.15);
+            color: #FF385C;
         }
 
         @media (max-width: 1024px) {
@@ -519,8 +519,8 @@
                 <div style="padding: 8px 10px 12px; display:flex; align-items:center; gap:8px;">
                     <div class="avatar-gradient" style="width:32px;height:32px;font-size:13px;" id="sidebarAvatar">U</div>
                     <div style="flex:1;min-width:0;">
-                        <p style="font-size:13px;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="sidebarName">User</p>
-                        <p style="font-size:11px;color:#6B7280;">Online</p>
+                        <p style="font-size:13px;font-weight:600;color:#222222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="sidebarName">User</p>
+                        <p style="font-size:11px;color:#717171;">Online</p>
                     </div>
                 </div>
                 <button class="logout-btn" onclick="handleLogout()">
@@ -542,7 +542,7 @@
                 </div>
                 <div class="user-pill">
                     <div class="user-avatar" id="userAvatar">U</div>
-                    <span style="font-size:13px;font-weight:500;color:#111827;" id="headerUserName">User</span>
+                    <span style="font-size:13px;font-weight:500;color:#222222;" id="headerUserName">User</span>
                 </div>
             </header>
 
@@ -554,11 +554,11 @@
                     <div class="ai-banner">
                         <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px;">
                             <div>
-                                <h2 style="font-size:22px;font-weight:800;color:#111827;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                                <h2 style="font-size:22px;font-weight:800;color:#222222;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                                     <span style="font-size:26px;">🤖</span>
                                     AI-Driven Matching
                                 </h2>
-                                <p style="font-size:14px;color:#6B7280;margin-bottom:12px;">
+                                <p style="font-size:14px;color:#717171;margin-bottom:12px;">
                                     Our 6-agent AI system analyzed your profile, preferences, and compatibility to find your best matches.
                                 </p>
                                 <div style="display:flex;flex-wrap:wrap;gap:6px;" id="agentBadges">
@@ -584,8 +584,8 @@
                         <!-- Pipeline status -->
                         <div id="pipelineStatus" class="hidden">
                             <div style="display:flex;align-items:center;gap:8px;font-size:13px;" id="pipelineText">
-                                <div style="width:14px;height:14px;border:2px solid #2563EB;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;"></div>
-                                <span style="color:#2563EB;">Running AI pipeline...</span>
+                                <div style="width:14px;height:14px;border:2px solid #FF385C;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;"></div>
+                                <span style="color:#FF385C;">Running AI pipeline...</span>
                             </div>
                         </div>
                     </div>
@@ -616,20 +616,20 @@
                     <!-- Stats Bar -->
                     <div id="statsBar">
                         <div class="stat-card-mini">
-                            <p style="font-size:26px;font-weight:800;color:#2563EB;letter-spacing:-1px;" id="statTotal">0</p>
-                            <p style="font-size:11px;color:#6B7280;margin-top:2px;">Total Matches</p>
+                            <p style="font-size:26px;font-weight:800;color:#FF385C;letter-spacing:-1px;" id="statTotal">0</p>
+                            <p style="font-size:11px;color:#717171;margin-top:2px;">Total Matches</p>
                         </div>
                         <div class="stat-card-mini">
                             <p style="font-size:26px;font-weight:800;color:#16A34A;letter-spacing:-1px;" id="statExcellent">0</p>
-                            <p style="font-size:11px;color:#6B7280;margin-top:2px;">Excellent (80+)</p>
+                            <p style="font-size:11px;color:#717171;margin-top:2px;">Excellent (80+)</p>
                         </div>
                         <div class="stat-card-mini">
                             <p style="font-size:26px;font-weight:800;color:#D97706;letter-spacing:-1px;" id="statGood">0</p>
-                            <p style="font-size:11px;color:#6B7280;margin-top:2px;">Good (60–79)</p>
+                            <p style="font-size:11px;color:#717171;margin-top:2px;">Good (60–79)</p>
                         </div>
                         <div class="stat-card-mini">
                             <p style="font-size:26px;font-weight:800;color:#0891B2;letter-spacing:-1px;" id="statAvgScore">0</p>
-                            <p style="font-size:11px;color:#6B7280;margin-top:2px;">Avg AI Score</p>
+                            <p style="font-size:11px;color:#717171;margin-top:2px;">Avg AI Score</p>
                         </div>
                     </div>
 
@@ -640,29 +640,29 @@
                             <span style="font-weight:700; color:#16A34A; font-size:15px;">Mutual Matches</span>
                             <span id="mutualCount" style="background:rgba(34,197,94,0.12); color:#16A34A; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px;">0</span>
                         </div>
-                        <p style="font-size:13px; color:#6B7280; margin-bottom:12px;">Both you and these users have expressed interest in each other!</p>
+                        <p style="font-size:13px; color:#717171; margin-bottom:12px;">Both you and these users have expressed interest in each other!</p>
                         <div id="mutualMatchesList" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
                     </div>
 
                     <!-- Matches Grid -->
                     <div id="matchesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;">
                         <div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;">
-                            <div style="width:36px;height:36px;border:3px solid #2563EB;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:12px;"></div>
-                            <p style="font-size:14px;color:#6B7280;">Loading AI recommendations...</p>
+                            <div style="width:36px;height:36px;border:3px solid #FF385C;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:12px;"></div>
+                            <p style="font-size:14px;color:#717171;">Loading AI recommendations...</p>
                         </div>
                     </div>
 
                     <!-- Empty State -->
                     <div id="emptyState" class="hidden" style="text-align:center;padding:80px 0;">
                         <div class="empty-icon-wrap">🤖</div>
-                        <h3 style="font-size:22px;font-weight:800;color:#111827;margin-bottom:8px;">No AI Matches Yet</h3>
-                        <p style="font-size:14px;color:#6B7280;max-width:400px;margin:0 auto 24px;line-height:1.6;">
+                        <h3 style="font-size:22px;font-weight:800;color:#222222;margin-bottom:8px;">No AI Matches Yet</h3>
+                        <p style="font-size:14px;color:#717171;max-width:400px;margin:0 auto 24px;line-height:1.6;">
                             Click "Run AI Matching" to activate the 6-agent pipeline and generate personalized recommendations.
                         </p>
                         <p>No matches found at this score threshold.</p>
-                        <p style="color:#6B7280; font-size:13px; margin-top:8px;">
+                        <p style="color:#717171; font-size:13px; margin-top:8px;">
                             Try lowering the minimum score filter, or
-                            <a href="/preferences.html" style="color:#2563EB;">update your preferences</a>
+                            <a href="/preferences.html" style="color:#FF385C;">update your preferences</a>
                             to expand your compatibility pool.
                         </p>
                         <button onclick="runAIMatching()"
@@ -689,12 +689,12 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
                     <div style="display:flex;align-items:center;gap:8px;">
                         <span style="font-size:18px;">🤖</span>
-                        <h3 style="font-size:17px;font-weight:700;color:#111827;">AI Match Analysis</h3>
+                        <h3 style="font-size:17px;font-weight:700;color:#222222;">AI Match Analysis</h3>
                     </div>
                     <button onclick="closeModal()"
-                        style="background:#F3F4F6;border:1px solid #E5E7EB;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#6B7280;transition:all 0.2s;"
-                        onmouseover="this.style.color='#111827';this.style.background='#E5E7EB'"
-                        onmouseout="this.style.color='#6B7280';this.style.background='#F3F4F6'">
+                        style="background:#F3F4F6;border:1px solid #EBEBEB;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#717171;transition:all 0.2s;"
+                        onmouseover="this.style.color='#222222';this.style.background='#EBEBEB'"
+                        onmouseout="this.style.color='#717171';this.style.background='#F3F4F6'">
                         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -709,21 +709,21 @@
                         U
                     </div>
                     <div style="flex:1;min-width:0;">
-                        <h4 id="modalName" style="font-size:18px;font-weight:700;color:#111827;margin-bottom:2px;">User Name</h4>
-                        <p id="modalLocation" style="font-size:13px;color:#6B7280;margin-bottom:4px;">Location</p>
-                        <p id="modalBio" style="font-size:13px;color:#6B7280;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">No bio</p>
+                        <h4 id="modalName" style="font-size:18px;font-weight:700;color:#222222;margin-bottom:2px;">User Name</h4>
+                        <p id="modalLocation" style="font-size:13px;color:#717171;margin-bottom:4px;">Location</p>
+                        <p id="modalBio" style="font-size:13px;color:#717171;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">No bio</p>
                     </div>
                     <div style="text-align:center;flex-shrink:0;">
                         <div class="score-ring">
                             <svg width="70" height="70">
-                                <circle cx="35" cy="35" r="30" stroke="#E5E7EB" stroke-width="5" fill="none"/>
-                                <circle id="modalScoreRing" cx="35" cy="35" r="30" stroke="#2563EB" stroke-width="5"
+                                <circle cx="35" cy="35" r="30" stroke="#EBEBEB" stroke-width="5" fill="none"/>
+                                <circle id="modalScoreRing" cx="35" cy="35" r="30" stroke="#FF385C" stroke-width="5"
                                     fill="none" stroke-dasharray="188.5" stroke-dashoffset="188.5"
                                     stroke-linecap="round"/>
                             </svg>
-                            <span class="score-text" id="modalScore" style="color:#2563EB;">0%</span>
+                            <span class="score-text" id="modalScore" style="color:#FF385C;">0%</span>
                         </div>
-                        <p id="modalStrength" style="font-size:11px;font-weight:600;color:#2563EB;margin-top:4px;">AI Score</p>
+                        <p id="modalStrength" style="font-size:11px;font-weight:600;color:#FF385C;margin-top:4px;">AI Score</p>
                     </div>
                 </div>
 
@@ -731,14 +731,14 @@
                 <div class="modal-ai-box">
                     <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
                         <span style="font-size:14px;">🧠</span>
-                        <h5 style="font-size:13px;font-weight:600;color:#2563EB;">AI Reasoning</h5>
+                        <h5 style="font-size:13px;font-weight:600;color:#FF385C;">AI Reasoning</h5>
                     </div>
-                    <p id="modalAISummary" style="font-size:13px;color:#374151;line-height:1.6;">Loading AI analysis...</p>
+                    <p id="modalAISummary" style="font-size:13px;color:#444444;line-height:1.6;">Loading AI analysis...</p>
                 </div>
 
                 <!-- Score Breakdown -->
                 <div class="modal-section">
-                    <h5 style="font-size:13px;font-weight:600;color:#111827;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+                    <h5 style="font-size:13px;font-weight:600;color:#222222;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
                         📊 Compatibility Score Breakdown
                     </h5>
                     <div style="display:flex;flex-direction:column;gap:10px;" id="modalScoreBreakdown">
@@ -748,10 +748,10 @@
 
                 <!-- AI Insights -->
                 <div id="modalDetailsSection" class="hidden modal-section">
-                    <h5 style="font-size:13px;font-weight:600;color:#111827;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+                    <h5 style="font-size:13px;font-weight:600;color:#222222;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
                         💡 AI Insights
                     </h5>
-                    <ul id="modalDetails" style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#374151;list-style:none;"></ul>
+                    <ul id="modalDetails" style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#444444;list-style:none;"></ul>
                 </div>
 
                 <!-- Conflict Warnings -->
@@ -765,20 +765,20 @@
                 <!-- User Info Grid -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
                     <div class="modal-info-cell">
-                        <p style="font-size:11px;color:#6B7280;margin-bottom:3px;">Gender</p>
-                        <p id="modalGender" style="font-size:14px;font-weight:500;color:#111827;">--</p>
+                        <p style="font-size:11px;color:#717171;margin-bottom:3px;">Gender</p>
+                        <p id="modalGender" style="font-size:14px;font-weight:500;color:#222222;">--</p>
                     </div>
                     <div class="modal-info-cell">
-                        <p style="font-size:11px;color:#6B7280;margin-bottom:3px;">City</p>
-                        <p id="modalCity" style="font-size:14px;font-weight:500;color:#111827;">--</p>
+                        <p style="font-size:11px;color:#717171;margin-bottom:3px;">City</p>
+                        <p id="modalCity" style="font-size:14px;font-weight:500;color:#222222;">--</p>
                     </div>
                     <div class="modal-info-cell">
-                        <p style="font-size:11px;color:#6B7280;margin-bottom:3px;">Match Type</p>
-                        <p id="modalMatchType" style="font-size:14px;font-weight:500;color:#111827;">--</p>
+                        <p style="font-size:11px;color:#717171;margin-bottom:3px;">Match Type</p>
+                        <p id="modalMatchType" style="font-size:14px;font-weight:500;color:#222222;">--</p>
                     </div>
                     <div class="modal-info-cell">
-                        <p style="font-size:11px;color:#6B7280;margin-bottom:3px;">Generated</p>
-                        <p id="modalCreated" style="font-size:14px;font-weight:500;color:#111827;">--</p>
+                        <p style="font-size:11px;color:#717171;margin-bottom:3px;">Generated</p>
+                        <p id="modalCreated" style="font-size:14px;font-weight:500;color:#222222;">--</p>
                     </div>
                 </div>
 
@@ -793,13 +793,13 @@
                         Like
                     </button>
                     <button onclick="skipMatch()"
-                        style="padding:12px 20px;border-radius:12px;background:#F9FAFB;border:1px solid #E5E7EB;color:#6B7280;cursor:pointer;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;transition:all 0.2s;"
-                        onmouseover="this.style.background='#F3F4F6';this.style.color='#111827'"
-                        onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280'">
+                        style="padding:12px 20px;border-radius:12px;background:#F9FAFB;border:1px solid #EBEBEB;color:#717171;cursor:pointer;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;transition:all 0.2s;"
+                        onmouseover="this.style.background='#F3F4F6';this.style.color='#222222'"
+                        onmouseout="this.style.background='#F9FAFB';this.style.color='#717171'">
                         Skip
                     </button>
                     <button onclick="showContactInfo()"
-                        style="flex:1;padding:12px;border-radius:12px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:#2563EB;color:white;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;"
+                        style="flex:1;padding:12px;border-radius:12px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;background:#FF385C;color:white;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity 0.2s;"
                         onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                         <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -811,9 +811,9 @@
 
                 <!-- Contact Info (hidden) -->
                 <div id="contactInfoSection" class="hidden modal-contact-box">
-                    <h5 style="font-size:13px;font-weight:600;color:#2563EB;margin-bottom:8px;">Contact Information</h5>
-                    <p id="contactEmail" style="font-size:13px;color:#374151;margin-bottom:4px;"></p>
-                    <p id="contactPhone" style="font-size:13px;color:#374151;"></p>
+                    <h5 style="font-size:13px;font-weight:600;color:#FF385C;margin-bottom:8px;">Contact Information</h5>
+                    <p id="contactEmail" style="font-size:13px;color:#444444;margin-bottom:4px;"></p>
+                    <p id="contactPhone" style="font-size:13px;color:#444444;"></p>
                 </div>
             </div>
         </div>
@@ -961,7 +961,7 @@
                     <div class="match-card slide-up" style="animation-delay: ${idx * 0.05}s" onclick='showMatchDetail(${safeMatch})'>
                         <!-- Header strip -->
                         <div class="match-card-header">
-                            <span style="font-size:11px;color:#2563EB;font-weight:600;display:flex;align-items:center;gap:4px;">
+                            <span style="font-size:11px;color:#FF385C;font-weight:600;display:flex;align-items:center;gap:4px;">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                                 AI Recommended
                             </span>
@@ -973,8 +973,8 @@
                             <div style="display:flex;align-items:center;margin-bottom:14px;">
                                 <div class="avatar-gradient" style="width:48px;height:48px;font-size:18px;margin-right:12px;flex-shrink:0;">${initial}</div>
                                 <div style="flex:1;min-width:0;">
-                                    <h4 style="font-size:15px;font-weight:700;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${user.full_name || 'Unknown'}</h4>
-                                    <p style="font-size:12px;color:#6B7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${user.city || 'Location not set'}${user.gender ? ' · ' + user.gender : ''}</p>
+                                    <h4 style="font-size:15px;font-weight:700;color:#222222;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${user.full_name || 'Unknown'}</h4>
+                                    <p style="font-size:12px;color:#717171;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${user.city || 'Location not set'}${user.gender ? ' · ' + user.gender : ''}</p>
                                 </div>
                                 <div style="margin-left:10px;text-align:center;flex-shrink:0;">
                                     <span style="font-size:24px;font-weight:800;color:${scoreDisplayColor};letter-spacing:-1px;">${score}<span style="font-size:14px;">%</span></span>
@@ -983,8 +983,8 @@
 
                             <!-- AI Summary -->
                             <div class="ai-summary-box">
-                                <p style="font-size:12px;color:#6B7280;display:flex;align-items:flex-start;gap:6px;line-height:1.5;">
-                                    <span style="color:#2563EB;flex-shrink:0;margin-top:1px;">🧠</span>
+                                <p style="font-size:12px;color:#717171;display:flex;align-items:flex-start;gap:6px;line-height:1.5;">
+                                    <span style="color:#FF385C;flex-shrink:0;margin-top:1px;">🧠</span>
                                     <span style="overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${summaryText}</span>
                                 </p>
                             </div>
@@ -1004,8 +1004,8 @@
                         </div>
 
                         <div class="match-card-footer">
-                            <span style="font-size:11px;color:#9CA3AF;">Analyzed by 6 agents</span>
-                            <span style="font-size:11px;font-weight:600;color:#2563EB;">View AI Analysis →</span>
+                            <span style="font-size:11px;color:#B0B0B0;">Analyzed by 6 agents</span>
+                            <span style="font-size:11px;font-weight:600;color:#FF385C;">View AI Analysis →</span>
                         </div>
                     </div>
                 `;
@@ -1217,10 +1217,10 @@
                     const u = m.matched_user || {};
                     const initial = (u.full_name || '?').charAt(0).toUpperCase();
                     return '<div style="display:flex; align-items:center; gap:8px; background:rgba(34,197,94,0.06); border:1px solid rgba(34,197,94,0.15); border-radius:10px; padding:8px 12px;">' +
-                        '<div style="width:32px; height:32px; border-radius:50%; background:#2563EB; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:white;">' + initial + '</div>' +
+                        '<div style="width:32px; height:32px; border-radius:50%; background:#FF385C; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:white;">' + initial + '</div>' +
                         '<div>' +
-                          '<div style="font-size:13px; font-weight:600; color:#111827;">' + (u.full_name || 'User') + '</div>' +
-                          '<div style="font-size:11px; color:#6B7280;">' + (u.city || '') + ' · ' + Math.round(m.match_score) + '% match</div>' +
+                          '<div style="font-size:13px; font-weight:600; color:#222222;">' + (u.full_name || 'User') + '</div>' +
+                          '<div style="font-size:11px; color:#717171;">' + (u.city || '') + ' · ' + Math.round(m.match_score) + '% match</div>' +
                         '</div>' +
                     '</div>';
                 }).join('');
