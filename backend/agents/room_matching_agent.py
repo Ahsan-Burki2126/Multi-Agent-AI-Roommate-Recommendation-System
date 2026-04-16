@@ -172,11 +172,12 @@ class RoomMatchingAgent(BaseAgent):
                     'location': item['room'].location,
                     'rent_price': float(item['room'].rent_price),
                     'room_type': item['room'].room_type,
-                    'bed_size': item['room'].bed_size,
-                    'furnishing': item['room'].furnishing_type,
+                    'bedrooms': item['room'].bedrooms,
+                    'bathrooms': float(item['room'].bathrooms) if item['room'].bathrooms else None,
                     'pets_allowed': item['room'].pets_allowed,
                     'smoking_allowed': item['room'].smoking_allowed,
-                    'amenities': item['room'].amenities,
+                    'amenities': item['room'].amenities or [],
+                    'images': item['room'].images or [],
                     'description': item['room'].description,
                     'match_score': item['score'],
                     'owner': {
@@ -291,18 +292,11 @@ class RoomMatchingAgent(BaseAgent):
             score += 15
         try:
             amenity_count = 0
-            desired = ['wifi', 'ac', 'kitchen', 'parking']
-            if room.amenities:
-                amenities = room.amenities.lower()
-                amenity_count = sum(1 for a in desired if a in amenities)
+            desired = ['wifi', 'ac', 'kitchen', 'parking', 'furnished']
+            if room.amenities and isinstance(room.amenities, list):
+                amenities_lower = [a.lower() for a in room.amenities]
+                amenity_count = sum(1 for a in desired if any(a in x for x in amenities_lower))
             score += min(20, amenity_count * 5)
         except:
             score += 10
-        try:
-            if room.bed_size in ['queen', 'double']:
-                score += 5
-            if room.furnishing_type == 'furnished':
-                score += 5
-        except:
-            pass
         return int(min(100, score))

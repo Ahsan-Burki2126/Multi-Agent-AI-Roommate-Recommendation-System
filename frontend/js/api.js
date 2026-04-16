@@ -248,6 +248,17 @@ class APIClient {
     return this.request("GET", `/rooms/user/${userId}`);
   }
 
+  // Get rooms scored against current user's preferences
+  async getMatchedRooms(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request("GET", `/rooms/matched?${queryString}`);
+  }
+
+  // Run AI room matching pipeline via orchestrator
+  async runRoomMatching(params = {}) {
+    return this.request("POST", "/orchestrate/rooms", params);
+  }
+
   /**
    * Matching Endpoints
    */

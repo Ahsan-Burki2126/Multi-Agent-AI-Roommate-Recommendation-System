@@ -460,10 +460,10 @@
                                 </div>
                                 <select id="priceFilter" class="input-glass">
                                     <option value="">All Prices</option>
-                                    <option value="0-10000">Under PKR 10,000</option>
-                                    <option value="10000-20000">PKR 10,000 – 20,000</option>
-                                    <option value="20000-35000">PKR 20,000 – 35,000</option>
-                                    <option value="35000+">PKR 35,000+</option>
+                                    <option value="under-8k">Under PKR 8,000</option>
+                                    <option value="8k-15k">PKR 8,000 – 15,000</option>
+                                    <option value="15k-25k">PKR 15,000 – 25,000</option>
+                                    <option value="25k-plus">PKR 25,000+</option>
                                 </select>
                                 <select id="roomTypeFilter" class="input-glass">
                                     <option value="">All Types</option>
@@ -664,6 +664,7 @@
 
         let allRooms = [];
         let myRooms = [];
+        let aiMatchedRooms = [];
 
         function showTab(tab) {
             const browseTab = document.getElementById('tab-browse');
@@ -672,143 +673,132 @@
             const myRoomsContent = document.getElementById('my-rooms-content');
 
             if (tab === 'browse') {
-                browseTab.classList.remove('bg-gray-700/50', 'border-gray-600', 'border');
-                browseTab.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-cyan-500');
-                myRoomsTab.classList.add('bg-gray-700/50', 'border-gray-600', 'border');
-                myRoomsTab.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'to-cyan-500');
-                browseContent.classList.remove('hidden');
-                myRoomsContent.classList.add('hidden');
-                // Also apply inline styles for glass approach
                 browseTab.className = 'tab-btn tab-btn-active';
                 myRoomsTab.className = 'tab-btn tab-btn-inactive';
+                browseContent.classList.remove('hidden');
+                myRoomsContent.classList.add('hidden');
             } else {
-                myRoomsTab.classList.remove('bg-gray-700/50', 'border-gray-600', 'border');
-                myRoomsTab.classList.add('bg-gradient-to-r', 'from-indigo-600', 'to-cyan-500');
-                browseTab.classList.add('bg-gray-700/50', 'border-gray-600', 'border');
-                browseTab.classList.remove('bg-gradient-to-r', 'from-indigo-600', 'to-cyan-500');
-                myRoomsContent.classList.remove('hidden');
-                browseContent.classList.add('hidden');
-                // Also apply inline styles for glass approach
                 myRoomsTab.className = 'tab-btn tab-btn-active';
                 browseTab.className = 'tab-btn tab-btn-inactive';
+                myRoomsContent.classList.remove('hidden');
+                browseContent.classList.add('hidden');
                 loadMyRooms();
             }
         }
 
+        // ── Score colour helper ─────────────────────────────────────────
+        function scoreColor(score) {
+            if (score >= 80) return '#059669';   // green
+            if (score >= 60) return '#D97706';   // amber
+            return '#EF4444';                    // red
+        }
+
+        // ── Render a single room card ────────────────────────────────────
+        function roomCardHTML(room) {
+            const roomType = (room.room_type || 'shared').toLowerCase();
+            const typeLabels = { single: 'Single Room', shared: 'Shared Room', master: 'Master Bedroom' };
+            const typeBadgeStyle = {
+                single: 'background:#FFF2F5;color:#FF385C;',
+                shared: 'background:#EDE9FE;color:#7C3AED;',
+                master: 'background:#FCE7F3;color:#DB2777;'
+            };
+            const badgeStyle = typeBadgeStyle[roomType] || 'background:#F3F4F6;color:#717171;';
+            const amenities = Array.isArray(room.amenities) ? room.amenities : [];
+            const price = room.rent_price || 0;
+            const roomId = room.room_id;
+            const score = room.match_score != null ? Math.round(room.match_score) : null;
+
+            const scoreBadge = score !== null
+                ? `<span style="flex-shrink:0; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:700; background:${scoreColor(score)}20; color:${scoreColor(score)}; border:1px solid ${scoreColor(score)}40;">
+                       ${score}% match
+                   </span>`
+                : '';
+
+            const imgSection = (room.images && room.images.length > 0 && !room.images[0].includes('placeholder'))
+                ? `<img src="${room.images[0]}" alt="${room.title}" style="width:100%; height:100%; object-fit:cover; border-radius:12px 12px 0 0;">`
+                : `<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:40px; background:linear-gradient(135deg,#FFF2F5,#EDE9FE); border-radius:12px 12px 0 0;">🏠</div>`;
+
+            return `
+                <div class="room-card slide-in">
+                    <div class="room-card-image" style="overflow:hidden; border-radius:12px 12px 0 0;">
+                        ${imgSection}
+                    </div>
+                    <div style="padding:18px 20px;">
+                        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; gap:8px;">
+                            <h4 style="font-weight:700; font-size:15px; color:#222222; line-height:1.3;">${room.title}</h4>
+                            <span style="flex-shrink:0; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; ${badgeStyle}">${typeLabels[roomType] || roomType}</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:5px; color:#717171; font-size:13px; margin-bottom:8px;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            ${room.location}
+                        </div>
+                        <p style="color:#717171; font-size:13px; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${room.description || 'No description available'}</p>
+
+                        ${amenities.length > 0 ? `<div style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px;">
+                            ${amenities.slice(0,4).map(a => `<span style="padding:2px 8px; background:#F3F4F6; border:1px solid #EBEBEB; border-radius:6px; font-size:11px; color:#717171;">${a}</span>`).join('')}
+                            ${amenities.length > 4 ? `<span style="padding:2px 8px; background:#F3F4F6; border:1px solid #EBEBEB; border-radius:6px; font-size:11px; color:#717171;">+${amenities.length-4} more</span>` : ''}
+                        </div>` : ''}
+
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid #EBEBEB;">
+                            <div>
+                                <span style="font-size:20px; font-weight:800; color:#059669;">PKR ${price.toLocaleString()}</span>
+                                <span style="font-size:12px; color:#717171;">/month</span>
+                                ${scoreBadge}
+                            </div>
+                            <button onclick="contactOwner(${roomId})" style="padding:8px 16px; background:#FF385C; border:none; border-radius:10px; color:white; font-size:13px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                                Contact
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderRooms(rooms, container) {
+            if (!rooms || rooms.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#717171;">No rooms found matching your filters.</div>`;
+                return;
+            }
+            container.innerHTML = rooms.map(roomCardHTML).join('');
+        }
+
+        // ── Load all rooms (with compatibility scores if logged in) ──────
         async function loadRooms() {
             const grid = document.getElementById('roomsGrid');
             const emptyState = document.getElementById('emptyRooms');
 
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#717171;">Loading rooms…</div>`;
+
             try {
-                const response = await api.getRooms();
-                allRooms = Array.isArray(response) ? response : response.rooms || [];
-
-                if (allRooms.length === 0) {
-                    grid.innerHTML = '';
-                    emptyState.classList.remove('hidden');
-                    return;
+                // Try to get rooms pre-scored against user preferences
+                const response = await api.getMatchedRooms({ limit: 50 });
+                allRooms = response.rooms || [];
+            } catch (_) {
+                // Fall back to plain room list if /matched fails (e.g. no prefs)
+                try {
+                    const response = await api.getRooms({ limit: 50 });
+                    allRooms = Array.isArray(response) ? response : response.rooms || [];
+                } catch (err) {
+                    console.error('Error loading rooms:', err);
+                    allRooms = [];
                 }
-
-                emptyState.classList.add('hidden');
-                renderRooms(allRooms, grid);
-            } catch (error) {
-                console.error('Error loading rooms:', error);
-                // Show sample rooms for demo
-                allRooms = getSampleRooms();
-                renderRooms(allRooms, grid);
             }
-        }
 
-        function getSampleRooms() {
-            return [
-                {
-                    id: 1,
-                    title: 'Cozy Room in Downtown',
-                    location: 'Manhattan, NYC',
-                    price: 1200,
-                    type: 'private',
-                    description: 'Beautiful furnished private room with great views.',
-                    furnished: true,
-                    utilities_included: true
-                },
-                {
-                    id: 2,
-                    title: 'Shared Space Near Campus',
-                    location: 'Brooklyn, NYC',
-                    price: 800,
-                    type: 'shared',
-                    description: 'Perfect for students. Close to public transit.',
-                    furnished: false,
-                    utilities_included: false
-                },
-                {
-                    id: 3,
-                    title: 'Sunny Studio Apartment',
-                    location: 'Queens, NYC',
-                    price: 1500,
-                    type: 'apartment',
-                    description: 'Entire apartment with kitchen and bathroom.',
-                    furnished: true,
-                    utilities_included: true
-                }
-            ];
-        }
+            if (allRooms.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
 
-        function renderRooms(rooms, container) {
-            container.innerHTML = rooms.map(room => {
-                const roomType = (room.room_type || room.type || 'shared').toLowerCase();
-                const typeLabels = { 'single': 'Single Room', 'shared': 'Shared Room', 'master': 'Master Bedroom' };
-                const typeColors = { 'single': 'bg-indigo-500/20 text-indigo-400', 'shared': 'bg-purple-500/20 text-purple-400', 'master': 'bg-pink-500/20 text-pink-400' };
-                const amenities = room.amenities || [];
-                const price = room.rent_price || room.price || 0;
-                const roomId = room.room_id || room.id;
-
-                const typeBadgeStyle = {
-                    'single': 'background:#FFF2F5;color:#FF385C;',
-                    'shared': 'background:#EDE9FE;color:#FF385C;',
-                    'master': 'background:#FCE7F3;color:#DB2777;'
-                };
-                const badgeStyle = typeBadgeStyle[roomType] || 'background:#F3F4F6;color:#717171;';
-
-                return `
-                    <div class="room-card slide-in">
-                        <div class="room-card-image">
-                            <span style="position:relative;z-index:1;">🏠</span>
-                        </div>
-                        <div style="padding:18px 20px;">
-                            <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; gap:8px;">
-                                <h4 style="font-weight:700; font-size:16px; color:#222222; line-height:1.3;">${room.title}</h4>
-                                <span style="flex-shrink:0; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; ${badgeStyle}">${typeLabels[roomType] || roomType}</span>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:5px; color:#717171; font-size:13px; margin-bottom:8px;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                ${room.location}
-                            </div>
-                            <p style="color:#717171; font-size:13px; margin-bottom:12px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${room.description || 'No description available'}</p>
-
-                            ${amenities.length > 0 ? `<div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;">
-                                ${amenities.map(a => `<span style="padding:3px 8px; background:#F3F4F6; border:1px solid #EBEBEB; border-radius:6px; font-size:11px; color:#717171;">${a}</span>`).join('')}
-                            </div>` : ''}
-
-                            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:12px; border-top:1px solid #EBEBEB;">
-                                <div>
-                                    <span style="font-size:24px; font-weight:800; color:#059669;">PKR ${price.toLocaleString()}</span>
-                                    <span style="font-size:13px; color:#717171;">/month</span>
-                                </div>
-                                <button onclick="contactOwner(${roomId})" style="padding:8px 18px; background:#FF385C; border:none; border-radius:10px; color:white; font-size:13px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                                    Contact
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            emptyState.classList.add('hidden');
+            renderRooms(allRooms, grid);
         }
 
         async function loadMyRooms() {
             const grid = document.getElementById('myRoomsGrid');
             const emptyState = document.getElementById('emptyMyRooms');
             const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:#717171;">Loading…</div>`;
 
             try {
                 const response = await api.getUserRooms(user.user_id);
@@ -841,7 +831,6 @@
         document.getElementById('addRoomForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Build amenities array based on checkboxes
             const amenities = [];
             if (document.getElementById('roomFurnished').checked) amenities.push('Furnished');
             if (document.getElementById('roomUtilities').checked) amenities.push('Utilities Included');
@@ -856,19 +845,27 @@
                 room_type: document.getElementById('roomType').value,
                 description: document.getElementById('roomDescription').value,
                 amenities: amenities,
-                images: ['placeholder.jpg']
+                images: []
             };
             if (availableFrom) roomData.available_from = availableFrom;
 
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const origText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Posting…';
+
             try {
                 await api.createRoom(roomData);
-                alert('Room posted successfully!');
+                showNotification('Room posted successfully!');
                 closePostRoomModal();
                 loadRooms();
                 loadMyRooms();
             } catch (error) {
                 console.error('Error posting room:', error);
-                alert('Failed to post room. Please try again.');
+                showNotification('Failed to post room: ' + (error.message || 'Please try again.'), true);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = origText;
             }
         });
 
@@ -877,106 +874,79 @@
                 const room = await api.getRoom(roomId);
                 const owner = room.owner;
 
-                if (!owner) {
-                    alert('Owner information not available');
-                    return;
-                }
-
-                // Create and show contact modal
                 const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
                 modal.id = 'contactModal';
+                modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:9999;';
                 modal.innerHTML = `
-                    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 border border-gray-200">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-xl font-bold text-gray-900">Contact Owner</h3>
-                            <button onclick="document.getElementById('contactModal').remove()" class="text-gray-500 hover:text-gray-900 text-2xl">&times;</button>
+                    <div style="background:#fff;border-radius:20px;padding:32px;max-width:420px;width:calc(100% - 32px);border:1px solid #EBEBEB;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+                            <h3 style="font-size:18px;font-weight:700;color:#222;">Contact Owner</h3>
+                            <button onclick="document.getElementById('contactModal').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#717171;line-height:1;">&times;</button>
                         </div>
-
-                        <div class="flex items-center gap-4 mb-6">
-                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-2xl font-bold text-white">
-                                ${(owner.full_name || 'O').charAt(0).toUpperCase()}
+                        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+                            <div style="width:56px;height:56px;border-radius:50%;background:#FFF2F5;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#FF385C;flex-shrink:0;">
+                                ${(owner?.full_name || 'O').charAt(0).toUpperCase()}
                             </div>
                             <div>
-                                <h4 class="font-semibold text-lg text-gray-900">${owner.full_name || 'Property Owner'}</h4>
-                                <p class="text-gray-500 text-sm">Room: ${room.title}</p>
+                                <div style="font-weight:600;font-size:16px;color:#222;">${owner?.full_name || 'Property Owner'}</div>
+                                <div style="font-size:13px;color:#717171;">${room.title}</div>
                             </div>
                         </div>
-
-                        <div class="space-y-4">
-                            ${owner.phone ? `
-                            <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-                                <span class="text-2xl">📞</span>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Phone</p>
-                                    <a href="tel:${owner.phone}" class="text-blue-600 hover:text-blue-500 font-medium">${owner.phone}</a>
-                                </div>
+                        <div style="display:flex;flex-direction:column;gap:10px;">
+                            ${owner?.phone ? `<div style="display:flex;align-items:center;gap:12px;padding:14px;background:#F9FAFB;border-radius:12px;border:1px solid #EBEBEB;">
+                                <span style="font-size:20px;">📞</span>
+                                <div><div style="font-size:11px;color:#717171;margin-bottom:2px;">Phone</div>
+                                <a href="tel:${owner.phone}" style="color:#2563EB;font-weight:600;text-decoration:none;">${owner.phone}</a></div>
+                            </div>` : '<div style="padding:14px;background:#FFF8DC;border-radius:12px;font-size:13px;color:#92400E;">No phone number listed. Email the owner to get contact details.</div>'}
+                            <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#F9FAFB;border-radius:12px;border:1px solid #EBEBEB;">
+                                <span style="font-size:20px;">💰</span>
+                                <div><div style="font-size:11px;color:#717171;margin-bottom:2px;">Monthly Rent</div>
+                                <div style="color:#059669;font-weight:700;">PKR ${(room.rent_price||0).toLocaleString()}/month</div></div>
                             </div>
-                            ` : ''}
-
-                            <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-                                <span class="text-2xl">💰</span>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Monthly Rent</p>
-                                    <p class="text-green-600 font-bold">PKR ${(room.rent_price||0).toLocaleString()}/month</p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-                                <span class="text-2xl">📍</span>
-                                <div>
-                                    <p class="text-gray-500 text-sm">Location</p>
-                                    <p class="text-gray-900">${room.location}</p>
-                                </div>
+                            <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#F9FAFB;border-radius:12px;border:1px solid #EBEBEB;">
+                                <span style="font-size:20px;">📍</span>
+                                <div><div style="font-size:11px;color:#717171;margin-bottom:2px;">Location</div>
+                                <div style="color:#222;font-weight:500;">${room.location}</div></div>
                             </div>
                         </div>
-
-                        <div class="mt-6 flex gap-3">
-                            ${owner.phone ? `<a href="tel:${owner.phone}" class="flex-1 py-3 bg-green-500 hover:bg-green-400 rounded-xl text-center font-medium transition text-white">Call Now</a>` : ''}
-                            <button onclick="document.getElementById('contactModal').remove()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition text-gray-700">Close</button>
+                        <div style="margin-top:20px;display:flex;gap:10px;">
+                            ${owner?.phone ? `<a href="tel:${owner.phone}" style="flex:1;padding:12px;background:#059669;color:white;border-radius:12px;text-align:center;font-weight:600;font-size:14px;text-decoration:none;">Call Now</a>` : ''}
+                            <button onclick="document.getElementById('contactModal').remove()" style="flex:1;padding:12px;background:#F3F4F6;color:#222;border:none;border-radius:12px;font-weight:600;font-size:14px;cursor:pointer;">Close</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 document.body.appendChild(modal);
-
-                // Close on backdrop click
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.remove();
-                });
-
+                modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
             } catch (error) {
                 console.error('Error fetching room details:', error);
-                alert('Failed to load contact information. Please try again.');
+                showNotification('Failed to load contact info. Please try again.', true);
             }
         }
 
-        // Combined filter function
+        // ── Filters (PKR ranges) ─────────────────────────────────────────
         function filterRooms() {
             const query = (document.getElementById('searchLocation').value || '').toLowerCase();
             const priceRange = document.getElementById('priceFilter').value;
             const roomType = document.getElementById('roomTypeFilter').value;
 
-            const filtered = allRooms.filter(room => {
-                // Text search
+            const source = aiMatchedRooms.length > 0 ? aiMatchedRooms : allRooms;
+
+            const filtered = source.filter(room => {
                 const matchesSearch = !query ||
                     room.title.toLowerCase().includes(query) ||
                     room.location.toLowerCase().includes(query);
 
-                // Price filter
                 let matchesPrice = true;
                 if (priceRange) {
-                    const price = room.rent_price || room.price || 0;
-                    if (priceRange === '0-500') matchesPrice = price < 500;
-                    else if (priceRange === '500-1000') matchesPrice = price >= 500 && price < 1000;
-                    else if (priceRange === '1000-1500') matchesPrice = price >= 1000 && price < 1500;
-                    else if (priceRange === '1500+') matchesPrice = price >= 1500;
+                    const price = room.rent_price || 0;
+                    if      (priceRange === 'under-8k')    matchesPrice = price < 8000;
+                    else if (priceRange === '8k-15k')      matchesPrice = price >= 8000  && price < 15000;
+                    else if (priceRange === '15k-25k')     matchesPrice = price >= 15000 && price < 25000;
+                    else if (priceRange === '25k-plus')    matchesPrice = price >= 25000;
                 }
 
-                // Type filter
                 let matchesType = true;
                 if (roomType) {
-                    const type = (room.room_type || room.type || '').toLowerCase();
-                    matchesType = type.includes(roomType);
+                    matchesType = (room.room_type || '').toLowerCase() === roomType.toLowerCase();
                 }
 
                 return matchesSearch && matchesPrice && matchesType;
@@ -985,41 +955,31 @@
             renderRooms(filtered, document.getElementById('roomsGrid'));
         }
 
-        // Search filter event listeners
         document.getElementById('searchLocation').addEventListener('input', filterRooms);
         document.getElementById('priceFilter').addEventListener('change', filterRooms);
         document.getElementById('roomTypeFilter').addEventListener('change', filterRooms);
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            document.getElementById('userAvatar').textContent = (user.full_name || 'U').charAt(0).toUpperCase();
-            loadRooms();
-        });
-
-        // Close modal on escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closePostRoomModal();
-        });
-
+        // ── AI Room Matching ─────────────────────────────────────────────
         async function runAIRoomMatching() {
             const userId = JSON.parse(localStorage.getItem('user') || '{}').user_id;
-            if (!userId) { alert('Please log in first'); return; }
+            if (!userId) { showNotification('Please log in first.', true); return; }
 
             const btn = document.getElementById('aiRoomBtn');
             btn.disabled = true;
-            btn.innerHTML = '⏳ AI Matching...';
+            btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite;">⏳</span> AI Matching…';
 
             try {
-                const result = await api.runRoomMatching(userId);
-                const rooms = result.matched_rooms || result.rooms || [];
+                // Use the orchestration pipeline for full AI matching
+                const result = await api.runRoomMatching({ limit: 20 });
+                const rooms = result.rooms || [];
 
                 if (rooms.length === 0) {
                     showNotification('No AI room matches found. Try updating your preferences.', true);
                 } else {
-                    showNotification(`🤖 AI found ${rooms.length} rooms matching your preferences!`);
-                    // Render the AI-matched rooms with scores
-                    renderAIRooms(rooms);
+                    aiMatchedRooms = rooms;
+                    showNotification(`AI found ${rooms.length} rooms matching your preferences!`);
+                    // Show AI results in the main grid (highlighted at top)
+                    renderAIMatchedRooms(rooms);
                 }
             } catch(e) {
                 showNotification('AI matching failed: ' + (e.message || 'Unknown error'), true);
@@ -1029,47 +989,44 @@
             }
         }
 
-        function renderAIRooms(rooms) {
-            // Find the rooms grid container and add AI-matched rooms at top
-            const grid = document.getElementById('roomsGrid') || document.querySelector('.rooms-grid') || document.getElementById('browseRoomsContainer');
-            if (!grid) return;
+        function renderAIMatchedRooms(rooms) {
+            const grid = document.getElementById('roomsGrid');
+            const emptyState = document.getElementById('emptyRooms');
 
-            const aiSection = document.createElement('div');
-            aiSection.id = 'aiRoomsSection';
-            aiSection.innerHTML = `
-                <div style="background:#FFF2F5; border:1px solid rgba(255,56,92,0.25); border-radius:14px; padding:16px; margin-bottom:20px;">
-                    <div style="font-size:15px; font-weight:700; color:#FF385C; margin-bottom:12px;">🤖 AI-Matched Rooms (${rooms.length})</div>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px;">
-                        ${rooms.map(room => `
-                            <div style="background:#FFFFFF; border:1px solid rgba(255,56,92,0.2); border-radius:12px; padding:16px;">
-                                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
-                                    <h4 style="font-size:14px; font-weight:600; color:#222222; margin:0;">${room.title || 'Room'}</h4>
-                                    <span style="background:#FFF2F5; color:#FF385C; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px; white-space:nowrap; margin-left:8px;">
-                                        ${Math.round(room.match_score || room.compatibility_score || 0)}% match
-                                    </span>
-                                </div>
-                                <div style="font-size:12px; color:#717171; margin-bottom:8px;">📍 ${room.location || 'Location N/A'}</div>
-                                <div style="font-size:13px; font-weight:600; color:#059669;">PKR ${(room.rent_price || 0).toLocaleString()}/month</div>
-                                ${room.explanation ? `<div style="font-size:11px; color:#717171; margin-top:8px; border-top:1px solid #EBEBEB; padding-top:8px;">${typeof room.explanation === 'object' ? (room.explanation.summary || '') : room.explanation}</div>` : ''}
-                            </div>
-                        `).join('')}
-                    </div>
+            emptyState.classList.add('hidden');
+
+            const banner = `
+                <div style="grid-column:1/-1; background:#FFF2F5; border:1px solid rgba(255,56,92,0.25); border-radius:14px; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+                    <div style="font-size:14px; font-weight:700; color:#FF385C;">🤖 AI-Matched Results — sorted by compatibility</div>
+                    <button onclick="clearAIResults()" style="font-size:12px; color:#717171; background:none; border:1px solid #EBEBEB; border-radius:8px; padding:4px 10px; cursor:pointer;">Show All Rooms</button>
                 </div>`;
 
-            // Remove old AI section if exists
-            const old = document.getElementById('aiRoomsSection');
-            if (old) old.remove();
-
-            grid.insertBefore(aiSection, grid.firstChild);
+            grid.innerHTML = banner + rooms.map(roomCardHTML).join('');
         }
 
+        function clearAIResults() {
+            aiMatchedRooms = [];
+            renderRooms(allRooms, document.getElementById('roomsGrid'));
+        }
+
+        // ── Notification ─────────────────────────────────────────────────
         function showNotification(message, isError = false) {
             const notif = document.createElement('div');
-            notif.style.cssText = `position:fixed; bottom:24px; right:24px; padding:14px 20px; border-radius:12px; font-size:14px; font-weight:500; z-index:9999; max-width:360px; box-shadow:0 4px 12px rgba(0,0,0,0.1); transition:all 0.3s; ${isError ? 'background:#FEE2E2; border:1px solid #FECACA; color:#DC2626;' : 'background:#FFF2F5; border:1px solid rgba(255,56,92,0.2); color:#FF385C;'}`;
+            notif.style.cssText = `position:fixed; bottom:24px; right:24px; padding:14px 20px; border-radius:12px; font-size:14px; font-weight:500; z-index:9999; max-width:380px; box-shadow:0 4px 16px rgba(0,0,0,0.12); transition:opacity 0.3s; ${isError ? 'background:#FEE2E2;border:1px solid #FECACA;color:#DC2626;' : 'background:#FFF2F5;border:1px solid rgba(255,56,92,0.2);color:#FF385C;'}`;
             notif.textContent = message;
             document.body.appendChild(notif);
-            setTimeout(() => { notif.style.opacity = '0'; setTimeout(() => notif.remove(), 300); }, 4000);
+            setTimeout(() => { notif.style.opacity = '0'; setTimeout(() => notif.remove(), 300); }, 4500);
         }
+
+        // ── Init ─────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const avatar = document.getElementById('userAvatar');
+            if (avatar) avatar.textContent = (user.full_name || 'U').charAt(0).toUpperCase();
+            loadRooms();
+        });
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closePostRoomModal(); });
     </script>
     <style>
         @keyframes spin { to { transform: rotate(360deg); } }
