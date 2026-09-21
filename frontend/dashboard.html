@@ -494,6 +494,87 @@
             color: #6B7280;
             text-align: center;
         }
+        .activity-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+        .activity-row:hover { background: #F1F5F9; }
+        .activity-icon { font-size: 17px; }
+        .activity-name {
+            flex: 1;
+            min-width: 0;
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .activity-status { font-size: 11px; font-weight: 700; }
+        .activity-time { font-size: 11px; color: #9CA3AF; }
+
+        /* Recent match cards (rendered by JS) */
+        .recent-match-card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 14px;
+            padding: 16px;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .recent-match-card:hover {
+            border-color: #BFDBFE;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+        }
+        .recent-match-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .recent-match-avatar {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: #FFFFFF;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .recent-match-identity { flex: 1; min-width: 0; }
+        .recent-match-identity h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .recent-match-identity p { font-size: 12px; color: #6B7280; }
+        .recent-match-score { font-size: 18px; font-weight: 700; }
+        .recent-match-summary {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            background: #F8FAFC;
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 12px;
+            color: #4B5563;
+            line-height: 1.45;
+        }
+        .recent-match-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .recent-match-strength { font-size: 12px; font-weight: 600; color: #2563EB; }
+        .recent-match-tag { font-size: 11px; color: #9CA3AF; }
 
         /* Mobile menu overlay */
         #mobileMenu {
@@ -840,7 +921,7 @@
         document.getElementById('mobileMenuBtn').addEventListener('click', () => { document.getElementById('mobileMenu').classList.remove('hidden'); });
         document.getElementById('closeMobileMenu').addEventListener('click', () => { document.getElementById('mobileMenu').classList.add('hidden'); });
         function handleLogout() { localStorage.removeItem('token'); localStorage.removeItem('user'); window.location.href = '/login.html'; }
-        function getScoreColor(score) { if (score >= 80) return 'text-green-400'; if (score >= 60) return 'text-yellow-400'; return 'text-orange-400'; }
+        function getScoreColor(score) { if (score >= 80) return '#059669'; if (score >= 60) return '#EA580C'; return '#6B7280'; }
         function getStrengthLabel(score) { if (score >= 90) return 'Excellent'; if (score >= 80) return 'Very Good'; if (score >= 70) return 'Good'; if (score >= 60) return 'Decent'; return 'Fair'; }
         async function loadDashboard() {
             try {
@@ -858,15 +939,18 @@
                 try {
                     const response = await api.getRecommendations(user.user_id, { limit: 100 });
                     const recommendations = Array.isArray(response) ? response : response.recommendations || [];
-                    document.getElementById('matchCount').textContent = recommendations.length;
+                    // Prefer the server's total; `recommendations.length` is capped by `limit`.
+                    document.getElementById('matchCount').textContent =
+                        response.total ?? recommendations.length;
                     const likedCount = recommendations.filter(r => r.liked === true).length;
                     document.getElementById('likesCount').textContent = likedCount;
                     if (recommendations.length > 0) { renderRecentMatches(recommendations.slice(0, 3)); }
                 } catch (e) { document.getElementById('matchCount').textContent = '0'; }
                 try {
-                    const rooms = await api.getRooms({ limit: 100 });
+                    const rooms = await api.getRooms({ limit: 1 });
                     const roomsList = Array.isArray(rooms) ? rooms : rooms.rooms || [];
-                    document.getElementById('roomsCount').textContent = roomsList.length;
+                    document.getElementById('roomsCount').textContent =
+                        rooms.total ?? roomsList.length;
                 } catch (e) { document.getElementById('roomsCount').textContent = '0'; }
                 loadAIStatus();
                 loadAgentActivity();
@@ -882,14 +966,14 @@
                 let explanation = null;
                 try { explanation = typeof match.explanation === 'string' ? JSON.parse(match.explanation) : match.explanation; } catch (e) { }
                 const summary = explanation?.summary || 'AI-generated match recommendation';
-                return '<div class="bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 hover:border-indigo-500/30 transition cursor-pointer" onclick="window.location.href=\'/matches.html\'">' +
-                    '<div class="flex items-center gap-3 mb-3">' +
-                    '<div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center font-bold">' + initial + '</div>' +
-                    '<div class="flex-1 min-w-0"><h4 class="font-semibold text-sm truncate">' + (user.full_name || 'Unknown') + '</h4><p class="text-gray-500 text-xs">' + (user.city || 'Unknown') + '</p></div>' +
-                    '<div class="text-lg font-bold ' + scoreColor + '">' + score + '%</div>' +
+                return '<div class="recent-match-card" onclick="window.location.href=\'/matches.html\'">' +
+                    '<div class="recent-match-top">' +
+                    '<div class="recent-match-avatar">' + initial + '</div>' +
+                    '<div class="recent-match-identity"><h4>' + (user.full_name || 'Unknown') + '</h4><p>' + (user.city || 'Unknown') + '</p></div>' +
+                    '<div class="recent-match-score" style="color:' + scoreColor + '">' + score + '%</div>' +
                     '</div>' +
-                    '<div class="bg-gray-900/50 rounded-lg p-2"><p class="text-xs text-gray-400 flex items-start gap-1"><span class="text-indigo-400 flex-shrink-0">🧠</span><span class="line-clamp-2">' + summary + '</span></p></div>' +
-                    '<div class="flex items-center justify-between mt-2"><span class="text-xs text-indigo-400 font-medium">' + getStrengthLabel(score) + ' Match</span><span class="text-xs text-gray-500">AI Recommended</span></div>' +
+                    '<div class="recent-match-summary"><span>🧠</span><span>' + summary + '</span></div>' +
+                    '<div class="recent-match-foot"><span class="recent-match-strength">' + getStrengthLabel(score) + ' Match</span><span class="recent-match-tag">AI Recommended</span></div>' +
                     '</div>';
             }).join('');
         }
@@ -908,17 +992,17 @@
                 const container = document.getElementById('agentActivity');
                 if (log.length === 0) return;
                 var agentIcons = { 'User Profiling Agent': '👤', 'Preference Analysis Agent': '📊', 'Compatibility Scoring Agent': '🧮', 'Conflict Detection Agent': '⚠️', 'Room Matching Agent': '🏠', 'Recommendation Engine Agent': '🎯' };
-                container.innerHTML = '<div class="space-y-2">' + log.reverse().slice(0, 6).map(function (entry) {
+                container.innerHTML = log.reverse().slice(0, 6).map(function (entry) {
                     var icon = agentIcons[entry.agent] || '🤖';
-                    var statusColor = entry.has_error ? 'text-red-400' : 'text-green-400';
+                    var statusColor = entry.has_error ? '#DC2626' : '#059669';
                     var time = new Date(entry.timestamp).toLocaleTimeString();
-                    return '<div class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-700/30 transition">' +
-                        '<span class="text-lg">' + icon + '</span>' +
-                        '<div class="flex-1 min-w-0"><span class="text-sm font-medium">' + entry.agent + '</span></div>' +
-                        '<span class="' + statusColor + ' text-xs font-bold">' + entry.status + '</span>' +
-                        '<span class="text-gray-500 text-xs">' + time + '</span>' +
+                    return '<div class="activity-row">' +
+                        '<span class="activity-icon">' + icon + '</span>' +
+                        '<span class="activity-name">' + entry.agent + '</span>' +
+                        '<span class="activity-status" style="color:' + statusColor + '">' + entry.status + '</span>' +
+                        '<span class="activity-time">' + time + '</span>' +
                         '</div>';
-                }).join('') + '</div>';
+                }).join('');
             } catch (e) { console.log('Could not load agent activity'); }
         }
         function calculateProfileCompletion(user) {

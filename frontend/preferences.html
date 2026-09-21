@@ -635,7 +635,26 @@
                             </div>
                             <div class="field-group">
                                 <label class="field-label" for="preferredLocation">Preferred Location</label>
-                                <input type="text" id="preferredLocation" name="preferredLocation" placeholder="e.g., Downtown, Near University" class="field-input">
+                                <!-- A fixed list, not free text: room listings are
+                                     tagged with these same area types and the AI
+                                     matches on them, so a typed-in value that does
+                                     not match one would return no rooms. -->
+                                <select id="preferredLocation" name="preferredLocation" class="field-input">
+                                    <option value="">No preference</option>
+                                    <option value="Near University/College Area">Near University/College Area</option>
+                                    <option value="Residential Area">Residential Area</option>
+                                    <option value="Downtown/City Center">Downtown/City Center</option>
+                                    <option value="Near Workplace/Office District">Near Workplace/Office District</option>
+                                    <option value="Suburban Area">Suburban Area</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label" for="preferredRoomType">Room Type</label>
+                                <select id="preferredRoomType" name="preferredRoomType" class="field-input">
+                                    <option value="Any">Any</option>
+                                    <option value="Single">Single Room</option>
+                                    <option value="Shared">Shared Room</option>
+                                </select>
                             </div>
                         </div>
 
@@ -683,7 +702,8 @@
                                     <label for="noiseTolerance">Noise Tolerance</label>
                                     <span class="range-val" id="noiseValue">Moderate</span>
                                 </div>
-                                <input type="range" id="noiseTolerance" name="noiseTolerance" min="1" max="5" value="3">
+                                <!-- noise_tolerance is stored on a 1-10 scale. -->
+                                <input type="range" id="noiseTolerance" name="noiseTolerance" min="1" max="10" value="5">
                                 <div class="range-hints"><span>Very Quiet</span><span>Very Loud</span></div>
                             </div>
 
@@ -692,32 +712,41 @@
                                     <label for="cleanlinessLevel">Cleanliness Level</label>
                                     <span class="range-val" id="cleanValue">Average</span>
                                 </div>
-                                <input type="range" id="cleanlinessLevel" name="cleanlinessLevel" min="1" max="5" value="3">
-                                <div class="range-hints"><span>Relaxed</span><span>Very Tidy</span></div>
+                                <input type="range" id="cleanlinessLevel" name="cleanlinessLevel" min="1" max="4" value="3">
+                                <div class="range-hints"><span>Relaxed</span><span>Very Clean</span></div>
                             </div>
 
                             <div class="field-group" style="margin-top:20px;">
-                                <label class="field-label" style="margin-bottom:12px;">Sleep Schedule</label>
+                                <label class="field-label" style="margin-bottom:12px;">Daily Schedule</label>
+                                <!-- Values match the schedule_enum in the database
+                                     and the options the survey asked about. -->
                                 <div class="radio-grid">
                                     <label class="radio-card-label">
-                                        <input type="radio" name="sleepSchedule" value="early">
+                                        <input type="radio" name="sleepSchedule" value="Student">
                                         <div class="radio-card">
-                                            <span class="emoji">🌅</span>
-                                            Early Bird
+                                            <span class="emoji">🎓</span>
+                                            Student
                                         </div>
                                     </label>
                                     <label class="radio-card-label">
-                                        <input type="radio" name="sleepSchedule" value="flexible" checked>
+                                        <input type="radio" name="sleepSchedule" value="9-5 Job">
+                                        <div class="radio-card">
+                                            <span class="emoji">🏢</span>
+                                            9-5 Job
+                                        </div>
+                                    </label>
+                                    <label class="radio-card-label">
+                                        <input type="radio" name="sleepSchedule" value="Night Shift">
+                                        <div class="radio-card">
+                                            <span class="emoji">🌙</span>
+                                            Night Shift
+                                        </div>
+                                    </label>
+                                    <label class="radio-card-label">
+                                        <input type="radio" name="sleepSchedule" value="Flexible" checked>
                                         <div class="radio-card">
                                             <span class="emoji">⏰</span>
                                             Flexible
-                                        </div>
-                                    </label>
-                                    <label class="radio-card-label">
-                                        <input type="radio" name="sleepSchedule" value="late">
-                                        <div class="radio-card">
-                                            <span class="emoji">🌙</span>
-                                            Night Owl
                                         </div>
                                     </label>
                                 </div>
@@ -759,6 +788,7 @@
                                 <h4>💰 Budget &amp; Location</h4>
                                 <p><span id="review-budget">PKR 5,000 - PKR 30,000</span></p>
                                 <p style="color:#9CA3AF;font-size:12px;"><span id="review-location">Not specified</span></p>
+                                <p style="color:#9CA3AF;font-size:12px;">Room type: <span id="review-roomtype">Any</span></p>
                             </div>
                             <div class="review-block">
                                 <h4>👥 Roommate Preferences</h4>
@@ -850,10 +880,18 @@
         const totalSteps = 4;
 
         const noiseLabels = ['Very Quiet', 'Quiet', 'Moderate', 'Loud', 'Very Loud'];
-        const cleanLabels = ['Very Relaxed', 'Relaxed', 'Average', 'Tidy', 'Very Tidy'];
+        // These are the cleanliness_enum values, least to most tidy. They are
+        // sent to the API verbatim, so they must match the database exactly.
+        const cleanLabels = ['Relaxed', 'Average', 'Clean', 'Very Clean'];
+
+        // noise_tolerance runs 1-10 but there are only five labels, so two
+        // steps share a label.
+        function noiseLabelFor(value) {
+            return noiseLabels[Math.ceil(value / 2) - 1] || 'Moderate';
+        }
 
         document.getElementById('noiseTolerance').addEventListener('input', (e) => {
-            document.getElementById('noiseValue').textContent = noiseLabels[e.target.value - 1];
+            document.getElementById('noiseValue').textContent = noiseLabelFor(e.target.value);
         });
 
         document.getElementById('cleanlinessLevel').addEventListener('input', (e) => {
@@ -909,6 +947,8 @@
 
             const location = document.getElementById('preferredLocation').value;
             document.getElementById('review-location').textContent = location || 'Not specified';
+            document.getElementById('review-roomtype').textContent =
+                document.getElementById('preferredRoomType').value || 'Any';
 
             const minAge = document.getElementById('minAge').value || '18';
             const maxAge = document.getElementById('maxAge').value || '65';
@@ -917,12 +957,11 @@
             const gender = document.getElementById('preferredGender').value;
             document.getElementById('review-gender').textContent = gender || 'No Preference';
 
-            document.getElementById('review-noise').textContent = noiseLabels[document.getElementById('noiseTolerance').value - 1];
+            document.getElementById('review-noise').textContent = noiseLabelFor(document.getElementById('noiseTolerance').value);
             document.getElementById('review-clean').textContent = cleanLabels[document.getElementById('cleanlinessLevel').value - 1];
 
             const sleepRadio = document.querySelector('input[name="sleepSchedule"]:checked');
-            const sleepMap = { 'early': 'Early Bird', 'flexible': 'Flexible', 'late': 'Night Owl' };
-            document.getElementById('review-sleep').textContent = sleepMap[sleepRadio?.value] || 'Flexible';
+            document.getElementById('review-sleep').textContent = sleepRadio?.value || 'Flexible';
 
             // Tags
             const tagsContainer = document.getElementById('review-tags');
@@ -968,9 +1007,10 @@
                 age_min: parseInt(document.getElementById('minAge').value) || 18,
                 age_max: parseInt(document.getElementById('maxAge').value) || 65,
                 gender_preference: document.getElementById('preferredGender').value || 'Any',
+                preferred_room_type: document.getElementById('preferredRoomType').value || 'Any',
                 noise_tolerance: parseInt(document.getElementById('noiseTolerance').value),
                 cleanliness_level: cleanLabels[document.getElementById('cleanlinessLevel').value - 1],
-                schedule: sleepRadio?.value || 'flexible',
+                schedule: sleepRadio?.value || 'Flexible',
                 smoking_ok: document.getElementById('smoking').checked,
                 pets_ok: document.getElementById('pets').checked
             };
@@ -1012,9 +1052,10 @@
                     if (prefs.age_min) document.getElementById('minAge').value = prefs.age_min;
                     if (prefs.age_max) document.getElementById('maxAge').value = prefs.age_max;
                     if (prefs.gender_preference) document.getElementById('preferredGender').value = prefs.gender_preference;
+                    if (prefs.preferred_room_type) document.getElementById('preferredRoomType').value = prefs.preferred_room_type;
                     if (prefs.noise_tolerance) {
                         document.getElementById('noiseTolerance').value = prefs.noise_tolerance;
-                        document.getElementById('noiseValue').textContent = noiseLabels[prefs.noise_tolerance - 1];
+                        document.getElementById('noiseValue').textContent = noiseLabelFor(prefs.noise_tolerance);
                     }
                     if (prefs.cleanliness_level) {
                         const cleanIndex = cleanLabels.indexOf(prefs.cleanliness_level);

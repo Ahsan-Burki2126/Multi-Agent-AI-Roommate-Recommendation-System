@@ -100,19 +100,18 @@ class RoomMatchingAgent(BaseAgent):
 
     def execute(self, **inputs):
         """
-        Find suitable rooms for a user.
+        Find suitable rooms for a user - SIMPLIFIED FOR SPEED.
 
         Inputs:
         - user_id (int): User looking for rooms
         - limit (int, optional): Max rooms to return
 
         Returns:
-            AgentResult with ranked rooms and AI summary
+            AgentResult with ranked rooms
         """
         try:
             user_id = inputs.get('user_id')
             limit = int(inputs.get('limit', 20))
-            include_unsuitable = inputs.get('include_unsuitable', False)
 
             is_valid, missing = self.validate_inputs(['user_id'], inputs)
             if not is_valid:
@@ -126,11 +125,11 @@ class RoomMatchingAgent(BaseAgent):
             if not prefs:
                 return AgentResult(
                     self.name, AgentStatus.PARTIAL,
-                    data={'rooms': [], 'message': 'User has no preferences set'},
+                    data={'rooms': []},
                     metadata={'filters_applied': []}
                 )
 
-            # ── Tool: Build query with filters ──
+            # ── Fast query: Get available rooms with basic filters ──
             query = Room.query.filter_by(is_available=True)
             filters_applied = []
 
@@ -138,7 +137,7 @@ class RoomMatchingAgent(BaseAgent):
                 budget_min = float(prefs.budget_min) if prefs.budget_min else 0
                 budget_max = float(prefs.budget_max) if prefs.budget_max else 10000
                 query = query.filter(Room.rent_price >= budget_min, Room.rent_price <= budget_max)
-                filters_applied.append(f"budget: ${budget_min}-${budget_max}")
+                filters_applied.append(f"budget: PKR {budget_min}-{budget_max}")
 
             if prefs.preferred_location:
                 location = prefs.preferred_location.strip().lower()
@@ -153,18 +152,19 @@ class RoomMatchingAgent(BaseAgent):
                 query = query.filter_by(pets_allowed=False)
                 filters_applied.append("pets: not allowed")
 
-            rooms = query.all()
+            # Get limited rooms (no .all() - use limit to cut query short)
+            rooms = query.limit(limit + 20).all()
 
-            # ── Tool: Score and rank rooms ──
+            # ── Simple scoring without owner lookups ──
             room_scores = []
             for room in rooms:
                 score = self._compute_room_score(room, prefs)
-                room_owner = User.query.get(room.owner_id)
-                room_scores.append({'score': score, 'room': room, 'owner': room_owner})
+                room_scores.append({'score': score, 'room': room})
 
             room_scores.sort(key=lambda x: x['score'], reverse=True)
             room_scores = room_scores[:limit]
 
+            # ── Format results WITHOUT extra DB lookups ──
             result = [
                 {
                     'room_id': item['room'].room_id,
@@ -172,77 +172,35 @@ class RoomMatchingAgent(BaseAgent):
                     'location': item['room'].location,
                     'rent_price': float(item['room'].rent_price),
                     'room_type': item['room'].room_type,
-                    'bed_size': item['room'].bed_size,
-                    'furnishing': item['room'].furnishing_type,
+                    'bedrooms': item['room'].bedrooms,
+                    'bathrooms': float(item['room'].bathrooms) if item['room'].bathrooms else None,
                     'pets_allowed': item['room'].pets_allowed,
                     'smoking_allowed': item['room'].smoking_allowed,
                     'amenities': item['room'].amenities,
+                    'images': item['room'].images,
+                    'available_from': (item['room'].available_from.isoformat()
+                                       if item['room'].available_from else None),
                     'description': item['room'].description,
                     'match_score': item['score'],
-                    'owner': {
-                        'user_id': item['owner'].user_id,
-                        'name': item['owner'].full_name,
-                        'city': item['owner'].city
-                    } if item['owner'] else None,
                     'posted_at': item['room'].created_at.isoformat() if item['room'].created_at else None
                 }
                 for item in room_scores
             ]
 
-            # ── LLM: Room search summary (Gemini) ──
-            ai_summary = None
-            if result and self.room_chain:
-                try:
-                    prefs_summary = {
-                        'budget': f"${prefs.budget_min or 0}-${prefs.budget_max or 'any'}",
-                        'location': prefs.preferred_location or 'any',
-                        'smoking': 'no' if not prefs.smoking_ok else 'ok',
-                        'pets': 'yes' if prefs.pets_ok else 'no'
-                    }
-                    llm_response = self.room_chain.invoke({
-                        'user_prefs': json.dumps(prefs_summary),
-                        'room_count': len(result),
-                        'top_room': json.dumps(result[0]) if result else 'None',
-                        'filters': ', '.join(filters_applied) or 'None'
-                    }, config={"callbacks": [self.callback_handler]})
-                    ai_summary = self._parse_room_summary(llm_response)
-                except Exception as e:
-                    self.logger.warning(f"LLM room summary failed: {e}")
-
-            if not ai_summary:
-                ai_summary = {
-                    'summary': f"Found {len(result)} rooms matching your criteria.",
-                    'search_quality': 'good' if len(result) >= 3 else 'limited',
-                    'llm_generated': False
-                }
-
-            # Log decision
-            self.log_decision(
-                entity_type='user', entity_id=user_id,
-                action='found_matching_rooms',
-                details={
-                    'rooms_found': len(result),
-                    'filters_applied': filters_applied,
-                    'ai_summary': ai_summary
-                }
-            )
-
             return AgentResult(
                 self.name, AgentStatus.SUCCESS,
                 data={
                     'user_id': user_id, 'rooms': result,
-                    'count': len(result), 'filters_applied': filters_applied,
-                    'ai_summary': ai_summary
+                    'count': len(result), 'filters_applied': filters_applied
                 },
                 metadata={
                     'total_available': len(rooms), 'returned': len(result),
-                    'limit': limit,
-                    'llm_used': ai_summary.get('llm_generated', False),
-                    'tools_used': [t.name for t in self.tools]
+                    'limit': limit
                 }
             )
 
         except Exception as e:
+            self.logger.error(f"Room matching error: {e}")
             return AgentResult(self.name, AgentStatus.ERROR, error=str(e))
 
     def _parse_room_summary(self, raw):
@@ -293,16 +251,24 @@ class RoomMatchingAgent(BaseAgent):
             amenity_count = 0
             desired = ['wifi', 'ac', 'kitchen', 'parking']
             if room.amenities:
-                amenities = room.amenities.lower()
-                amenity_count = sum(1 for a in desired if a in amenities)
+                amenities_str = json.dumps(room.amenities).lower()
+                amenity_count = sum(1 for a in desired if a in amenities_str)
             score += min(20, amenity_count * 5)
         except:
             score += 10
+        # Room type preference (10 points). Without this every room that clears
+        # the hard filters lands on the same score and the ranking is flat.
         try:
-            if room.bed_size in ['queen', 'double']:
-                score += 5
-            if room.furnishing_type == 'furnished':
-                score += 5
+            preferred_type = user_prefs.preferred_room_type
+            if not preferred_type or preferred_type == 'Any':
+                score += 7
+            elif room.room_type == preferred_type:
+                score += 10
+            elif {preferred_type, room.room_type} == {'Single', 'Master'}:
+                # Both are private rooms, so a near miss rather than a mismatch.
+                score += 6
+            else:
+                score += 2
         except:
-            pass
+            score += 5
         return int(min(100, score))

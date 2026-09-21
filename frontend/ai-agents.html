@@ -581,6 +581,9 @@
                 const summary = status.execution_summary || {};
                 document.getElementById('totalExecutions').textContent = summary.total_executions || 0;
                 document.getElementById('successRate').textContent = (summary.success_rate || 0).toFixed(1) + '%';
+                document.getElementById('lastRun').textContent = summary.last_execution
+                    ? new Date(summary.last_execution + 'Z').toLocaleTimeString()
+                    : 'Never';
 
                 // Agent details
                 const agentDetails = document.getElementById('agentDetails');

@@ -25,11 +25,21 @@ from backend.models import (
 
 @pytest.fixture
 def app():
-    """Create test app with in-memory SQLite database"""
-    app = create_app()
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    app.config['TESTING'] = True
-    
+    """Create test app with in-memory SQLite database.
+
+    The 'testing' config must be passed to create_app(), not patched in
+    afterwards: create_app() binds the SQLAlchemy engine and calls
+    db.create_all() before returning, so a URI assigned after the fact is
+    ignored and the teardown's db.drop_all() would run against the real
+    development database.
+    """
+    app = create_app('testing')
+
+    assert ':memory:' in app.config['SQLALCHEMY_DATABASE_URI'], (
+        'Refusing to run tests against a real database: '
+        f"{app.config['SQLALCHEMY_DATABASE_URI']}"
+    )
+
     with app.app_context():
         db.create_all()
         yield app
@@ -43,6 +53,18 @@ def client(app):
     return app.test_client()
 
 
+def make_user(**kwargs):
+    """Build a User with a password set.
+
+    `password_hash` is NOT NULL, so any user that gets committed needs one.
+    Tests that exercise password handling itself build their User directly.
+    """
+    user = User(**kwargs)
+    user.set_password('TestPass123!')
+    return user
+
+
+
 class TestUserModel:
     """Tests for User model"""
     
@@ -51,9 +73,9 @@ class TestUserModel:
         with app.app_context():
             user = User(
                 email='test@example.com',
-                name='Test User',
+                full_name='Test User',
                 phone='+1234567890',
-                gender='male'
+                gender='M'
             )
             user.set_password('SecurePass123!')
             db.session.add(user)
@@ -74,14 +96,14 @@ class TestUserModel:
             assert len(errors) > 0
             
             # Invalid email
-            user = User(email='notanemail', name='Test')
+            user = User(email='notanemail', full_name='Test')
             is_valid, errors = user.validate()
             assert not is_valid
     
     def test_password_hashing(self, app):
         """Test password is properly hashed"""
         with app.app_context():
-            user = User(email='test@example.com', name='Test')
+            user = User(email='test@example.com', full_name='Test')
             user.set_password('MyPassword123!')
             
             # Password should not be stored in plaintext
@@ -91,27 +113,27 @@ class TestUserModel:
     def test_user_to_dict(self, app):
         """Test user serialization"""
         with app.app_context():
-            user = User(
+            user = make_user(
                 email='test@example.com',
-                name='Test User',
+                full_name='Test User',
                 phone='+1234567890',
-                gender='male'
+                gender='M'
             )
             db.session.add(user)
             db.session.commit()
-            
+
             user_dict = user.to_dict()
             assert user_dict['email'] == 'test@example.com'
-            assert user_dict['name'] == 'Test User'
+            assert user_dict['full_name'] == 'Test User'
             assert 'password_hash' not in user_dict
     
     def test_get_by_email(self, app):
         """Test finding user by email"""
         with app.app_context():
-            user = User(email='test@example.com', name='Test')
+            user = make_user(email='test@example.com', full_name='Test')
             db.session.add(user)
             db.session.commit()
-            
+
             found = User.get_by_email('test@example.com')
             assert found is not None
             assert found.email == 'test@example.com'
@@ -126,7 +148,7 @@ class TestUserPreferenceModel:
     def test_preference_creation(self, app):
         """Test creating user preferences"""
         with app.app_context():
-            user = User(email='test@example.com', name='Test')
+            user = make_user(email='test@example.com', full_name='Test')
             db.session.add(user)
             db.session.commit()
             
@@ -163,14 +185,14 @@ class TestPreferenceVectorModel:
     def test_vector_creation(self, app):
         """Test creating preference vector"""
         with app.app_context():
-            user = User(email='test@example.com', name='Test')
+            user = make_user(email='test@example.com', full_name='Test')
             db.session.add(user)
             db.session.commit()
             
             vector = PreferenceVector(
                 user_id=user.user_id,
                 vector_data=[0.5, 0.7, 0.8, 0.6, 0.9],
-                vector_norm=1.42
+                vector_norm=1.3928
             )
             db.session.add(vector)
             db.session.commit()
@@ -181,7 +203,7 @@ class TestPreferenceVectorModel:
     def test_vector_staleness(self, app):
         """Test vector staleness detection"""
         with app.app_context():
-            user = User(email='test@example.com', name='Test')
+            user = make_user(email='test@example.com', full_name='Test')
             db.session.add(user)
             db.session.commit()
             
@@ -190,22 +212,22 @@ class TestPreferenceVectorModel:
                 user_id=user.user_id,
                 vector_data=[0.5, 0.7],
                 vector_norm=0.86,
-                last_updated=datetime.now()
+                computed_at=datetime.utcnow()
             )
             db.session.add(vector)
             db.session.commit()
             
-            assert not vector.is_stale(days=30)
+            assert not vector.is_stale(max_age_days=30)
             
             # Old vector
-            vector.last_updated = datetime.now() - timedelta(days=31)
-            assert vector.is_stale(days=30)
+            vector.computed_at = datetime.utcnow() - timedelta(days=31)
+            assert vector.is_stale(max_age_days=30)
     
     def test_vector_similarity(self, app):
         """Test cosine similarity computation"""
         with app.app_context():
-            user1 = User(email='user1@example.com', name='User 1')
-            user2 = User(email='user2@example.com', name='User 2')
+            user1 = make_user(email='user1@example.com', full_name='User 1')
+            user2 = make_user(email='user2@example.com', full_name='User 2')
             db.session.add_all([user1, user2])
             db.session.commit()
             
@@ -213,12 +235,12 @@ class TestPreferenceVectorModel:
             vec1 = PreferenceVector(
                 user_id=user1.user_id,
                 vector_data=[0.8, 0.7, 0.9],
-                vector_norm=1.42
+                vector_norm=1.3928
             )
             vec2 = PreferenceVector(
                 user_id=user2.user_id,
                 vector_data=[0.75, 0.72, 0.88],
-                vector_norm=1.41
+                vector_norm=1.3621
             )
             db.session.add_all([vec1, vec2])
             db.session.commit()
@@ -233,7 +255,7 @@ class TestRoomModel:
     def test_room_creation(self, app):
         """Test creating a room"""
         with app.app_context():
-            owner = User(email='owner@example.com', name='Owner')
+            owner = make_user(email='owner@example.com', full_name='Owner')
             db.session.add(owner)
             db.session.commit()
             
@@ -241,7 +263,6 @@ class TestRoomModel:
                 owner_id=owner.user_id,
                 title='Nice Room',
                 location='San Francisco',
-                address='123 Main St',
                 room_type='Shared',
                 rent_price=1000
             )
@@ -254,7 +275,7 @@ class TestRoomModel:
     def test_room_budget_matching(self, app):
         """Test budget matching"""
         with app.app_context():
-            owner = User(email='owner@example.com', name='Owner')
+            owner = make_user(email='owner@example.com', full_name='Owner')
             db.session.add(owner)
             db.session.commit()
             
@@ -263,8 +284,7 @@ class TestRoomModel:
                 title='Room',
                 location='SF',
                 room_type='Shared',
-                rent_price=1000,
-                address='123 St'
+                rent_price=1000
             )
             db.session.add(room)
             db.session.commit()
@@ -277,7 +297,7 @@ class TestRoomModel:
     def test_room_location_matching(self, app):
         """Test location matching"""
         with app.app_context():
-            owner = User(email='owner@example.com', name='Owner')
+            owner = make_user(email='owner@example.com', full_name='Owner')
             db.session.add(owner)
             db.session.commit()
             
@@ -285,7 +305,6 @@ class TestRoomModel:
                 owner_id=owner.user_id,
                 title='Room',
                 location='San Francisco',
-                address='123 St',
                 room_type='Shared',
                 rent_price=1000
             )
@@ -304,8 +323,8 @@ class TestCompatibilityScoreModel:
     def test_score_creation(self, app):
         """Test creating compatibility score"""
         with app.app_context():
-            user1 = User(email='user1@example.com', name='User 1')
-            user2 = User(email='user2@example.com', name='User 2')
+            user1 = make_user(email='user1@example.com', full_name='User 1')
+            user2 = make_user(email='user2@example.com', full_name='User 2')
             db.session.add_all([user1, user2])
             db.session.commit()
             
@@ -323,8 +342,8 @@ class TestCompatibilityScoreModel:
     def test_score_strength_label(self, app):
         """Test score strength descriptions"""
         with app.app_context():
-            user1 = User(email='user1@example.com', name='User 1')
-            user2 = User(email='user2@example.com', name='User 2')
+            user1 = make_user(email='user1@example.com', full_name='User 1')
+            user2 = make_user(email='user2@example.com', full_name='User 2')
             db.session.add_all([user1, user2])
             db.session.commit()
             
@@ -346,8 +365,8 @@ class TestRecommendationModel:
     def test_recommendation_creation(self, app):
         """Test creating recommendation"""
         with app.app_context():
-            requester = User(email='requester@example.com', name='Requester')
-            match = User(email='match@example.com', name='Match')
+            requester = make_user(email='requester@example.com', full_name='Requester')
+            match = make_user(email='match@example.com', full_name='Match')
             db.session.add_all([requester, match])
             db.session.commit()
             
@@ -366,8 +385,8 @@ class TestRecommendationModel:
     def test_recommendation_interaction(self, app):
         """Test marking recommendation as viewed/liked"""
         with app.app_context():
-            requester = User(email='requester@example.com', name='Requester')
-            match = User(email='match@example.com', name='Match')
+            requester = make_user(email='requester@example.com', full_name='Requester')
+            match = make_user(email='match@example.com', full_name='Match')
             db.session.add_all([requester, match])
             db.session.commit()
             
@@ -397,17 +416,17 @@ class TestConflictLogModel:
     def test_conflict_creation(self, app):
         """Test creating conflict log"""
         with app.app_context():
-            user1 = User(email='user1@example.com', name='User 1')
-            user2 = User(email='user2@example.com', name='User 2')
+            user1 = make_user(email='user1@example.com', full_name='User 1')
+            user2 = make_user(email='user2@example.com', full_name='User 2')
             db.session.add_all([user1, user2])
             db.session.commit()
             
             conflict = ConflictLog(
                 user_a_id=user1.user_id,
                 user_b_id=user2.user_id,
-                conflict_type='soft',
+                conflict_type='Soft',
                 severity=5,
-                reason='Schedule mismatch'
+                description='Schedule mismatch'
             )
             db.session.add(conflict)
             db.session.commit()
@@ -418,17 +437,17 @@ class TestConflictLogModel:
     def test_conflict_type_detection(self, app):
         """Test hard vs soft conflict detection"""
         with app.app_context():
-            user1 = User(email='user1@example.com', name='User 1')
-            user2 = User(email='user2@example.com', name='User 2')
+            user1 = make_user(email='user1@example.com', full_name='User 1')
+            user2 = make_user(email='user2@example.com', full_name='User 2')
             db.session.add_all([user1, user2])
             db.session.commit()
             
             hard_conflict = ConflictLog(
                 user_a_id=user1.user_id,
                 user_b_id=user2.user_id,
-                conflict_type='hard',
+                conflict_type='Hard',
                 severity=9,
-                reason='Pet policy mismatch'
+                description='Pet policy mismatch'
             )
             db.session.add(hard_conflict)
             db.session.commit()

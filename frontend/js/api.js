@@ -7,12 +7,11 @@
 
 // In production (Vercel), API routes are on the same domain (routed via vercel.json).
 // In local development, the backend runs separately on port 5000.
-const BASE_URL = (
+const BASE_URL =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
-)
-  ? "http://localhost:5000"
-  : "";   // same origin on Vercel — routes handled by vercel.json
+    ? "http://localhost:5000"
+    : ""; // same origin on Vercel — routes handled by vercel.json
 
 class APIClient {
   constructor() {
@@ -345,6 +344,11 @@ class APIClient {
 
   // Execute room search pipeline
   async findRooms(params = {}) {
+    return this.request("POST", "/orchestrate/rooms", params);
+  }
+
+  // Find AI-matched rooms for user (alias for findRooms)
+  async runRoomMatching(userId, params = {}) {
     return this.request("POST", "/orchestrate/rooms", params);
   }
 

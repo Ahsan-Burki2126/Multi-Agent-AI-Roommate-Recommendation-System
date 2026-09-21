@@ -1125,21 +1125,52 @@
             document.getElementById('matchModal').classList.remove('open');
         }
 
+        function showToast(message, isError) {
+            var toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-lg z-[60] text-white '
+                + (isError ? 'bg-red-500' : 'bg-green-500');
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(function () { toast.remove(); }, 3000);
+        }
+
         async function likeMatch() {
             if (!currentMatch) return;
             var recId = currentMatch.recommendation_id;
-            if (recId) {
-                try { await api.markLiked(recId); } catch (e) { console.error(e); }
+            if (!recId) { closeModal(); return; }
+
+            try {
+                await api.markLiked(recId);
+                // Keep the in-memory list in step so the card reflects the decision
+                // without a full reload.
+                var match = allMatches.find(function (m) { return m.recommendation_id === recId; });
+                if (match) match.liked = true;
+                showToast('Match liked!');
+                renderMatches(allMatches);
+            } catch (e) {
+                console.error(e);
+                showToast('Could not save your like. Please try again.', true);
             }
-            var toast = document.createElement('div');
-            toast.className = 'fixed bottom-4 right-4 px-6 py-3 bg-green-500 text-white rounded-xl shadow-lg z-[60]';
-            toast.textContent = 'Match liked!';
-            document.body.appendChild(toast);
-            setTimeout(function () { toast.remove(); }, 3000);
             closeModal();
         }
 
-        function skipMatch() {
+        async function skipMatch() {
+            if (!currentMatch) { closeModal(); return; }
+            var recId = currentMatch.recommendation_id;
+            if (!recId) { closeModal(); return; }
+
+            try {
+                await api.markDisliked(recId);
+                // Drop the passed match from the list rather than leaving it in place.
+                allMatches = allMatches.filter(function (m) {
+                    return m.recommendation_id !== recId;
+                });
+                showToast('Match passed');
+                renderMatches(allMatches);
+            } catch (e) {
+                console.error(e);
+                showToast('Could not save your choice. Please try again.', true);
+            }
             closeModal();
         }
 

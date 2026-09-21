@@ -298,56 +298,46 @@ class AgentOrchestrator:
 
     def find_rooms_for_user(self, user_id, limit=20):
         """
-        Room search pipeline using LangChain orchestration.
+        Fast room search pipeline (simplified).
 
         Pipeline:
         1. User Profiling Agent - Validate user
         2. Room Matching Agent - Filter rooms by preferences
-        3. Conflict Detection Agent - Check user-room conflicts
 
         Returns:
             Dict with room matches
         """
-        self.logger.info(f"Starting LangChain room search pipeline for user {user_id}")
+        self.logger.info(f"Starting fast room search pipeline for user {user_id}")
 
-        results = {}
+        try:
+            # Step 1: Profile user
+            self.logger.info("Step 1: User Profiling Agent")
+            profile_result = self.execute_agent('User Profiling Agent', user_id=user_id)
 
-        # Step 1: Profile user
-        self.logger.info("Step 1: User Profiling Agent (LangChain)")
-        profile_result = self.execute_agent('User Profiling Agent', user_id=user_id)
-        results['profiling'] = profile_result
+            if not profile_result.is_success():
+                return {'success': False, 'error': profile_result.error, 'pipeline': 'fast'}
 
-        if not profile_result.is_success():
-            return {'success': False, 'error': profile_result.error, 'pipeline': 'langchain'}
+            # Step 2: Find matching rooms (NO conflict detection - too slow)
+            self.logger.info("Step 2: Room Matching Agent")
+            room_result = self.execute_agent('Room Matching Agent', user_id=user_id, limit=limit)
 
-        # Step 2: Find matching rooms
-        self.logger.info("Step 2: Room Matching Agent (LangChain)")
-        room_result = self.execute_agent('Room Matching Agent', user_id=user_id, limit=limit)
-        results['room_matching'] = room_result
+            if not room_result.is_success():
+                return {'success': False, 'error': room_result.error, 'pipeline': 'fast'}
 
-        if not room_result.is_success():
-            return {'success': False, 'error': room_result.error, 'pipeline': 'langchain'}
+            # Return rooms directly without extra processing
+            rooms = room_result.data.get('rooms', []) if room_result.data else []
 
-        # Step 3: Check conflicts for top rooms
-        rooms = room_result.data.get('rooms', [])
+            return {
+                'success': True,
+                'user_id': user_id,
+                'rooms': rooms,
+                'count': len(rooms),
+                'pipeline': 'fast'
+            }
 
-        for room in rooms[:10]:
-            conflict_result = self.execute_agent(
-                'Conflict Detection Agent',
-                user_id=user_id,
-                room_id=room['room_id']
-            )
-            if conflict_result.is_success():
-                room['conflicts'] = conflict_result.data
-
-        return {
-            'success': True,
-            'user_id': user_id,
-            'rooms': rooms,
-            'count': len(rooms),
-            'pipeline': 'langchain',
-            'detailed_results': results
-        }
+        except Exception as e:
+            self.logger.error(f"Room search error: {e}")
+            return {'success': False, 'error': str(e), 'pipeline': 'fast'}
 
     def _parse_summary(self, raw):
         """Parse LLM pipeline summary response."""
@@ -418,6 +408,9 @@ class AgentOrchestrator:
             'successful': successful,
             'failed': failed,
             'success_rate': (successful / total * 100) if total > 0 else 0,
+            # When the last agent ran, so the UI can show it on page load
+            # instead of only after a run in the current session.
+            'last_execution': self.execution_log[-1].get('timestamp') if total > 0 else None,
             'by_agent': by_agent,
             'framework': 'LangChain',
             'llm_provider': 'Google Gemini'

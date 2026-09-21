@@ -85,25 +85,49 @@ def create_room():
     """
     try:
         user_id = int(get_jwt_identity())  # Convert string identity back to int
-        data = request.get_json()
-        
-        # Parse available_from date
+        data = request.get_json() or {}
+
+        # Parse available_from date. The column is a Date, so drop any time part.
         available_from = None
         if data.get('available_from'):
-            available_from = datetime.fromisoformat(data['available_from'])
-        
+            try:
+                available_from = datetime.fromisoformat(data['available_from']).date()
+            except ValueError:
+                return jsonify({
+                    'error': 'Validation failed',
+                    'details': ['available_from must be an ISO date (YYYY-MM-DD)']
+                }), 400
+
+        room_type = data.get('room_type', 'Shared')
+        if room_type not in ('Single', 'Shared', 'Master'):
+            return jsonify({
+                'error': 'Validation failed',
+                'details': ["room_type must be one of 'Single', 'Shared', 'Master'"]
+            }), 400
+
+        try:
+            rent_price = float(data.get('rent_price', 0))
+        except (TypeError, ValueError):
+            return jsonify({
+                'error': 'Validation failed',
+                'details': ['rent_price must be a number']
+            }), 400
+
         # Create room
         room = Room(
             owner_id=user_id,
             title=data.get('title'),
             description=data.get('description'),
             location=data.get('location'),
-            room_type=data.get('room_type', 'Shared'),
-            rent_price=float(data.get('rent_price', 0)),
+            room_type=room_type,
+            rent_price=rent_price,
+            bedrooms=data.get('bedrooms'),
+            bathrooms=data.get('bathrooms'),
             amenities=data.get('amenities', []),
             images=data.get('images', []),
             pets_allowed=data.get('pets_allowed', False),
             smoking_allowed=data.get('smoking_allowed', False),
+            lease_duration_months=data.get('lease_duration_months'),
             is_available=True,
             available_from=available_from
         )
@@ -189,10 +213,19 @@ def update_room(room_id):
             room.description = data['description']
         if 'location' in data:
             room.location = data['location']
-        if 'address' in data:
-            room.address = data['address']
         if 'room_type' in data:
+            if data['room_type'] not in ('Single', 'Shared', 'Master'):
+                return jsonify({
+                    'error': 'Validation failed',
+                    'details': ["room_type must be one of 'Single', 'Shared', 'Master'"]
+                }), 400
             room.room_type = data['room_type']
+        if 'bedrooms' in data:
+            room.bedrooms = data['bedrooms']
+        if 'bathrooms' in data:
+            room.bathrooms = data['bathrooms']
+        if 'lease_duration_months' in data:
+            room.lease_duration_months = data['lease_duration_months']
         if 'rent_price' in data:
             room.rent_price = float(data['rent_price'])
         if 'amenities' in data:
@@ -206,7 +239,13 @@ def update_room(room_id):
         if 'is_available' in data:
             room.is_available = data['is_available']
         if 'available_from' in data:
-            room.available_from = datetime.fromisoformat(data['available_from'])
+            try:
+                room.available_from = datetime.fromisoformat(data['available_from']).date()
+            except (TypeError, ValueError):
+                return jsonify({
+                    'error': 'Validation failed',
+                    'details': ['available_from must be an ISO date (YYYY-MM-DD)']
+                }), 400
         
         room.updated_at = datetime.utcnow()
         
