@@ -13,7 +13,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', sans-serif;
-            background: #F0F2F8;
+            background: #F7F7F7;
             color: #222222;
             min-height: 100vh;
             overflow: hidden;
@@ -29,18 +29,17 @@
         #sidebar {
             width: 240px;
             min-width: 240px;
-            background: #1e1b4b;
-            border-right: none;
+            background: #FFFFFF;
+            border-right: 1px solid #EBEBEB;
             display: flex;
             flex-direction: column;
             position: relative;
             z-index: 10;
             flex-shrink: 0;
-            box-shadow: 2px 0 12px rgba(0,0,0,.12);
         }
         .sidebar-logo-area {
             padding: 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,.08);
+            border-bottom: 1px solid #EBEBEB;
         }
         .sidebar-logo-link {
             display: flex;
@@ -76,21 +75,21 @@
             font-size: 14px;
             margin-bottom: 2px;
             transition: all 0.2s;
-            color: rgba(196,181,253,.6);
+            color: #717171;
             border-left: 3px solid transparent;
         }
         .nav-link:hover {
             color: #222222;
-            background: rgba(255,255,255,.07);
+            background: #F3F4F6;
         }
         .nav-link.active {
-            background: rgba(255,56,92,.25);
+            background: #FFF2F5;
             border-left: 3px solid #FF385C;
             color: #FF385C;
         }
         .sidebar-footer {
             padding: 12px 10px;
-            border-top: 1px solid rgba(255,255,255,.08);
+            border-top: 1px solid #EBEBEB;
         }
         .logout-btn {
             display: flex;
@@ -98,7 +97,7 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 10px;
-            color: rgba(196,181,253,.55);
+            color: #717171;
             background: none;
             border: none;
             cursor: pointer;
@@ -223,7 +222,8 @@
         /* Welcome section */
         .welcome-section {
             margin-bottom: 28px;
-            background: linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4c1d95 100%);
+            background: #FFF2F5;
+            border: 1px solid rgba(255,56,92,.15);
             border-radius: 20px;
             padding: 28px 28px 24px;
             position: relative;
@@ -231,13 +231,13 @@
         }
         .welcome-section::before {
             content:''; position:absolute; inset:0;
-            background: radial-gradient(ellipse at 80% 50%, rgba(255,56,92,.3) 0%, transparent 60%);
+            background: radial-gradient(ellipse at 80% 50%, rgba(255,56,92,.07) 0%, transparent 60%);
             pointer-events: none;
         }
         .welcome-title {
             font-size: 26px;
             font-weight: 800;
-            color: #ffffff;
+            color: #222222;
             margin-bottom: 6px;
             position: relative; z-index: 1;
         }
@@ -245,7 +245,7 @@
             background: linear-gradient(90deg,#FF385C,#FF385C);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .welcome-subtitle { font-size: 14px; color: rgba(196,181,253,.7); position: relative; z-index: 1; }
+        .welcome-subtitle { font-size: 14px; color: #717171; position: relative; z-index: 1; }
 
         /* Stats grid */
         .stats-grid {
@@ -316,8 +316,8 @@
 
         /* AI Banner */
         .ai-banner {
-            background: linear-gradient(135deg,#1e1b4b 0%,#4c1d95 60%,#312e81 100%);
-            border: none;
+            background: #FFF2F5;
+            border: 1px solid rgba(255,56,92,.15);
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
@@ -345,30 +345,30 @@
         .ai-banner-title {
             font-size: 17px;
             font-weight: 700;
-            color: #ffffff;
+            color: #222222;
             display: flex;
             align-items: center;
             gap: 8px;
             margin-bottom: 4px;
         }
-        .ai-banner-subtitle { font-size: 13px; color: rgba(196,181,253,.7); }
+        .ai-banner-subtitle { font-size: 13px; color: #717171; }
         .agent-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
         .agent-badge {
             padding: 4px 10px;
             border-radius: 99px;
             font-size: 11px;
             font-weight: 600;
-            background: rgba(255,255,255,.12) !important;
+            background: #FFFFFF !important;
             color: #FF385C !important;
-            border: 1px solid rgba(255,255,255,.15);
+            border: 1px solid rgba(255,56,92,.2);
         }
         .ai-view-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             padding: 10px 20px;
-            background: rgba(255,255,255,.15);
-            border: 1px solid rgba(255,255,255,.25);
+            background: #FF385C;
+            border: none;
             border-radius: 12px;
             color: white;
             font-size: 13px;
@@ -380,22 +380,22 @@
             flex-shrink: 0;
             backdrop-filter: blur(8px);
         }
-        .ai-view-btn:hover { background: rgba(255,255,255,.22); transform: translateY(-1px); }
+        .ai-view-btn:hover { opacity: .9; transform: translateY(-1px); }
         .ai-stats-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
         }
         .ai-stat-box {
-            background: rgba(255,255,255,.08);
-            border: 1px solid rgba(255,255,255,.12);
+            background: #FFFFFF;
+            border: 1px solid #EBEBEB;
             border-radius: 12px;
             padding: 12px;
             text-align: center;
             backdrop-filter: blur(8px);
         }
-        .ai-stat-num { font-size: 20px; font-weight: 700; margin-bottom: 2px; color: #fff; }
-        .ai-stat-label { font-size: 11px; color: rgba(196,181,253,.6); }
+        .ai-stat-num { font-size: 20px; font-weight: 700; margin-bottom: 2px; color: #222222; }
+        .ai-stat-label { font-size: 11px; color: #717171; }
 
         /* Section divider label */
         .section-divider {
@@ -557,7 +557,7 @@
         #mobileMenu {
             position: fixed;
             inset: 0;
-            background: #1e1b4b;
+            background: #FFFFFF;
             z-index: 999;
             overflow-y: auto;
         }
