@@ -389,6 +389,54 @@ def search_rooms():
         return jsonify({'error': str(e)}), 500
 
 
+@rooms_bp.route('/matched', methods=['GET'])
+@jwt_required()
+def get_matched_rooms():
+    """
+    Return available rooms scored against the current user's preferences.
+
+    Query Parameters:
+    - limit: Max results (default 20)
+    - min_score: Minimum compatibility score 0-100 (default 0)
+
+    Returns:
+    {
+        "rooms": [...],   # sorted by match_score desc
+        "total": 12
+    }
+    """
+    try:
+        user_id = int(get_jwt_identity())
+        limit = min(int(request.args.get('limit', 20)), 100)
+        min_score = int(request.args.get('min_score', 0))
+
+        from backend.models import UserPreference
+        prefs = UserPreference.query.filter_by(user_id=user_id).first()
+
+        query = Room.query.filter_by(is_available=True)
+        rooms = query.all()
+
+        scored = []
+        for room in rooms:
+            if prefs:
+                score = room.get_compatibility_score(prefs)
+            else:
+                score = 50  # neutral when no prefs
+            if score >= min_score:
+                d = room.to_dict(include_owner=True)
+                d['match_score'] = score
+                scored.append(d)
+
+        scored.sort(key=lambda r: r['match_score'], reverse=True)
+        scored = scored[:limit]
+
+        return jsonify({'rooms': scored, 'total': len(scored)}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
 @rooms_bp.route('/user/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_user_rooms(user_id):

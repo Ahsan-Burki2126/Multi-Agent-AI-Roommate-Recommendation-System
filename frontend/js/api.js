@@ -65,7 +65,8 @@ class APIClient {
       const response = await fetch(url, options);
 
       // Handle 401 (unauthorized) - clear token and redirect to login
-      if (response.status === 401) {
+      // But don't redirect if we're already on the login page (wrong credentials case)
+      if (response.status === 401 && !window.location.pathname.includes("login")) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "/login.html";
@@ -244,6 +245,17 @@ class APIClient {
   // Get user's rooms
   async getUserRooms(userId) {
     return this.request("GET", `/rooms/user/${userId}`);
+  }
+
+  // Get rooms scored against current user's preferences
+  async getMatchedRooms(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return this.request("GET", `/rooms/matched?${queryString}`);
+  }
+
+  // Run AI room matching pipeline via orchestrator
+  async runRoomMatching(params = {}) {
+    return this.request("POST", "/orchestrate/rooms", params);
   }
 
   /**

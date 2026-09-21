@@ -115,7 +115,7 @@ def register():
             'full_name': user.full_name,
             'message': 'Registration successful'
         }), 201
-        
+
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500

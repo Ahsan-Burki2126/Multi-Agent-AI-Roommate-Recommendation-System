@@ -1,496 +1,227 @@
-# Roommate Matching System - README
+# AI-Powered Roommate Matching System
 
-## 🏠 Overview
-
-This is a complete, FYP-ready web application for intelligent roommate and room matching using a **multi-agent AI system**. The system analyzes user preferences, computes compatibility scores, detects conflicts, and provides explainable recommendations.
-
-**Key Features:**
-- ✅ User authentication & profile management
-- ✅ Comprehensive preference collection
-- ✅ 6-Agent AI matching engine
-- ✅ Explainable compatibility scores
-- ✅ Room listing & filtering
-- ✅ Conflict detection system
-- ✅ Ranked recommendations dashboard
+A full-stack web application that uses a **6-agent AI pipeline** to match people looking for roommates and rooms — built as a Final Year Project (FYP).
 
 ---
 
-## 🎯 System Architecture
+## What It Does
 
-### Multi-Agent Components
-1. **User Profiling Agent** - Validates and normalizes user input
-2. **Preference Analysis Agent** - Converts preferences to numerical vectors
-3. **Compatibility Scoring Agent** - Computes similarity/matching scores
-4. **Room Matching Agent** - Filters rooms by constraints
-5. **Conflict Detection Agent** - Identifies deal-breaker mismatches
-6. **Recommendation Engine Agent** - Ranks matches with explanations
-
-Each agent is:
-- **Loosely coupled** - Can be tested independently
-- **Single responsibility** - Does one thing well
-- **Orchestrated** - Controlled by agent_orchestrator.py
-- **Traceable** - All decisions are logged and explainable
+| Feature | Description |
+|---|---|
+| **Roommate Matching** | Compatibility scores between users based on budget, lifestyle, schedule, habits |
+| **Room Matching** | Rooms scored against your preferences and ranked by fit percentage |
+| **AI Explanations** | Google Gemini generates natural-language explanations for every match |
+| **Conflict Detection** | Identifies deal-breakers (pets, smoking, budget mismatch) before they happen |
+| **Room Listings** | 23+ real Pakistani room listings seeded across 8 cities (no external API needed) |
+| **Post a Room** | Any user can post their own room listing |
+| **Survey Data** | Pre-loaded with 327 real survey responses from IUB students |
 
 ---
 
-## 📚 Documentation Structure
-
-| Document | Purpose |
-|----------|---------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | System design, agent details, data flow |
-| [SRS.md](SRS.md) | Functional & non-functional requirements |
-| [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) | Directory organization |
-| [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) | Installation & running instructions |
-| [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) | Complete API reference |
-| [docs/AGENT_GUIDE.md](docs/AGENT_GUIDE.md) | How each agent works |
-| [docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md) | Running tests |
-| [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) | Production deployment |
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Python 3.8+
-- Node.js 14+ (optional, for frontend tooling)
-- SQLite3 (included with Python)
-- Git
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone repository
-git clone <repo-url>
 cd roommate-matching-system
-
-# Create virtual environment
-python -m venv venv
-
-# Activate (Windows)
-venv\Scripts\activate
-
-# Activate (Mac/Linux)
-source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Initialize database
-python -c "from backend.utils.database import init_db; init_db()"
+# Copy and configure environment
+copy .env.example .env       # Windows
+cp .env.example .env         # Mac/Linux
+# Set GOOGLE_API_KEY for Gemini AI (AI agents use this)
 
-# Run Flask app
-python -m flask run
+# Seed the database with Pakistani room listings
+python seed_rooms.py
+
+# Run migrations (adds new room fields if upgrading)
+python migrate_db.py
+
+# Start the server
+python backend/app.py
+# → http://localhost:5000
 ```
-
-The application will be available at `http://localhost:5000`
-
-**See [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) for detailed instructions**
 
 ---
 
-## 📊 Tech Stack
+## Architecture
 
-| Layer | Technology | Why? |
-|-------|-----------|------|
-| **Frontend** | HTML5 + CSS3 + Vanilla JS | Light, no build step, quick to grade |
-| **Backend** | Python 3 + Flask | Clean, agent-friendly, easy to test |
-| **Database** | SQLite (dev) / PostgreSQL (prod) | Free, relational, FYP-appropriate |
-| **AI/ML** | scikit-learn + NumPy | Lightweight, interpretable similarity metrics |
-| **API** | REST + JSON | Standard, stateless, cacheable |
-| **Deployment** | Docker | Reproducible, easy to grade |
+```
+Frontend (HTML/CSS/JS)
+    ↓  REST / JSON
+Flask Backend (port 5000)
+    ↓
+Agent Orchestrator
+    ├── User Profiling Agent       validates user profile
+    ├── Preference Analysis Agent  converts prefs → numerical vectors
+    ├── Compatibility Scoring Agent  cosine similarity + sub-scores
+    ├── Room Matching Agent        filters & scores rooms
+    ├── Conflict Detection Agent   flags hard/soft blockers
+    └── Recommendation Engine      ranks results + Gemini explanations
+    ↓
+SQLite (dev) / PostgreSQL / Neon (prod)
+```
 
 ---
 
-## 🧠 How the Matching Works
+## Tech Stack
 
-### Example: Finding Roommate Matches
-
-```
-User: John (25, budget: $500-700, clean, 9-5 job)
-System Request: GET /matches/:user_id
-
-STEP 1: User Profiling Agent
-├─ Loads John's profile from database
-└─ Validates completeness
-
-STEP 2: Preference Analysis Agent
-├─ Retrieves John's preference vector
-├─ Vectorizes: [budget_agg, lifestyle_agg, ...] = [0.6, 0.8, ...]
-└─ Normalizes to 0-1 scale
-
-STEP 3: Compatibility Scoring Agent
-├─ Compares John with all other users
-├─ Computes similarity for each pair
-│  ├─ Cosine similarity of preference vectors
-│  ├─ Lifestyle alignment score
-│  ├─ Schedule compatibility
-│  └─ Budget range overlap
-└─ Returns top 10 candidates with scores
-
-STEP 4: Conflict Detection Agent
-├─ Checks for hard blockers
-│  ├─ John: no pets allowed, other person has dog? ❌ HARD CONFLICT
-│  └─ Budget ranges don't overlap? ❌ HARD CONFLICT
-├─ Checks for soft warnings
-│  ├─ Schedule mismatch (John 9-5, other night shift)? ⚠️ WARNING
-│  └─ Cleanliness gap (John 9/10, other 5/10)? ⚠️ WARNING
-└─ Flags results
-
-STEP 5: Recommendation Engine Agent
-├─ Filters out hard conflicts (no match if blockers)
-├─ Ranks by composite score:
-│  score = 0.3*similarity + 0.2*lifestyle + 0.2*schedule + 
-│          0.15*budget + 0.15*habits
-├─ Generates explanations:
-│  "Jane (23): 78/100 match
-│   ✓ Both prefer clean living (8/10 & 7/10)
-│   ✓ Similar budget range ($550-700)
-│   ⚠️ Different schedule (she's night shift)"
-└─ Stores recommendations in DB
-
-STEP 6: Frontend Display
-└─ Shows ranked matches with:
-   ✓ Profile card (photo, name, age, bio)
-   ✓ Match score & breakdown
-   ✓ Conflict warnings
-   ✓ "Like" & "View Profile" buttons
-```
-
-### Example: Finding Room Matches
-
-Same agents but:
-- Step 4: Compare user preferences against room listing requirements
-- Step 5: Room Matching Agent filters by location, price, amenities
-- Recommendation: Rank rooms by match%, explain why room is good fit
+| Layer | Tech |
+|---|---|
+| Frontend | HTML5 + Tailwind CSS (CDN) + Vanilla JS |
+| Backend | Python 3 + Flask + Flask-JWT-Extended |
+| AI Agents | LangChain + Google Gemini (`gemini-2.0-flash`) |
+| Similarity | NumPy (cosine similarity on preference vectors) |
+| Database | SQLite (dev) / PostgreSQL via pg8000 (prod) |
+| Deployment | Vercel (frontend + serverless backend) |
 
 ---
 
-## 📡 API Endpoints (Summary)
+## Key API Endpoints
 
 ### Authentication
 ```
-POST /auth/register          - Create account
-POST /auth/login            - Login
-POST /auth/logout           - Logout
-GET  /auth/profile          - Current user profile
-```
-
-### User Management
-```
-GET  /users/:id             - User details
-PUT  /users/:id             - Update profile
-DELETE /users/:id           - Delete account
-```
-
-### Preferences
-```
-POST /preferences           - Create/update preferences
-GET  /preferences/:id       - Get user preferences
-```
-
-### Matching
-```
-GET  /matches/:user_id      - Find roommate matches
-POST /matches/like/:id      - Like a match
+POST /auth/register       Create account
+POST /auth/login          Login → JWT token
+GET  /auth/verify         Verify token
 ```
 
 ### Rooms
 ```
-POST /rooms                 - Post new room
-GET  /rooms                 - Search rooms (with filters)
-GET  /rooms/:id             - Room details
-PUT  /rooms/:id             - Edit room (owner only)
-DELETE /rooms/:id           - Delete room (owner only)
+GET  /rooms               List all available rooms (paginated)
+GET  /rooms/matched       Rooms scored against current user's preferences
+POST /rooms               Post a new room listing
+GET  /rooms/<id>          Room detail (includes owner phone)
+PUT  /rooms/<id>          Update room (owner only)
+DELETE /rooms/<id>        Remove listing (owner only)
+GET  /rooms/search        Filter by location / price / type
+GET  /rooms/user/<id>     Rooms posted by a user
 ```
 
-**Full API docs**: See [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+### Matching Pipeline
+```
+POST /orchestrate/matches    Full 6-agent roommate matching pipeline
+POST /orchestrate/rooms      Room matching pipeline with AI summary
+GET  /orchestrate/status     Agent system health
+```
+
+### Matches
+```
+GET  /matches/user/<id>      Computed compatibility scores
+POST /matches/compute        Trigger scoring for current user
+GET  /matches/conflicts/<a>/<b>   Conflict check between two users
+```
 
 ---
 
-## 🗄️ Database Schema (Quick Overview)
+## Room System
 
-```sql
-users                    -- User accounts
-├─ user_id (PK)
-├─ email (UNIQUE)
-├─ password_hash
-├─ full_name
-├─ gender
-└─ created_at
+Rooms work without any external API. Data comes from:
 
-user_preferences         -- User's matching preferences
-├─ preference_id (PK)
-├─ user_id (FK→users)
-├─ budget_min, budget_max
-├─ preferred_location
-├─ cleanliness_level
-├─ schedule
-├─ smoking_ok, pets_ok
-└─ noise_tolerance
+1. **`seed_rooms.py`** — 23 realistic Pakistani listings across Bahawalpur, Islamabad,
+   Lahore, Karachi, Rawalpindi, Multan, Faisalabad, Peshawar.
+   ```bash
+   python seed_rooms.py           # add rooms
+   python seed_rooms.py --clear   # wipe and reseed
+   python seed_rooms.py --city Lahore   # seed one city only
+   ```
 
-preference_vectors       -- Vectorized preferences
-├─ vector_id (PK)
-├─ user_id (FK→users)
-├─ vector_data (JSON)     -- [0.5, 0.8, 0.3, ...]
-└─ computed_at
+2. **`POST /rooms`** — Any authenticated user can post their own room.
 
-rooms                    -- Room listings
-├─ room_id (PK)
-├─ owner_id (FK→users)
-├─ title, description
-├─ location, rent_price
-├─ room_type, amenities (JSON)
-└─ available_from
-
-compatibility_scores     -- Cached match scores
-├─ score_id (PK)
-├─ user_a_id (FK→users)
-├─ user_b_id (FK→users)
-├─ overall_score (0-100)
-├─ lifestyle_score, budget_score, etc.
-└─ computed_at
-
-conflict_log             -- Conflict detection results
-├─ conflict_id (PK)
-├─ user_a_id, user_b_id
-├─ conflict_type (Hard/Soft)
-├─ description
-└─ severity (1-10)
-
-recommendations          -- Match recommendations
-├─ rec_id (PK)
-├─ requester_id (FK→users)
-├─ match_id (FK→users)
-├─ match_score
-├─ explanation (TEXT)
-├─ viewed_at
-└─ liked (BOOLEAN)
-```
-
-**Full schema**: See [database/schema.sql](database/schema.sql)
+### Room Compatibility Score
+`GET /rooms/matched` returns every available room pre-scored against the
+current user's preferences. Score = 0–100 based on:
+- Budget overlap (40 pts)
+- Location match (30 pts)
+- Room type preference (20 pts)
+- Amenity coverage (10 pts)
 
 ---
 
-## 🧪 Testing
+## Database Schema
 
-### Run Unit Tests
+```
+users                    user accounts
+user_preferences         budget, location, lifestyle prefs
+preference_vectors       vectorised prefs for cosine similarity
+rooms                    room listings
+  ├─ location            city name
+  ├─ address             full street address
+  ├─ latitude/longitude  map coordinates (nullable)
+  ├─ place_id            Google Place ID (nullable, for future use)
+  ├─ google_rating       star rating (nullable)
+  └─ google_maps_url     direct maps link (nullable)
+compatibility_scores     cached pair-wise match scores
+conflict_log             detected hard/soft conflicts
+recommendations          ranked match list shown to users
+audit_log                every agent decision, timestamped
+```
+
+---
+
+## Environment Variables (`.env`)
+
+```
+SECRET_KEY=your-secret-key
+JWT_SECRET_KEY=your-jwt-secret
+DATABASE_URL=sqlite:///./database/roommate_system.db
+GOOGLE_API_KEY=AIza...        # Gemini AI (required for AI explanations)
+FLASK_ENV=development
+```
+
+> `GOOGLE_API_KEY` is used **only for Gemini AI** agent explanations.
+> Rooms, matching scores, and all other features work without it.
+
+---
+
+## Project Files
+
+```
+roommate-matching-system/
+├── backend/
+│   ├── app.py                    Flask factory
+│   ├── config.py                 Dev / prod config
+│   ├── agents/                   6 AI agents + orchestrator
+│   ├── models/                   SQLAlchemy ORM models
+│   ├── routes/                   REST API blueprints
+│   └── services/                 (empty — no external services)
+├── frontend/
+│   ├── rooms.html                Room listing + AI matching UI
+│   ├── matches.html              Roommate match results
+│   ├── dashboard.html            User dashboard
+│   ├── js/api.js                 API client (all endpoints)
+│   └── css/                      Tailwind + custom styles
+├── seed_rooms.py                 Seed 23 Pakistani room listings
+├── migrate_db.py                 Add new Room columns to existing DB
+├── seed_prod.py                  Seed 327 IUB survey users (production)
+├── FYP_PROJECT_DOCUMENTATION.md  Full documentation for presentation
+├── MODELS_QUICK_REFERENCE.md     Model API quick reference
+└── PROJECT_STATUS_FINAL.md       Completion status per phase
+```
+
+---
+
+## For FYP Examiners
+
+**Run the app:**
 ```bash
-pytest backend/tests/ -v
+python backend/app.py
+# Open http://localhost:5000
 ```
 
-### Run Agent Tests
-```bash
-pytest backend/tests/test_agents.py -v
-```
+**Test user flow:**
+1. Register → complete preferences form
+2. Dashboard → trigger AI roommate matching
+3. Rooms → browse rooms with compatibility scores
+4. Click "Find My Best Rooms (AI)" → AI ranks rooms by fit
+5. Click Contact → see owner phone number
 
-### Run Integration Tests
-```bash
-pytest backend/tests/test_routes.py -v
-```
-
-**See [docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md) for detailed test coverage**
-
----
-
-## 📦 Project Files
-
-### Backend Structure
-```
-backend/
-├── app.py                    -- Flask initialization
-├── config.py                 -- Configuration
-├── agents/                   -- 6 AI agents
-│   ├── user_profiling_agent.py
-│   ├── preference_analysis_agent.py
-│   ├── compatibility_scoring_agent.py
-│   ├── room_matching_agent.py
-│   ├── conflict_detection_agent.py
-│   ├── recommendation_engine_agent.py
-│   └── agent_orchestrator.py  -- Controls agent workflow
-├── models/                   -- Database models
-├── routes/                   -- API endpoints
-├── utils/                    -- Helper functions
-└── tests/                    -- Unit tests
-```
-
-### Frontend Structure
-```
-frontend/
-├── index.html               -- Landing page
-├── register.html, login.html -- Auth pages
-├── dashboard.html           -- Main page
-├── matches.html             -- Matches display
-├── rooms.html               -- Room search
-├── css/                     -- Stylesheets
-└── js/                      -- Client-side logic
-```
+**Key code to review:**
+- `backend/agents/agent_orchestrator.py` — pipeline controller
+- `backend/agents/compatibility_scoring_agent.py` — scoring math
+- `backend/routes/rooms.py` — room endpoints incl. `/matched`
+- `backend/models/room.py` — Room ORM model with scoring method
 
 ---
 
-## 🔐 Security Features
-
-✅ **Password Security**: bcrypt hashing with 10+ salt rounds  
-✅ **Session Management**: JWT tokens (30-day expiry)  
-✅ **Input Validation**: All user inputs validated & sanitized  
-✅ **SQL Injection Prevention**: Parameterized queries  
-✅ **XSS Prevention**: HTML escaping on frontend  
-✅ **CSRF Protection**: CSRF tokens on forms  
-✅ **HTTPS**: Enforced in production  
-✅ **Privacy**: GDPR-compliant data handling  
-
----
-
-## 🎓 For Examiners / Grading
-
-### Key Points to Understand
-
-1. **Multi-Agent Architecture**: 6 independent agents, each with clear responsibility
-   - Located in: `backend/agents/*.py`
-   - Orchestrated by: `backend/agents/agent_orchestrator.py`
-
-2. **Explainability**: Every match recommendation is explained
-   - Example: `"Jane (78/100): Both prefer clean living (8/10 & 7/10), similar budget..."`
-   - No black-box AI; all decisions mathematically traceable
-
-3. **Modularity**: Easy to extend
-   - Add new preference category? Update vectorization only
-   - Change scoring algorithm? Modify compatibility_scoring_agent.py only
-   - Add new conflict type? Update conflict_detection_agent.py only
-
-4. **Testing**: Every agent can be tested independently
-   - `backend/tests/test_agents.py` - Agent unit tests
-   - `backend/tests/test_scoring.py` - Scoring algorithm tests
-   - `backend/tests/test_routes.py` - API integration tests
-
-### How to Evaluate
-
-**Run The Application:**
-```bash
-python -m flask run
-```
-Then visit `http://localhost:5000`
-
-**Test User Flow:**
-1. Register new account
-2. Complete preference form
-3. View dashboard
-4. Find roommate matches (see scores + explanations)
-5. Search rooms
-6. View match details
-
-**Review Code:**
-- Start with: `backend/agents/agent_orchestrator.py` (main flow)
-- Then: Each agent in `backend/agents/`
-- Finally: Routes in `backend/routes/`
-
-**Check Documentation:**
-- [ARCHITECTURE.md](ARCHITECTURE.md) - System design
-- [docs/AGENT_GUIDE.md](docs/AGENT_GUIDE.md) - Agent behavior
-- Code comments in agent files
-
----
-
-## 📈 Performance Metrics
-
-| Metric | Target | Implementation |
-|--------|--------|----------------|
-| Match computation | < 5s for 1000 users | Vectorization + caching |
-| Page load | < 2s | Static frontend + fast API |
-| Database query | < 200ms | Proper indexing |
-| Concurrency | 100+ users | Stateless design |
-
----
-
-## 🚀 Deployment
-
-### Local Development
-```bash
-python -m flask run
-```
-
-### Docker Deployment
-```bash
-docker-compose up
-```
-
-### Production Deployment
-See [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) for:
-- Cloud hosting (Heroku, AWS, Azure, etc.)
-- Database migration (SQLite → PostgreSQL)
-- Security checklist
-- Monitoring & logging
-
----
-
-## 📋 Maintenance & Future Enhancements
-
-### Phase 1 (Current - MVP)
-✅ User auth & profiles
-✅ Preference collection
-✅ Multi-agent matching
-✅ Room listing
-✅ Dashboard
-
-### Phase 2 (Optional - Easy Additions)
-- Real-time chat between matches
-- Photo uploads for rooms
-- Rating/review system
-- Admin dashboard
-- Analytics & insights
-- Mobile app
-
-### Phase 3 (Advanced)
-- Machine learning refinement (if static weights don't work well)
-- Geographic mapping
-- Payment integration
-- Verification (ID, background checks)
-
----
-
-## 🤝 Contributing
-
-### Code Style
-- Follow PEP 8
-- Use type hints where possible
-- Write docstrings for all functions
-- Keep functions under 50 lines
-
-### Adding Features
-1. Create issue/feature branch
-2. Write unit tests first (TDD)
-3. Implement feature in isolated module
-4. Update relevant documentation
-5. Submit PR with clear description
-
----
-
-## 📞 Support / Questions
-
-For questions about the system:
-1. Check [docs/FAQ.md](docs/FAQ.md) if it exists
-2. Review [ARCHITECTURE.md](ARCHITECTURE.md)
-3. Check inline code comments
-4. Review test cases for usage examples
-
----
-
-## 📜 License
-
-This project is created for educational purposes (FYP) and is not licensed for commercial use.
-
----
-
-## 📝 Version History
-
-| Version | Date | Status | Notes |
-|---------|------|--------|-------|
-| 0.1 | Feb 24, 2026 | Planning | Architecture & SRS |
-| 0.2 | Feb 24, 2026 | In Progress | Backend setup |
-| 1.0 | TBD | Target | Feature complete |
-
----
-
-**Last Updated**: February 24, 2026  
-**Maintainer**: Development Team  
-**For Grading**: See [docs/GRADING_GUIDE.md](docs/GRADING_GUIDE.md)
-# Multi-Agent-AI-Roommate-Recommendation-System
+**Last Updated:** April 2026

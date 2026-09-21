@@ -176,8 +176,8 @@ class RoomMatchingAgent(BaseAgent):
                     'bathrooms': float(item['room'].bathrooms) if item['room'].bathrooms else None,
                     'pets_allowed': item['room'].pets_allowed,
                     'smoking_allowed': item['room'].smoking_allowed,
-                    'amenities': item['room'].amenities,
-                    'images': item['room'].images,
+                    'amenities': item['room'].amenities or [],
+                    'images': item['room'].images or [],
                     'available_from': (item['room'].available_from.isoformat()
                                        if item['room'].available_from else None),
                     'description': item['room'].description,
@@ -249,10 +249,10 @@ class RoomMatchingAgent(BaseAgent):
             score += 15
         try:
             amenity_count = 0
-            desired = ['wifi', 'ac', 'kitchen', 'parking']
-            if room.amenities:
-                amenities_str = json.dumps(room.amenities).lower()
-                amenity_count = sum(1 for a in desired if a in amenities_str)
+            desired = ['wifi', 'ac', 'kitchen', 'parking', 'furnished']
+            if room.amenities and isinstance(room.amenities, list):
+                amenities_lower = [a.lower() for a in room.amenities]
+                amenity_count = sum(1 for a in desired if any(a in x for x in amenities_lower))
             score += min(20, amenity_count * 5)
         except:
             score += 10

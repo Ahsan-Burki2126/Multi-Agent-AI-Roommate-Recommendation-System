@@ -1,431 +1,365 @@
-# Phase 1: Foundation Complete ✅
-## Roommate Matching System - Getting Started Guide
+# Getting Started Guide
+## AI-Powered Roommate Matching System
+
+This guide walks you through setting up and running the project from scratch, understanding each component, and navigating the codebase.
 
 ---
 
-## 📊 What Has Been Created (Phase 1)
-
-### 1. **Documentation** 📋
-- ✅ **ARCHITECTURE.md** - Complete system design with diagrams
-- ✅ **SRS.md** - Software Requirements Specification
-- ✅ **PROJECT_STRUCTURE.md** - Directory organization
-- ✅ **README.md** - Project overview and quick start
-
-### 2. **Backend Foundation** 🐍
-- ✅ **app.py** - Flask application factory with route registration
-- ✅ **config.py** - Multi-environment configuration (dev/test/prod)
-- ✅ **agents/base_agent.py** - Abstract agent base class
-- ✅ **.env.example** - Environment variables template
-
-### 3. **Database** 💾
-- ✅ **schema.sql** - Complete database schema with 10+ tables
-- ✅ **utils/database.py** - Database initialization and utilities
-
-### 4. **Configuration Files** ⚙️
-- ✅ **requirements.txt** - Python dependencies
-- ✅ **.gitignore** - Git exclusion rules
+## Table of Contents
+1. [Prerequisites](#1-prerequisites)
+2. [Installation](#2-installation)
+3. [Environment Variables](#3-environment-variables)
+4. [Database Setup](#4-database-setup)
+5. [Seeding Room Data](#5-seeding-room-data)
+6. [Running the Application](#6-running-the-application)
+7. [Project Structure Explained](#7-project-structure-explained)
+8. [Understanding the Flow](#8-understanding-the-flow)
+9. [Key Files to Read First](#9-key-files-to-read-first)
+10. [Common Troubleshooting](#10-common-troubleshooting)
 
 ---
 
-## 🎯 Next Phase: Implementation Plan
+## 1. Prerequisites
 
-### Phase 2: Backend Models (1-2 days)
-```
-✓ User model
-✓ Preference models  
-✓ Room model
-✓ Score models
-✓ Recommendation model
-✓ Conflict model
-```
+| Requirement | Version | Purpose |
+|---|---|---|
+| Python | 3.10+ | Backend runtime |
+| pip | Latest | Package installer |
+| Git | Any | Version control |
+| Browser | Chrome/Firefox | Running the frontend |
 
-### Phase 3: API Routes & Auth (2-3 days)
-```
-✓ Authentication (register/login)
-✓ User management routes
-✓ Preference routes
-✓ Room management routes
-✓ JWT token handling
-```
-
-### Phase 4: Agent Implementation (3-5 days)
-```
-✓ Agent 1: User Profiling Agent
-✓ Agent 2: Preference Analysis Agent
-✓ Agent 3: Compatibility Scoring Agent
-✓ Agent 4: Room Matching Agent
-✓ Agent 5: Conflict Detection Agent
-✓ Agent 6: Recommendation Engine Agent
-✓ Agent Orchestrator
-```
-
-### Phase 5: Frontend (2-3 days)
-```
-✓ Registration & Login pages
-✓ Preference form
-✓ Dashboard
-✓ Matches display
-✓ Room search
-```
-
-### Phase 6: Testing & Deployment (1-2 days)
-```
-✓ Unit tests
-✓ Integration tests
-✓ Docker setup
-✓ Deployment guide
-```
+Optional (for production only):
+- PostgreSQL / Neon account — the app uses SQLite locally
 
 ---
 
-## 🚀 How to Continue Development
+## 2. Installation
 
-### Step 1: Set Up Environment
 ```bash
-# Navigate to project
+# Navigate to project folder
 cd roommate-matching-system
 
-# Create virtual environment
+# Create a virtual environment (keeps dependencies isolated)
 python -m venv venv
 
-# Activate it (Windows)
+# Activate it
+# Windows:
 venv\Scripts\activate
-
-# Activate it (Mac/Linux)
+# Mac/Linux:
 source venv/bin/activate
 
-# Install dependencies
+# Install all Python packages
 pip install -r requirements.txt
-
-# Create .env file
-copy .env.example .env          # Windows
-cp .env.example .env            # Mac/Linux
 ```
-
-### Step 2: Initialize Database
-```bash
-# From project root
-python -c "from backend.utils.database import init_db; init_db()"
-
-# Or using the utility
-python backend/utils/database.py init
-```
-
-### Step 3: Run Flask App
-```bash
-python -m flask run
-# App runs at http://localhost:5000
-```
-
-### Step 4: Build Each Component
-The development should proceed module by module:
-
-1. **Models** - Define database structure
-2. **Routes** - Create API endpoints
-3. **Agents** - Implement AI logic
-4. **Frontend** - Build UI
 
 ---
 
-## 📁 Key Files to Review First
+## 3. Environment Variables
 
-**For Understanding Architecture:**
-1. Read: [ARCHITECTURE.md](../ARCHITECTURE.md)
-2. Examine: [backend/app.py](../backend/app.py) - Flask initialization
-3. Review: [backend/agents/base_agent.py](../backend/agents/base_agent.py) - Agent pattern
+Copy the example file and fill it in:
 
-**For Database Understanding:**
-1. Review: [database/schema.sql](../database/schema.sql) - All tables
-2. Study: [backend/utils/database.py](../backend/utils/database.py) - DB utilities
+```bash
+copy .env.example .env      # Windows
+cp .env.example .env        # Mac/Linux
+```
 
-**For Requirements:**
-1. Read: [SRS.md](../SRS.md) - What system should do
-2. Reference: Functional requirements (FR-1.1 through FR-7.1)
+Open `.env` and set:
+
+```env
+# Flask security keys — use any random string locally
+SECRET_KEY=dev-secret-key
+JWT_SECRET_KEY=dev-jwt-secret
+
+# Database — SQLite for local development (no setup needed)
+DATABASE_URL=sqlite:///./database/roommate_system.db
+
+# Google Gemini AI — needed for AI explanations in match results
+# Get from: https://aistudio.google.com/app/apikey
+GOOGLE_API_KEY=AIza...your_key_here
+
+# Flask environment
+FLASK_ENV=development
+```
+
+> **Without `GOOGLE_API_KEY`:** The app still runs. Roommate matching, room
+> scoring, and all features work. Only the AI natural-language explanations
+> ("Why are these two users a good match?") will fall back to a rule-based
+> summary instead of Gemini output.
 
 ---
 
-## 🧠 Understanding the Multi-Agent System
+## 4. Database Setup
 
-The system consists of **6 independent agents** that work together:
+The database is created automatically when Flask starts. But if you want to set it up manually:
+
+```bash
+python -c "
+from dotenv import load_dotenv; load_dotenv()
+from backend.app import create_app
+app = create_app('development')
+with app.app_context():
+    from backend.database import db
+    db.create_all()
+    print('Tables created.')
+"
+```
+
+**If you are upgrading from an older version** (adding new Room columns):
+```bash
+python migrate_db.py
+```
+This safely adds the new columns (`address`, `latitude`, `longitude`, `place_id`, `google_rating`, `google_maps_url`) to the existing `rooms` table without touching any data.
+
+### Load survey users (327 real IUB profiles)
+
+```bash
+# Local SQLite
+python load_survey_data.py
+
+# Production Neon/PostgreSQL
+DATABASE_URL="postgresql+pg8000://..." python seed_prod.py
+```
+
+---
+
+## 5. Seeding Room Data
+
+The app comes with a seed script that creates 23 realistic Pakistani room listings across 8 cities. No internet or API key needed.
+
+```bash
+# Add rooms (skips duplicates automatically)
+python seed_rooms.py
+
+# Wipe all rooms and start fresh
+python seed_rooms.py --clear
+
+# Seed only one city
+python seed_rooms.py --city Lahore
+```
+
+Cities covered: **Bahawalpur, Islamabad, Lahore, Karachi, Rawalpindi, Multan, Faisalabad, Peshawar**
+
+Room types: Single rooms, Shared hostels, Master bedrooms
+Price range: PKR 4,000 – 45,000/month
+
+---
+
+## 6. Running the Application
+
+```bash
+# From the roommate-matching-system/ folder with venv active:
+python backend/app.py
+```
+
+Open your browser at: **http://localhost:5000**
+
+You should see the landing page. From there:
+1. **Register** an account
+2. Fill in the **Preferences** form (budget, lifestyle, schedule, etc.)
+3. Go to **Dashboard** → trigger AI roommate matching
+4. Go to **Rooms** → browse rooms with compatibility scores
+5. Click **"Find My Best Rooms (AI)"** → AI pipeline ranks rooms for you
+
+---
+
+## 7. Project Structure Explained
 
 ```
-INPUT USER DATA
+roommate-matching-system/
+│
+├── backend/                         ← All Python server-side code
+│   ├── app.py                       ← Flask app factory (start here)
+│   ├── config.py                    ← Dev / prod config classes
+│   ├── database.py                  ← SQLAlchemy db object
+│   │
+│   ├── agents/                      ← The 6 AI agents
+│   │   ├── base_agent.py            ← Abstract base all agents extend
+│   │   ├── user_profiling_agent.py  ← Validates user profile completeness
+│   │   ├── preference_analysis_agent.py  ← Converts prefs → vectors
+│   │   ├── compatibility_scoring_agent.py ← Scores user pairs
+│   │   ├── room_matching_agent.py   ← Scores rooms against user prefs
+│   │   ├── conflict_detection_agent.py   ← Flags hard/soft blockers
+│   │   ├── recommendation_engine_agent.py ← Ranks + Gemini explanations
+│   │   └── agent_orchestrator.py    ← Controls the full pipeline
+│   │
+│   ├── models/                      ← SQLAlchemy ORM models
+│   │   ├── user.py                  ← User accounts
+│   │   ├── preference.py            ← UserPreference + PreferenceVector
+│   │   ├── room.py                  ← Room listings (incl. Google Places fields)
+│   │   ├── score.py                 ← CompatibilityScore
+│   │   ├── match.py                 ← Recommendation
+│   │   ├── conflict.py              ← ConflictLog
+│   │   └── audit.py                 ← AuditLog
+│   │
+│   ├── routes/                      ← REST API endpoints (Flask blueprints)
+│   │   ├── auth.py                  ← /auth/register, /auth/login, /auth/verify
+│   │   ├── users.py                 ← /users/<id>
+│   │   ├── preferences.py           ← /preferences/user/<id>
+│   │   ├── rooms.py                 ← /rooms, /rooms/matched, /rooms/search
+│   │   ├── matching.py              ← /matches/compute, /matches/user/<id>
+│   │   ├── recommendations.py       ← /recommendations/user/<id>
+│   │   └── orchestrate.py           ← /orchestrate/matches, /orchestrate/rooms
+│   │
+│   └── services/                    ← (empty — no external services)
+│
+├── frontend/                        ← Static HTML/CSS/JS pages
+│   ├── index.html                   ← Landing page
+│   ├── register.html                ← Registration form
+│   ├── login.html                   ← Login form
+│   ├── dashboard.html               ← Main dashboard after login
+│   ├── preferences.html             ← Preferences form (budget, lifestyle…)
+│   ├── matches.html                 ← Roommate match results
+│   ├── rooms.html                   ← Room listings + AI matching
+│   ├── profile.html                 ← User profile page
+│   ├── settings.html                ← Account settings
+│   ├── ai-agents.html               ← Agent activity/status page
+│   ├── js/
+│   │   ├── api.js                   ← Central API client (all HTTP calls)
+│   │   ├── auth.js                  ← JWT + auth helpers
+│   │   └── main.js                  ← Shared UI utilities
+│   └── css/
+│       ├── style.css                ← Main styles
+│       └── design-system.css        ← Design tokens (Airbnb-style light theme)
+│
+├── database/
+│   └── roommate_system.db           ← SQLite file (git-ignored in prod)
+│
+├── seed_rooms.py                    ← Seeds 23 Pakistani room listings (no API needed)
+├── seed_prod.py                     ← Seeds 327 IUB survey users (production)
+├── load_survey_data.py              ← Loads survey Excel → local DB
+├── migrate_db.py                    ← Adds new Room columns to existing DB
+├── requirements.txt                 ← Python dependencies
+├── vercel.json                      ← Vercel deployment routing config
+└── .env                             ← Local environment variables (git-ignored)
+```
+
+---
+
+## 8. Understanding the Flow
+
+### Roommate Matching Flow
+
+```
+User clicks "Find Matches" on Dashboard
     ↓
-┌─────────────────────────────────────┐
-│ 1. User Profiling Agent             │  ← Validates input
-│    (validates, normalizes)          │
-└──────────────┬──────────────────────┘
-               ↓
-┌─────────────────────────────────────┐
-│ 2. Preference Analysis Agent        │  ← Converts to vectors
-│    (vectorizes, weights)            │
-└──────────────┬──────────────────────┘
-               ↓
-┌─────────────────────────────────────┐
-│ 3. Compatibility Scoring Agent      │  ← Computes similarity
-│    (similarity metrics)             │
-└──────────────┬──────────────────────┘
-               ↓
-┌─────────────────────────────────────┐
-│ 4. Room Matching Agent              │  ← Filters rooms
-│    (constraint checking)            │
-└──────────────┬──────────────────────┘
-               ↓
-┌─────────────────────────────────────┐
-│ 5. Conflict Detection Agent         │  ← Identifies issues
-│    (hard/soft conflicts)            │
-└──────────────┬──────────────────────┘
-               ↓
-┌─────────────────────────────────────┐
-│ 6. Recommendation Engine Agent      │  ← Ranks & explains
-│    (ranking, explanations)          │
-└──────────────┬──────────────────────┘
-               ↓
-         FINAL RECOMMENDATIONS
+POST /orchestrate/matches
+    ↓
+Agent Orchestrator runs the pipeline:
+    1. User Profiling Agent
+       → checks user profile is complete
+    2. Preference Analysis Agent
+       → converts prefs to a numerical vector [0.5, 0.8, 0.3, ...]
+    3. Compatibility Scoring Agent
+       → computes cosine similarity + sub-scores for every other user
+          overall = 0.3×similarity + 0.2×lifestyle + 0.2×schedule
+                  + 0.15×budget + 0.15×habits
+    4. Conflict Detection Agent
+       → flags hard blockers (smoking, pets, budget gap)
+    5. Recommendation Engine Agent
+       → ranks by score, calls Gemini to write explanation
+       → stores in recommendations table
+    ↓
+Frontend receives ranked list with scores + explanations
 ```
 
-Each agent:
-- ✓ Is **independent** (can be tested alone)
-- ✓ Has **one responsibility** (single agent principle)
-- ✓ **Logs decisions** (for explainability)
-- ✓ **Returns standardized results** (AgentResult object)
-- ✓ **Validates inputs** (error handling)
+### Room Matching Flow
 
----
+```
+User opens Rooms page
+    ↓
+GET /rooms/matched
+    ↓
+Backend:
+    1. Loads user's UserPreference
+    2. Queries all available rooms
+    3. Calls room.get_compatibility_score(prefs) for each
+    4. Returns sorted by score desc
+    ↓
+Frontend renders room cards with "82% match" badges
 
-## 💻 Technology Stack Summary
-
-| Component | Technology | Why |
-|-----------|-----------|-----|
-| **Framework** | Flask 2.3 | Lightweight, perfect for FYP |
-| **ORM** | SQLAlchemy 2.0 | Type-safe, flexible |
-| **Database** | SQLite (dev) / PostgreSQL (prod) | Free, relational, standard |
-| **Similarity** | scikit-learn + NumPy | Proven cosine similarity |
-| **Security** | bcrypt + JWT | Industry standard |
-| **Testing** | pytest | Professional test framework |
-| **Deployment** | Docker | Reproducible environments |
-
----
-
-## 🔍 Database Architecture at a Glance
-
-**Core Tables:**
-- `users` - User accounts
-- `user_preferences` - User's matching preferences
-- `preference_vectors` - Vectorized preferences (for similarity)
-- `rooms` - Room listings
-- `compatibility_scores` - Cached match scores
-- `conflict_log` - Detected conflicts
-- `recommendations` - Match recommendations shown to users
-- `interactions` - Likes, messages, views
-- `audit_log` - All agent decisions (for transparency)
-
-**Views:**
-- `mutual_matches` - Users who've liked each other
-- `user_stats` - Dashboard statistics per user
-
-See: [database/schema.sql](../database/schema.sql) for complete schema
-
----
-
-## 🧪 Testing Strategy
-
-### Unit Tests (Agent-level)
-```python
-# Tests for each agent independently
-# Example: test_preference_vectorization()
+User clicks "Find My Best Rooms (AI)"
+    ↓
+POST /orchestrate/rooms
+    ↓
+Room Matching Agent runs:
+    → filters by budget, location, smoking, pets
+    → scores remaining rooms
+    → calls Gemini for a search summary
+    ↓
+Frontend injects AI-matched section at top of grid
 ```
 
-### Integration Tests (Multi-agent flow)
-```python
-# Test complete matching pipeline
-# Example: test_find_roommate_matches()
+### Scoring Formula
+
+**Roommate compatibility score (0–100):**
+```
+score = cosine_similarity × 100 × 0.30
+      + lifestyle_score           × 0.20
+      + schedule_score            × 0.20
+      + budget_score              × 0.15
+      + habits_score              × 0.15
 ```
 
-### API Tests (Route-level)
-```python
-# Test Flask routes
-# Example: test_post_preferences_endpoint()
+**Room compatibility score (0–100):**
+```
+score = budget_overlap_points   (max 40)
+      + location_match_points   (max 30)
+      + room_type_match_points  (max 20)
+      + amenity_coverage_points (max 10)
 ```
 
-See: Tests will go in `backend/tests/`
+---
+
+## 9. Key Files to Read First
+
+If you're studying the code, start in this order:
+
+1. **`backend/app.py`** — How Flask is initialised and all blueprints registered
+2. **`backend/agents/agent_orchestrator.py`** — The pipeline controller
+3. **`backend/agents/compatibility_scoring_agent.py`** — Core scoring math
+4. **`backend/models/room.py`** — Room model with `get_compatibility_score()`
+5. **`backend/routes/rooms.py`** — Room API endpoints incl. `/matched`
+6. **`frontend/js/api.js`** — Every API call the frontend makes
+7. **`frontend/rooms.html`** — The complete room listing UI + AI matching
 
 ---
 
-## 🚢 Deployment Checklist
+## 10. Common Troubleshooting
 
-When ready to deploy:
-- [ ] All agents implemented and tested
-- [ ] Database migrated to PostgreSQL
-- [ ] Environment variables configured
-- [ ] HTTPS enforced
-- [ ] Password hashing verified
-- [ ] CORS properly configured
-- [ ] Docker image built and tested
-- [ ] Database backups configured
-- [ ] Logging and monitoring set up
-- [ ] Documentation complete
-
-See: [docs/DEPLOYMENT_GUIDE.md](../docs/DEPLOYMENT_GUIDE.md) when ready
-
----
-
-## 📞 Questions to Answer During Development
-
-As you build each component, keep these in mind:
-
-**For Models:**
-- What data does each entity need?
-- What relationships exist?
-- What indexes will improve performance?
-
-**For Agents:**
-- How does this agent transform input to output?
-- What validation must it perform?
-- How should errors be handled?
-- What should be logged for auditability?
-
-**For Routes:**
-- What are valid inputs/outputs?
-- Who can access this endpoint?
-- What validation is needed?
-- How should errors be returned?
-
-**For Frontend:**
-- Is the form intuitive?
-- Are error messages helpful?
-- Is it mobile-responsive?
-- Is the flow logical?
-
----
-
-## 📚 Documentation References
-
-**For FYP Examiners/Grading:**
-1. Start with: [ARCHITECTURE.md](../ARCHITECTURE.md) - High-level design
-2. Then: [SRS.md](../SRS.md) - Requirements covered
-3. Review: Agent code in `backend/agents/` - Implementation
-4. Check: Route code in `backend/routes/` - API implementation
-5. Final: Test files in `backend/tests/` - Quality assurance
-
-**For Development:**
-1. [PROJECT_STRUCTURE.md](../PROJECT_STRUCTURE.md) - Where things go
-2. [README.md](../README.md) - Quick start
-3. Code comments - Implementation details
-4. This guide - Workflow and strategy
-
----
-
-## 🎯 Success Criteria for Each Phase
-
-**Phase 2 (Models) Complete When:**
-- [ ] All 6 models created
-- [ ] Relationships defined
-- [ ] Models can be imported without errors
-- [ ] Database tables created successfully
-
-**Phase 3 (Routes) Complete When:**
-- [ ] Auth endpoints working (register/login)
-- [ ] User CRUD endpoints working
-- [ ] Preference endpoints working
-- [ ] All routes return proper JSON
-
-**Phase 4 (Agents) Complete When:**
-- [ ] Each agent implements BaseAgent
-- [ ] Agent.execute() works correctly
-- [ ] Results are logged to audit_log
-- [ ] Pipeline execution works
-
-**Phase 5 (Frontend) Complete When:**
-- [ ] Pages load from Flask server
-- [ ] Forms submit to correct endpoints
-- [ ] Results display correctly
-- [ ] Mobile responsive
-
-**Phase 6 (Testing) Complete When:**
-- [ ] Unit tests pass (80%+ coverage)
-- [ ] Integration tests pass
-- [ ] Docker builds successfully
-- [ ] System can be graded end-to-end
-
----
-
-## 🔧 Development Tools Setup (Optional)
-
-**For Code Quality:**
+**App won't start — import error**
 ```bash
-pip install black flake8 isort  # Code formatting & linting
-```
-
-**For Better API Testing:**
-```bash
-pip install postman  # API testing tool
-```
-
-**For Database Inspection:**
-```bash
-pip install dbeaver-cli  # Database GUI
-```
-
----
-
-## 💡 Pro Tips
-
-1. **Commit Frequently**: After each agent/route is complete
-2. **Test Early**: Don't wait until the end
-3. **Document As You Go**: Comments in code
-4. **Keep Agents Simple**: Each should do one thing
-5. **Use Type Hints**: Makes code clearer
-6. **Log Everything**: For debugging
-7. **Test Edge Cases**: Empty inputs, missing data, etc.
-
----
-
-## 📞 Troubleshooting
-
-**Database won't initialize:**
-```bash
-python backend/utils/database.py reset
-python backend/utils/database.py init
-```
-
-**Flask import errors:**
-```bash
-# Make sure you're in project root and venv is activated
+# Make sure venv is active and packages installed
 pip install -r requirements.txt
 ```
 
-**Port 5000 already in use:**
+**Database error on first run**
 ```bash
-python -m flask run --port 5001
+# Run the migration to create/update all tables
+python migrate_db.py
 ```
 
-**Database locks (SQLite):**
-- Only one process can write at a time
-- Use PostgreSQL for production to avoid this
+**No rooms showing**
+```bash
+# Seed the database
+python seed_rooms.py
+```
+
+**AI explanations not working / Gemini error**
+- Check `GOOGLE_API_KEY` is set in `.env`
+- The app works without it; only explanations fall back to rule-based text
+
+**Port 5000 in use**
+```bash
+python backend/app.py --port 5001
+# or
+flask run --port 5001
+```
+
+**SQLite locked (concurrent writes)**
+- Restart the Flask server
+- In production, use PostgreSQL (configured via `DATABASE_URL`)
 
 ---
 
-## ✅ Checklist for Phase 2: Models
-
-Before building models, ensure:
-- [ ] Reviewed database schema
-- [ ] Understood relationships between tables
-- [ ] Installed SQLAlchemy
-- [ ] Can run basic Flask app
-- [ ] Database initializes without errors
-
-**Ready to proceed?** Your next step is:
-```bash
-# Create backend/models/user.py
-# Then: backend/models/preference.py
-# Then: backend/models/room.py
-# And so on...
-```
-
----
-
-**Status**: Phase 1 Complete ✅ | Ready for Phase 2 🚀
-
-**Last Updated**: February 24, 2026
-
+**Last Updated:** April 2026  
+**Status:** All 6 phases complete — system is production-ready

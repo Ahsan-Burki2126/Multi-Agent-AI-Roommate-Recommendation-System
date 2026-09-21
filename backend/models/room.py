@@ -14,43 +14,49 @@ from backend.database import db
 
 class Room(db.Model):
     """
-    Room listing posted by property owners
-    
-    A room is available for rent and can be:
-    - Searched by users looking for housing
-    - Matched against user preferences
-    - Scored for compatibility with user
-    
+    Room listing posted by property owners.
+
     Attributes:
         room_id: Unique identifier
         owner_id: User (property owner) who posted the room
         title: Room listing title
         description: Detailed description
-        location: City/area where room is located
-        rent_price: Monthly rent price
-        room_type: Single/Shared/Master bedroom
-        bedrooms: Number of bedrooms
-        bathrooms: Number of bathrooms
-        amenities: List of room features (WiFi, AC, etc.)
-        smoking_allowed: Whether smoking is permitted
-        pets_allowed: Whether pets are allowed
-        images: URLs to room photos
-        is_available: Whether room is currently available
-        available_from: Date room becomes available
-        lease_duration_months: Typical lease length
+        location: City name (e.g. "Islamabad")
+        address: Full street address (from Google Places or user input)
+        latitude / longitude: Coordinates for map pins
+        place_id: Google Place ID — used for deduplication and deep-links
+        google_rating: Star rating sourced from Google (1.0 – 5.0)
+        google_maps_url: Direct https://maps.google.com/?cid=... link
+        rent_price: Monthly rent (PKR)
+        room_type: Single / Shared / Master
+        bedrooms / bathrooms: Room counts
+        amenities: JSON list of feature strings
+        smoking_allowed / pets_allowed: House rules
+        images: JSON list of photo URLs
+        is_available: Whether the listing is active
+        available_from: Date room opens up
+        lease_duration_months: Preferred lease length
     """
-    
+
     __tablename__ = 'rooms'
-    
-    # Primary Key & Foreign Key
-    room_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), 
-                        nullable=False, index=True)
-    
-    # Listing Info
-    title = db.Column(db.String(255), nullable=False)
+
+    # ── Keys ────────────────────────────────────────────────────────────
+    room_id  = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),
+                         nullable=False, index=True)
+
+    # ── Listing Info ─────────────────────────────────────────────────────
+    title       = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
-    location = db.Column(db.String(200), nullable=False, index=True)
+    location    = db.Column(db.String(200), nullable=False, index=True)
+
+    # ── Google Places enrichment (nullable — not required for manual posts) ──
+    address        = db.Column(db.String(500))
+    latitude       = db.Column(db.Numeric(9, 6))
+    longitude      = db.Column(db.Numeric(9, 6))
+    place_id       = db.Column(db.String(300), index=True)
+    google_rating  = db.Column(db.Numeric(3, 1))
+    google_maps_url = db.Column(db.String(500))
     
     # Rental Details
     rent_price = db.Column(db.Numeric(8, 2), nullable=False)
@@ -102,6 +108,12 @@ class Room(db.Model):
             'title': self.title,
             'description': self.description,
             'location': self.location,
+            'address': self.address,
+            'latitude': float(self.latitude) if self.latitude else None,
+            'longitude': float(self.longitude) if self.longitude else None,
+            'place_id': self.place_id,
+            'google_rating': float(self.google_rating) if self.google_rating else None,
+            'google_maps_url': self.google_maps_url,
             'rent_price': float(self.rent_price),
             'room_type': self.room_type,
             'bedrooms': self.bedrooms,
@@ -141,13 +153,19 @@ class Room(db.Model):
             'room_id': self.room_id,
             'title': self.title,
             'location': self.location,
+            'address': self.address,
+            'latitude': float(self.latitude) if self.latitude else None,
+            'longitude': float(self.longitude) if self.longitude else None,
+            'place_id': self.place_id,
+            'google_rating': float(self.google_rating) if self.google_rating else None,
+            'google_maps_url': self.google_maps_url,
             'rent_price': float(self.rent_price),
             'room_type': self.room_type,
             'bedrooms': self.bedrooms,
             'bathrooms': float(self.bathrooms) if self.bathrooms else None,
-            'image': self.images[0] if self.images else None,
+            'images': self.images or [],
             'match_score': match_score,
-            'amenities': self.amenities[:3] if self.amenities else [],  # Top 3
+            'amenities': self.amenities[:4] if self.amenities else [],
         }
     
     def validate(self):
@@ -171,8 +189,7 @@ class Room(db.Model):
         if not self.room_type:
             errors.append('Room type is required')
         
-        if not self.images or len(self.images) == 0:
-            errors.append('At least one image is required')
+        # images are optional — placeholder used when none provided
         
         return len(errors) == 0, errors
     
@@ -202,8 +219,18 @@ class Room(db.Model):
         """
         if not preferred_location:
             return True  # No location preference = matches all
-        
-        return self.location.lower() == preferred_location.lower()
+
+        if not self.location:
+            return False
+
+        # Substring, not equality: a listing's location is "<locality>, <area
+        # type>" (e.g. "Khawaja Farid Colony, Near University/College Area")
+        # while the preference holds just the area type. Comparing for equality
+        # made every room fail, which scored them all 0 in /rooms/matched.
+        # This mirrors the ILIKE filter the Room Matching Agent applies.
+        room_loc = self.location.lower()
+        pref_loc = preferred_location.lower().strip()
+        return pref_loc in room_loc or room_loc in pref_loc
     
     def matches_room_type(self, preferred_type):
         """
@@ -261,12 +288,16 @@ class Room(db.Model):
         else:
             pref_dict = preferences.to_dict()
         
-        # Check hard constraints
-        if not self.pets_allowed and pref_dict.get('pets_ok', False):
-            blocking_reasons.append('Room does not allow pets')
-        
-        if not self.smoking_allowed and pref_dict.get('smoking_ok', False):
-            blocking_reasons.append('Room does not allow smoking')
+        # Check hard constraints.
+        # pets_ok / smoking_ok mean "I am comfortable with this", which is how
+        # the survey asked it and how the Room Matching Agent filters: a user
+        # who is not comfortable should not be shown rooms that permit it. The
+        # test was reversed, which blocked rooms for the wrong people.
+        if self.pets_allowed and not pref_dict.get('pets_ok', False):
+            blocking_reasons.append('Room allows pets')
+
+        if self.smoking_allowed and not pref_dict.get('smoking_ok', False):
+            blocking_reasons.append('Room allows smoking')
         
         # Check budget
         if not self.matches_budget(

@@ -11,7 +11,7 @@ The app creates and configures all components including:
 """
 
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
@@ -153,6 +153,14 @@ def _register_routes(app):
             'status': 'healthy',
             'message': 'Roommate Matching System API is running'
         }), 200
+
+    # Serve frontend static files
+    frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend')
+
+    @app.route('/', defaults={'filename': 'index.html'})
+    @app.route('/<path:filename>')
+    def serve_frontend(filename):
+        return send_from_directory(frontend_dir, filename)
 
 
 def _register_error_handlers(app):

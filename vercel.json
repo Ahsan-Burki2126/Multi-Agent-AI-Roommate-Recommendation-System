@@ -12,13 +12,13 @@
     }
   ],
   "routes": [
-    { "src": "/auth/(.*)",            "dest": "backend/api/index.py" },
-    { "src": "/users/(.*)",           "dest": "backend/api/index.py" },
-    { "src": "/preferences/(.*)",     "dest": "backend/api/index.py" },
-    { "src": "/rooms/(.*)",           "dest": "backend/api/index.py" },
-    { "src": "/matches/(.*)",         "dest": "backend/api/index.py" },
-    { "src": "/recommendations/(.*)", "dest": "backend/api/index.py" },
-    { "src": "/orchestrate/(.*)",     "dest": "backend/api/index.py" },
+    { "src": "/auth(/.*)?",            "dest": "backend/api/index.py" },
+    { "src": "/users(/.*)?",          "dest": "backend/api/index.py" },
+    { "src": "/preferences(/.*)?",    "dest": "backend/api/index.py" },
+    { "src": "/rooms(/.*)?",          "dest": "backend/api/index.py" },
+    { "src": "/matches(/.*)?",        "dest": "backend/api/index.py" },
+    { "src": "/recommendations(/.*)?","dest": "backend/api/index.py" },
+    { "src": "/orchestrate(/.*)?",    "dest": "backend/api/index.py" },
     { "src": "/health",               "dest": "backend/api/index.py" },
     {
       "src": "/(.*\\.(css|js|png|jpg|svg|ico|woff|woff2|ttf|eot))",

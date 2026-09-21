@@ -154,71 +154,128 @@ if vec1.is_stale(days=30):
 
 ## Room Model
 
+### Full Column List
+
+| Column | Type | Notes |
+|---|---|---|
+| `room_id` | Integer PK | Auto-increment |
+| `owner_id` | FK → users | Who posted the room |
+| `title` | String(255) | Listing headline |
+| `description` | Text | Full description |
+| `location` | String(200) | City name (indexed) |
+| `address` | String(500) | Full street address (nullable) |
+| `latitude` | Numeric(9,6) | GPS latitude (nullable) |
+| `longitude` | Numeric(9,6) | GPS longitude (nullable) |
+| `place_id` | String(300) | Google Place ID (nullable, indexed) |
+| `google_rating` | Numeric(3,1) | Star rating 1–5 (nullable) |
+| `google_maps_url` | String(500) | Direct maps link (nullable) |
+| `rent_price` | Numeric(8,2) | Monthly rent in PKR |
+| `room_type` | Enum | `Single` / `Shared` / `Master` |
+| `bedrooms` | Integer | Count |
+| `bathrooms` | Numeric(3,1) | Count (e.g. 1.5) |
+| `amenities` | JSON | `["WiFi", "AC", ...]` |
+| `smoking_allowed` | Boolean | Default False |
+| `pets_allowed` | Boolean | Default False |
+| `images` | JSON | List of photo URLs |
+| `is_available` | Boolean | Default True (indexed) |
+| `available_from` | Date | When it's free |
+| `lease_duration_months` | Integer | Preferred lease length |
+| `created_at` | DateTime | Auto-set |
+| `updated_at` | DateTime | Auto-updated |
+
+> **Note:** `address`, `latitude`, `longitude`, `place_id`, `google_rating`, `google_maps_url`
+> are all nullable. They are populated automatically when rooms are seeded. Manual posts
+> via `POST /rooms` leave them as `null`.
+
 ### Creating a Room Listing
 ```python
 room = Room(
     owner_id=owner_user.user_id,
-    title='Cozy Shared Room in Mission',
-    description='Bright shared room with large window',
-    location='San Francisco',
-    address='123 Mission St, SF, CA 94103',
-    room_type='Shared',  # or 'Single' or 'Master'
-    rent_price=950,
-    available_from=datetime.now(),
-    amenities=['WiFi', 'AC', 'Washing Machine'],
-    images=['room1.jpg', 'room2.jpg'],
-    pets_allowed=True,
+    title='Male Hostel Near IUB Gate 1',
+    description='Clean male hostel 5 minutes from IUB.',
+    location='Bahawalpur',
+    address='University Road, Bahawalpur',   # optional
+    room_type='Shared',   # 'Single' | 'Shared' | 'Master'
+    rent_price=5500,      # PKR per month
+    bedrooms=1,
+    bathrooms=1,
+    amenities=['WiFi', 'Generator Backup', 'Study Room'],
+    images=[],            # list of photo URLs — optional
+    pets_allowed=False,
     smoking_allowed=False,
-    is_available=True
+    is_available=True,
+    lease_duration_months=6,
 )
 db.session.add(room)
 db.session.commit()
 ```
 
-### Matching Against Preferences (Room Matching Agent)
+### Compatibility Scoring
 ```python
-pref = user.preferences[0]  # or fetch from DB
+from backend.models import UserPreference
 
-# Check hard constraints
-matches, reasons = room.matches_constraints(pref)
+prefs = UserPreference.query.filter_by(user_id=user_id).first()
+
+# Score 0–100 against user preferences
+score = room.get_compatibility_score(prefs)
+# Breakdown:
+#   40 pts — budget overlap
+#   30 pts — location match
+#   20 pts — room type preference
+#   10 pts — amenity coverage
+
+# Hard constraint check (budget, smoking, pets, location)
+matches, reasons = room.matches_constraints(prefs)
 if not matches:
-    print(f"Blocked: {reasons}")  # ['Pets not allowed', ...]
-    continue
+    print(reasons)  # ['Room is outside budget range', ...]
+```
 
-# Check soft matching
-score = room.get_compatibility_score(pref)
-# Returns 0-100, considering:
-# - 40 points for budget match
-# - 30 points for location match
-# - 20 points for room type match
-# - 10 points for amenities
+### GET /rooms/matched — Pre-scored rooms endpoint
+The `/rooms/matched` endpoint automatically scores every available room
+against the authenticated user's preferences and returns them sorted
+highest-score first. No agent pipeline needed — pure model logic.
+
+```python
+# What the endpoint does internally:
+rooms = Room.query.filter_by(is_available=True).all()
+scored = []
+for room in rooms:
+    score = room.get_compatibility_score(prefs)
+    d = room.to_dict(include_owner=True)
+    d['match_score'] = score
+    scored.append(d)
+scored.sort(key=lambda r: r['match_score'], reverse=True)
 ```
 
 ### Quick Checks
 ```python
-# Budget compatibility
-room.matches_budget(budget_min, budget_max)  # bool
+room.matches_budget(5000, 15000)        # bool — PKR range
+room.matches_location('Bahawalpur')     # bool — case-insensitive
+room.matches_room_type('Shared')        # bool
+room.has_amenity('WiFi')                # bool
+room.is_expired()                       # bool — available_from in past
+```
 
-# Location
-room.matches_location('san francisco')  # bool, case-insensitive
-
-# Room type
-room.matches_room_type('Shared')  # bool
-
-# Has amenity
-room.has_amenity('WiFi')  # bool
+### Serialization
+```python
+room.to_dict()                   # all fields including Google Places fields
+room.to_dict(include_owner=True) # + owner name/phone
+room.to_search_result(score=82)  # lightweight card format with match_score
 ```
 
 ### Querying
 ```python
-# Available rooms in location
-rooms = Room.query.filter_by(
-    location='San Francisco',
-    is_available=True
+# Available rooms in a city
+rooms = Room.query.filter(
+    Room.location.ilike('%Bahawalpur%'),
+    Room.is_available == True
 ).all()
 
 # By owner
 user_rooms = Room.query.filter_by(owner_id=user_id).all()
+
+# By type
+shared = Room.query.filter_by(room_type='Shared', is_available=True).all()
 ```
 
 ---
