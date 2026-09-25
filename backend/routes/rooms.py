@@ -129,7 +129,16 @@ def create_room():
             smoking_allowed=data.get('smoking_allowed', False),
             lease_duration_months=data.get('lease_duration_months'),
             is_available=True,
-            available_from=available_from
+            available_from=available_from,
+            # Optional Google Places details. The model and to_dict() already
+            # expose these, so accept them here rather than leaving them
+            # permanently null for anything created through the API.
+            address=data.get('address'),
+            latitude=data.get('latitude'),
+            longitude=data.get('longitude'),
+            place_id=data.get('place_id'),
+            google_rating=data.get('google_rating'),
+            google_maps_url=data.get('google_maps_url'),
         )
         
         # Validate
@@ -213,6 +222,11 @@ def update_room(room_id):
             room.description = data['description']
         if 'location' in data:
             room.location = data['location']
+        # Optional Google Places details, mirroring create_room.
+        for field in ('address', 'latitude', 'longitude',
+                      'place_id', 'google_rating', 'google_maps_url'):
+            if field in data:
+                setattr(room, field, data[field])
         if 'room_type' in data:
             if data['room_type'] not in ('Single', 'Shared', 'Master'):
                 return jsonify({

@@ -37,7 +37,7 @@ import sys
 from datetime import datetime, timedelta
 
 # Run from the project root regardless of where the script is invoked from.
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, PROJECT_ROOT)
 os.chdir(PROJECT_ROOT)
 

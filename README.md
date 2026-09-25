@@ -12,34 +12,57 @@ A full-stack web application that uses a **6-agent AI pipeline** to match people
 | **Room Matching** | Rooms scored against your preferences and ranked by fit percentage |
 | **AI Explanations** | Google Gemini generates natural-language explanations for every match |
 | **Conflict Detection** | Identifies deal-breakers (pets, smoking, budget mismatch) before they happen |
-| **Room Listings** | 23+ real Pakistani room listings seeded across 8 cities (no external API needed) |
+| **Room Listings** | 237 listings — 24 hand-written Pakistani hostels plus survey-aligned stock the matcher can rank (no external API needed) |
 | **Post a Room** | Any user can post their own room listing |
-| **Survey Data** | Pre-loaded with 327 real survey responses from IUB students |
+| **Survey Data** | Pre-loaded with 319 real survey responses from IUB students |
 
 ---
 
 ## Quick Start
 
-```bash
-cd roommate-matching-system
+The app is two servers: a Flask API and a static frontend. You need both.
 
-# Install dependencies
+```bash
+# 1. Dependencies
 pip install -r requirements.txt
 
-# Copy and configure environment
+# 2. Environment
 copy .env.example .env       # Windows
-cp .env.example .env         # Mac/Linux
-# Set GOOGLE_API_KEY for Gemini AI (AI agents use this)
+cp .env.example .env         # macOS / Linux
+# then set GOOGLE_API_KEY in .env — the AI agents use Gemini
+```
 
-# Seed the database with Pakistani room listings
-python seed_rooms.py
+**Terminal 1 — backend (port 5000):**
 
-# Run migrations (adds new room fields if upgrading)
-python migrate_db.py
+```bash
+python -m backend.app
+```
 
-# Start the server
-python backend/app.py
-# → http://localhost:5000
+**Terminal 2 — frontend (port 8000):**
+
+```bash
+cd frontend
+python -m http.server 8000
+```
+
+Open <http://localhost:8000>. The database ships with data already loaded, so
+there is nothing to seed for a normal run.
+
+Log in with any survey account — e.g. `abdul.ahad.0002@survey.iub.edu.pk`,
+password `Survey@2024`.
+
+### Starting from an empty database
+
+```bash
+python backend/init_db.py                      # create the tables
+python scripts/load_survey_data.py             # import the survey respondents
+python scripts/seed_rooms_for_matching.py      # rooms the AI can actually match
+```
+
+### Running the tests
+
+```bash
+pytest
 ```
 
 ---
@@ -118,15 +141,18 @@ GET  /matches/conflicts/<a>/<b>   Conflict check between two users
 
 Rooms work without any external API. Data comes from:
 
-1. **`seed_rooms.py`** — 23 realistic Pakistani listings across Bahawalpur, Islamabad,
-   Lahore, Karachi, Rawalpindi, Multan, Faisalabad, Peshawar.
+1. **`scripts/seed_rooms_by_city.py`** — 24 realistic Pakistani listings across
+   Bahawalpur, Islamabad, Lahore, Karachi, Rawalpindi, Multan, Faisalabad, Peshawar.
    ```bash
-   python seed_rooms.py           # add rooms
-   python seed_rooms.py --clear   # wipe and reseed
-   python seed_rooms.py --city Lahore   # seed one city only
+   python scripts/seed_rooms_by_city.py           # add rooms
+   python scripts/seed_rooms_by_city.py --clear   # wipe and reseed
+   python scripts/seed_rooms_by_city.py --city Lahore   # seed one city only
    ```
 
-2. **`POST /rooms`** — Any authenticated user can post their own room.
+2. **`scripts/seed_rooms_for_matching.py`** — survey-aligned stock so every
+   respondent gets matches. This is what makes AI room matching return results.
+
+3. **`POST /rooms`** — Any authenticated user can post their own room.
 
 ### Room Compatibility Score
 `GET /rooms/matched` returns every available room pre-scored against the
@@ -164,7 +190,7 @@ audit_log                every agent decision, timestamped
 ```
 SECRET_KEY=your-secret-key
 JWT_SECRET_KEY=your-jwt-secret
-DATABASE_URL=sqlite:///./database/roommate_system.db
+DATABASE_URL=sqlite:///./backend/database/roommate_system.db
 GOOGLE_API_KEY=AIza...        # Gemini AI (required for AI explanations)
 FLASK_ENV=development
 ```
@@ -177,37 +203,41 @@ FLASK_ENV=development
 ## Project Files
 
 ```
-roommate-matching-system/
-├── backend/
-│   ├── app.py                    Flask factory
-│   ├── config.py                 Dev / prod config
-│   ├── agents/                   6 AI agents + orchestrator
-│   ├── models/                   SQLAlchemy ORM models
-│   ├── routes/                   REST API blueprints
-│   └── services/                 (empty — no external services)
-├── frontend/
-│   ├── rooms.html                Room listing + AI matching UI
-│   ├── matches.html              Roommate match results
-│   ├── dashboard.html            User dashboard
-│   ├── js/api.js                 API client (all endpoints)
-│   └── css/                      Tailwind + custom styles
-├── seed_rooms.py                 Seed 23 Pakistani room listings
-├── migrate_db.py                 Add new Room columns to existing DB
-├── seed_prod.py                  Seed 327 IUB survey users (production)
-├── FYP_PROJECT_DOCUMENTATION.md  Full documentation for presentation
-├── MODELS_QUICK_REFERENCE.md     Model API quick reference
-└── PROJECT_STATUS_FINAL.md       Completion status per phase
+FYP/
+├── backend/          Flask API — app.py, config.py, models/, routes/, agents/
+│                     plus database/ (the live SQLite file) and tests/
+├── frontend/         Static HTML/CSS/JS — no build step
+│                     css/design-system.css holds the theme tokens
+├── scripts/          Seeders and one-off utilities — see scripts/README.md
+├── data/             survey_user_credentials.xlsx (the source survey)
+└── docs/             Written report, schema reference, structure guide
 ```
+
+**[docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) has the full annotated
+tree** — what every folder is for, and where to change things.
+
+Other documentation:
+
+| File | Contents |
+|---|---|
+| [docs/FYP_PROJECT_DOCUMENTATION.md](docs/FYP_PROJECT_DOCUMENTATION.md) | Full write-up for presentation |
+| [docs/MODELS_QUICK_REFERENCE.md](docs/MODELS_QUICK_REFERENCE.md) | Model API quick reference |
+| [docs/PROJECT_STATUS_FINAL.md](docs/PROJECT_STATUS_FINAL.md) | Completion status per phase |
+| [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) | Longer setup walkthrough |
+| [docs/schema.sql](docs/schema.sql) | SQL schema reference |
+| [scripts/README.md](scripts/README.md) | What each script does |
 
 ---
 
 ## For FYP Examiners
 
-**Run the app:**
+**Run the app** (two terminals):
 ```bash
-python backend/app.py
-# Open http://localhost:5000
+python -m backend.app              # API on :5000
+cd frontend && python -m http.server 8000   # UI on :8000
+# Open http://localhost:8000
 ```
+Log in as `abdul.ahad.0002@survey.iub.edu.pk` / `Survey@2024`.
 
 **Test user flow:**
 1. Register → complete preferences form

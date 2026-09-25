@@ -37,7 +37,6 @@ Optional (for production only):
 
 ```bash
 # Navigate to project folder
-cd roommate-matching-system
 
 # Create a virtual environment (keeps dependencies isolated)
 python -m venv venv
@@ -106,7 +105,7 @@ with app.app_context():
 
 **If you are upgrading from an older version** (adding new Room columns):
 ```bash
-python migrate_db.py
+python scripts/migrate_db.py
 ```
 This safely adds the new columns (`address`, `latitude`, `longitude`, `place_id`, `google_rating`, `google_maps_url`) to the existing `rooms` table without touching any data.
 
@@ -114,7 +113,7 @@ This safely adds the new columns (`address`, `latitude`, `longitude`, `place_id`
 
 ```bash
 # Local SQLite
-python load_survey_data.py
+python scripts/load_survey_data.py
 
 # Production Neon/PostgreSQL
 DATABASE_URL="postgresql+pg8000://..." python seed_prod.py
@@ -128,13 +127,13 @@ The app comes with a seed script that creates 23 realistic Pakistani room listin
 
 ```bash
 # Add rooms (skips duplicates automatically)
-python seed_rooms.py
+python scripts/seed_rooms_by_city.py
 
 # Wipe all rooms and start fresh
-python seed_rooms.py --clear
+python scripts/seed_rooms_by_city.py --clear
 
 # Seed only one city
-python seed_rooms.py --city Lahore
+python scripts/seed_rooms_by_city.py --city Lahore
 ```
 
 Cities covered: **Bahawalpur, Islamabad, Lahore, Karachi, Rawalpindi, Multan, Faisalabad, Peshawar**
@@ -148,7 +147,7 @@ Price range: PKR 4,000 – 45,000/month
 
 ```bash
 # From the roommate-matching-system/ folder with venv active:
-python backend/app.py
+python -m backend.app
 ```
 
 Open your browser at: **http://localhost:5000**
@@ -226,7 +225,7 @@ roommate-matching-system/
 │
 ├── seed_rooms.py                    ← Seeds 23 Pakistani room listings (no API needed)
 ├── seed_prod.py                     ← Seeds 327 IUB survey users (production)
-├── load_survey_data.py              ← Loads survey Excel → local DB
+├── scripts/load_survey_data.py      ← Loads survey Excel → local DB
 ├── migrate_db.py                    ← Adds new Room columns to existing DB
 ├── requirements.txt                 ← Python dependencies
 ├── vercel.json                      ← Vercel deployment routing config
@@ -335,13 +334,13 @@ pip install -r requirements.txt
 **Database error on first run**
 ```bash
 # Run the migration to create/update all tables
-python migrate_db.py
+python scripts/migrate_db.py
 ```
 
 **No rooms showing**
 ```bash
 # Seed the database
-python seed_rooms.py
+python scripts/seed_rooms_by_city.py
 ```
 
 **AI explanations not working / Gemini error**
@@ -350,7 +349,7 @@ python seed_rooms.py
 
 **Port 5000 in use**
 ```bash
-python backend/app.py --port 5001
+python -m backend.app  # port is set in backend/config.py
 # or
 flask run --port 5001
 ```

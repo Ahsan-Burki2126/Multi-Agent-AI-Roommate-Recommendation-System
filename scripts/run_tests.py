@@ -17,8 +17,8 @@ logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
 logging.getLogger('agent').setLevel(logging.WARNING)
 logging.getLogger('langchain').setLevel(logging.WARNING)
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from dotenv import load_dotenv
 load_dotenv()

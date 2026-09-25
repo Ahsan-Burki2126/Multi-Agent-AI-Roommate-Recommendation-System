@@ -25,7 +25,7 @@ logging.getLogger("sqlalchemy").setLevel(logging.ERROR)
 logging.getLogger("sqlalchemy.engine").setLevel(logging.ERROR)
 
 # ── resolve project root ──────────────────────────────────────────────────────
-ROOT = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 

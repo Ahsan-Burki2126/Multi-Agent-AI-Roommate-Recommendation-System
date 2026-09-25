@@ -3,7 +3,7 @@ Reset stale data and re-run the full pipeline for User 6 (John Smith).
 Clears old conflicts, scores, and recommendations, then triggers the orchestrator.
 """
 import sys, os, time, json
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 os.environ['FLASK_ENV'] = 'development'
 
