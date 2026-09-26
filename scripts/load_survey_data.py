@@ -5,7 +5,6 @@ Imports the 327 real survey responses from the Excel file into the database.
 Maps survey columns to User and UserPreference models.
 
 Usage:
-    cd roommate-matching-system
     python load_survey_data.py
 """
 

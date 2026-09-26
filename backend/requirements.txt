@@ -1,3 +1,7 @@
+# Runtime dependencies for the DEPLOYED function (Vercel installs this one,
+# next to backend/api/index.py). No dev/test packages on purpose.
+# For local development use the root requirements.txt instead.
+
 # Web Framework
 Flask==3.0.0
 Werkzeug==3.0.1

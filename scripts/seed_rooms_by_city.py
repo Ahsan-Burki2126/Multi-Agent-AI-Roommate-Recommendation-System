@@ -4,7 +4,7 @@ Seed Rooms Data
 Creates realistic Pakistani hostel / room listings for major cities.
 No Google API key required — all data is hardcoded.
 
-Usage (from roommate-matching-system/):
+Usage (run from the project root):
     python seed_rooms.py                     # uses local SQLite / .env DATABASE_URL
     DATABASE_URL="postgresql://..." python seed_rooms.py   # production Neon DB
 

@@ -104,5 +104,3 @@ Thumbs.db
 *.stackdump
 nul
 
-# Nested duplicate of this project (has its own .git) - kept locally, never committed
-roommate-matching-system/

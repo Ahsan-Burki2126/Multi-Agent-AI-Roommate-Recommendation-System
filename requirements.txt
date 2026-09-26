@@ -1,3 +1,8 @@
+# Full dependency set for LOCAL DEVELOPMENT — includes pytest and other
+# dev-only packages. Install this one when working on the project:
+#     pip install -r requirements.txt
+# The deployed function uses the leaner backend/requirements.txt.
+
 # Web Framework
 Flask==3.0.0
 Werkzeug==3.0.1

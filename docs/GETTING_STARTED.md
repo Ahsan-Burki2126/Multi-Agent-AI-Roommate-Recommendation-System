@@ -146,7 +146,7 @@ Price range: PKR 4,000 – 45,000/month
 ## 6. Running the Application
 
 ```bash
-# From the roommate-matching-system/ folder with venv active:
+# From the project root with the venv active:
 python -m backend.app
 ```
 
@@ -164,7 +164,7 @@ You should see the landing page. From there:
 ## 7. Project Structure Explained
 
 ```
-roommate-matching-system/
+FYP/
 │
 ├── backend/                         ← All Python server-side code
 │   ├── app.py                       ← Flask app factory (start here)

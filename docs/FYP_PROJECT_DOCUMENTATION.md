@@ -104,7 +104,7 @@ This system solves all of the above by:
 ## 2. Project Structure
 
 ```
-roommate-matching-system/
+FYP/
 │
 ├── backend/                        # Python Flask backend
 │   ├── __init__.py                 # Makes backend a Python package
@@ -1977,7 +1977,6 @@ A Google AI Studio API key (for Gemini LLM)
 ```bash
 # 1. Clone the repository
 git clone <repo-url>
-cd roommate-matching-system
 
 # 2. Create virtual environment
 python -m venv venv

@@ -3,7 +3,6 @@ End-to-end test suite for Multi-Agent AI Roommate Recommendation System
 Tests the full pipeline: auth → preferences → vectorization → matching → recommendations
 
 Run:
-    cd roommate-matching-system
     python run_tests.py
 """
 

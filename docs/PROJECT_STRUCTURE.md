@@ -116,7 +116,13 @@ FYP/
 that is what the Room Matching Agent filters on. A room whose location is just a
 city name will never match a survey respondent.
 
-**`roommate-matching-system/`** — if you see this folder on disk, it is a second
-full copy of this project with its own git history. It is in `.gitignore` and is
-not part of the project. Work pushed from it once left the GitHub branch ahead of
-the main working copy, so always `git fetch` and check before pushing.
+**Only ever work from one checkout.** A second full copy of this project used to
+sit inside the repo at `roommate-matching-system/`, with its own git history.
+Work pushed from it left the GitHub branch ahead of the main working copy, and
+the two had to be merged by hand. It has been deleted. If you clone the project
+somewhere else to experiment, always `git fetch` and check before pushing:
+
+```bash
+git fetch origin
+git rev-list --left-right --count origin/Ahsan-Burki...HEAD   # want "0 0"
+```

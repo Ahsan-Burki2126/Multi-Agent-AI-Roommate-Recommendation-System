@@ -4,7 +4,6 @@ Seed Production Database with Survey Users
 Loads the 327 real IUB survey responses into the Vercel/Neon PostgreSQL database.
 
 Usage:
-    cd roommate-matching-system
 
     # Set your Neon DATABASE_URL then run:
     DATABASE_URL="postgresql://user:pass@host/dbname?sslmode=require" python seed_prod.py

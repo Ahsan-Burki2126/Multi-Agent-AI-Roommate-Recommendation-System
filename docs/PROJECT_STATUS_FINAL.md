@@ -527,7 +527,7 @@ POST   /orchestrate/clear-log - Clear log
 ## 📁 Directory Structure
 
 ```
-roommate-matching-system/
+FYP/
 ├── README.md
 ├── ARCHITECTURE.md
 ├── DATABASE_DESIGN.md
